@@ -30,5 +30,3 @@ SyntaxHighlighter.text!(penumbra_dark, crayon"#8F8F8F")
 SyntaxHighlighter.add!("Penumbra Dark", penumbra_dark)
 
 colorscheme!("Penumbra Dark")
-
-OhMyREPL.Passes.BracketHighlighter.setcrayon!(crayon"#CB7459")
