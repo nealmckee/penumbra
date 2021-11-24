@@ -61,6 +61,10 @@ Within the constraints described above, the colour hues are optimised to produce
 
 * **iTerm2** import itermcolour files from this repository in the preferences pane
 
+### Other
+
+* **JuliaREPL with OhMyREPL** add the Packages OhMyREPL.jl and Crayons.jl to your (base) environment and copy the code into your startup.jl file
+
 ## Intended Usage
 
 The recommended font is `Fira Code`.
