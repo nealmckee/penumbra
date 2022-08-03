@@ -6,7 +6,7 @@
 
 # Penumbra
 
-Penumbra is a mathematically balanced colour scheme constructed in a perceptually uniform colour space with base colours inspired by the shades of colour occuring in nature due to the light of the sun and the sky. To my knowledge, it's the first to cleanly separate the perceptual properties of colours while optimally utilising the available colour space of typical displays.
+Penumbra is a mathematically balanced colour scheme constructed in a perceptually uniform colour space with base colours inspired by the shades of colour occuring in nature due to the light of the sun and the sky. It cleanly separates the perceptual properties of colours while optimally utilising the available colour space of typical displays.
 
 The nine base colours are (almost fully, see below) symmetric and used to build the main light and dark theme, drawing from differently sized accent colour palettes as necessary. Additionally, there are two variants of the dark theme with enhanced contrast, ideal for anyone with mild to moderate visual impairments. Due to the constraints of the design principles, none are particularly suitable for people with colour vision deficiency.
 
