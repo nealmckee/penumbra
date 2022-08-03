@@ -116,7 +116,7 @@ If palettes smaller than 6 are desired, choose subsets as following:
 #### Data Visualisations
 For qualitative data, choose a palette as described above (balanced for optimum contrast, contrast++ for optimum chroma) for the number of categories in the data. Additionally, if there is adjacency like in a bar chart or pie chart, choose adjacent colours so that the hue difference is maximised. For examaple for six categories: the colours of a palette of half the size (3), then the other three beginning with the one that is not adjecent to the last (and ending with the one that is not adjacent to the first if adjacency is circular).
 
-This is all meant for your own exploratory visualisations, for publications it is better to use a palette that's safe for people with colour vision deficiency. Penumabra was also specifically designed for electronic displays and not made to be print safe.
+This is all meant for your own exploratory visualisations, for publications it is better to use a palette that's safe for people with colour vision deficiency. Penumbra was also specifically designed for electronic displays and not made to be print safe.
 
 ## Construction
 I implemented transformations from the XYZ colour space to [Oklab](https://bottosson.github.io/posts/oklab/) and from Oklab to sRGB in Julia (and LCH based on Oklab respectively). Combined with Colors.jl, this allowed conversion from any supported colour space to Oklab.
