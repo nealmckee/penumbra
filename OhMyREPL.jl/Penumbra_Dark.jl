@@ -1,7 +1,7 @@
 #=
 execute
 ] add OhMyREPL
-] add Cryaons
+] add Crayons
 in your REPL, then copy the code below into your startup.jl file at ~\.julia\config\
 =#
 
