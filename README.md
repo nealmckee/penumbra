@@ -55,7 +55,7 @@ Within the constraints described above, the colour hues are optimised to produce
 
 ### Editors and IDEs
 
-* **VSCode** available from the [extension marketplace](https://TODO) or its own [repository](https://www.github.com/TODO)
+* **VSCode** available from the [extension marketplace](https://TODO) or its own [repository](https://github.com/nealmckee/penumbra_vscode)
 
 ### Terminal Emulators
 
