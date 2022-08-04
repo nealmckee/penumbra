@@ -8,7 +8,7 @@
 
 Penumbra is a mathematically balanced colour scheme constructed in a perceptually uniform colour space with base colours inspired by the shades of colour occuring in nature due to the light of the sun and the sky. It cleanly separates the perceptual properties of colours while optimally utilising the available colour space of typical displays.
 
-The nine base colours are (almost fully, see below) symmetric and used to build the main light and dark theme, drawing from differently sized accent colour palettes as necessary. Additionally, there are two variants of the dark theme with enhanced contrast, ideal for anyone with mild to moderate visual impairments. Due to the constraints of the design principles, none are particularly suitable for people with colour vision deficiency.
+The nine base colours are (almost fully, see below) symmetric and used to build the main light and dark theme, drawing from differently sized accent colour palettes as necessary. Additionally, there are two variants of the dark theme with enhanced contrast, ideal for anyone with mild to moderate visual impairments. Due to the constraints of the design principles, they are even particularly *unsuitable* for people with colour vision deficiency.
 
 The accent colour palettes also lend themselves to encoding quantitative information in data visualisations.
 
@@ -55,7 +55,7 @@ Within the constraints described above, the colour hues are optimised to produce
 
 ### Editors and IDEs
 
-* **VSCode** available from the [extension marketplace](https://TODO) or its own [repository](https://github.com/nealmckee/penumbra_vscode)
+* **VSCode** available from the [extension marketplace](https://marketplace.visualstudio.com/items?itemName=PenumbraTheme.penumbra) or its own [repository](https://github.com/nealmckee/penumbra_vscode)
 
 ### Terminal Emulators
 
