@@ -64,7 +64,7 @@ Within the constraints described above, the colour hues are optimized to produce
 
 ### Editors and IDEs
 
-* **VS Code** available from the [extension marketplace](https://marketplace.visualstudio.com/items?itemName=PenumbraTheme.penumbra) or its own [repository](https://github.com/nealmckee/penumbra_vscode)
+* **VS Code** available from the [extension marketplace](https://marketplace.visualstudio.com/items?itemName=PenumbraTheme.penumbra), [Open VSX](https://open-vsx.org/extension/PenumbraTheme/penumbra) or its own [repository](https://github.com/nealmckee/penumbra_vscode)
 
 ### Terminal Emulators
 
