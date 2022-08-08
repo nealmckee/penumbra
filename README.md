@@ -73,9 +73,6 @@ Within the constraints described above, the colour hues are optimized to produce
 ### Other
 
 * **JuliaREPL with OhMyREPL** add the Packages OhMyREPL.jl and Crayons.jl to your (base) environment and copy the code into your startup.jl file
-
-### Unofficial
-
 * **R Plotting** install from its own [repository](https://github.com/hughjonesd/penumbra) with `remotes::install_github("hughjonesd/penumbra")`
 
 ## Intended Usage
