@@ -70,6 +70,7 @@ Within the constraints described above, the colour hues are optimized to produce
 ### Terminal Emulators
 
 * **iTerm2** import itermcolour files from this repository in the preferences pane
+* **Alacritty** install from its own [repository](https://github.com/pomarec/alacritty-theme-penumbra)
 
 ### Other
 
