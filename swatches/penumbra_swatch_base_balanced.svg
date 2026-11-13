@@ -50,7 +50,7 @@
      id="layer1"
      transform="translate(6.1303453,-38.208385)">
     <rect
-       style="fill:#636363;fill-opacity:1;stroke:none;stroke-width:0.264582;paint-order:stroke fill markers"
+       style="fill:#8b8b8b;fill-opacity:1;stroke:none;stroke-width:0.264582;paint-order:stroke fill markers"
        id="rect209496"
        width="211.66666"
        height="105.83334"
@@ -60,70 +60,70 @@
        id="g240419"
        transform="translate(213.02747,208.49145)">
       <rect
-         style="fill:#fffdfb;fill-opacity:1;stroke-width:0.264998;stroke-dasharray:0.264998, 0.264998;paint-order:stroke fill markers"
+         style="fill:#fff6e9;fill-opacity:1;stroke-width:0.264998;stroke-dasharray:0.264998, 0.264998;paint-order:stroke fill markers"
          id="rect40227-9"
          width="16.143923"
          height="58.499168"
          x="-203.30161"
          y="-144.49931" />
       <rect
-         style="fill:none;fill-opacity:1;stroke:#303338;stroke-width:0.264583;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:stroke fill markers"
+         style="fill:none;fill-opacity:1;stroke:#2c2e31;stroke-width:0.264583;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:stroke fill markers"
          id="rect240049"
          width="196.51758"
          height="82.423965"
          x="-211.58328"
          y="-156.4617" />
       <rect
-         style="fill:#fff7ed;fill-opacity:1;stroke-width:0.264998;stroke-dasharray:0.264998, 0.264998;paint-order:stroke fill markers"
+         style="fill:#efe8dd;fill-opacity:1;stroke-width:0.264998;stroke-dasharray:0.264998, 0.264998;paint-order:stroke fill markers"
          id="rect40229-3"
          width="16.144133"
          height="58.499168"
          x="-182.82536"
          y="-144.49931" />
       <rect
-         style="fill:#f2e6d4;fill-opacity:1;stroke-width:0.264998;stroke-dasharray:0.264998, 0.264998;paint-order:stroke fill markers"
+         style="fill:#dfd9d0;fill-opacity:1;stroke-width:0.264998;stroke-dasharray:0.264998, 0.264998;paint-order:stroke fill markers"
          id="rect40231-6"
          width="16.143923"
          height="58.499165"
          x="-162.34892"
          y="-144.49931" />
       <rect
-         style="fill:#bebebe;fill-opacity:1;stroke-width:0.264998;stroke-dasharray:0.264998, 0.264998;paint-order:stroke fill markers"
+         style="fill:#b4b1ad;fill-opacity:1;stroke-width:0.264998;stroke-dasharray:0.264998, 0.264998;paint-order:stroke fill markers"
          id="rect40233-0"
          width="16.143923"
          height="58.499168"
          x="-141.8727"
          y="-144.49931" />
       <rect
-         style="fill:#8f8f8f;fill-opacity:1;stroke-width:0.264998;stroke-dasharray:0.264998, 0.264998;paint-order:stroke fill markers"
+         style="fill:#8b8b8b;fill-opacity:1;stroke:#010101;stroke-width:0.264583;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:stroke fill markers"
          id="rect40235-6"
          width="16.143923"
          height="58.499168"
          x="-121.39646"
          y="-144.49931" />
       <rect
-         style="fill:#636363;fill-opacity:1;stroke:#010101;stroke-width:0.264583;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:stroke fill markers"
+         style="fill:#5e6063;fill-opacity:1;stroke-width:0.264998;stroke-dasharray:0.264998, 0.264998;paint-order:stroke fill markers"
          id="rect40237-2"
          width="16.143923"
          height="58.234581"
          x="-100.92023"
          y="-144.36702" />
       <rect
-         style="fill:#3e4044;fill-opacity:1;stroke-width:0.264998;stroke-dasharray:0.264998, 0.264998;paint-order:stroke fill markers"
+         style="fill:#383a3d;fill-opacity:1;stroke-width:0.264998;stroke-dasharray:0.264998, 0.264998;paint-order:stroke fill markers"
          id="rect40239-6"
          width="16.143923"
          height="58.499168"
          x="-80.443985"
          y="-144.49931" />
       <rect
-         style="fill:#303338;fill-opacity:1;stroke-width:0.264998;stroke-dasharray:0.264998, 0.264998;paint-order:stroke fill markers"
+         style="fill:#2c2e31;fill-opacity:1;stroke-width:0.264998;stroke-dasharray:0.264998, 0.264998;paint-order:stroke fill markers"
          id="rect40241-1"
          width="16.143923"
          height="58.499168"
          x="-59.967762"
          y="-144.49931" />
       <rect
-         style="fill:#24272b;fill-opacity:1;stroke-width:0.264998;stroke-dasharray:0.264998, 0.264998;paint-order:stroke fill markers"
+         style="fill:#202225;fill-opacity:1;stroke-width:0.264998;stroke-dasharray:0.264998, 0.264998;paint-order:stroke fill markers"
          id="rect133712"
          width="16.143923"
          height="58.499168"
@@ -131,113 +131,113 @@
          y="-144.49931" />
       <text
          xml:space="preserve"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.23914px;line-height:1.25;font-family:'fira sans';-inkscape-font-specification:'fira sans';text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#bebebe;fill-opacity:1;stroke-width:0.264584"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.23914px;line-height:1.25;font-family:'Fira Sans', sans-serif;-inkscape-font-specification:'Fira Sans';text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#202225;fill-opacity:1;stroke-width:0.264584"
          x="-195.22964"
          y="-147.38441"
          id="text40285-8"><tspan
            sodipodi:role="line"
            id="tspan40283-7"
-           style="font-size:4.23914px;fill:#bebebe;fill-opacity:1;stroke-width:0.264584"
+           style="font-size:4.23914px;fill:#202225;fill-opacity:1;stroke-width:0.264584"
            x="-195.22964"
            y="-147.38441">sun+</tspan></text>
       <text
          xml:space="preserve"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.23914px;line-height:1.25;font-family:'fira sans';-inkscape-font-specification:'fira sans';text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#bebebe;fill-opacity:1;stroke-width:0.264584"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.23914px;line-height:1.25;font-family:'Fira Sans', sans-serif;-inkscape-font-specification:'Fira Sans';text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#202225;fill-opacity:1;stroke-width:0.264584"
          x="-174.67488"
          y="-147.38441"
          id="text137095"><tspan
            sodipodi:role="line"
            id="tspan137093"
-           style="font-size:4.23914px;fill:#bebebe;fill-opacity:1;stroke-width:0.264584"
+           style="font-size:4.23914px;fill:#202225;fill-opacity:1;stroke-width:0.264584"
            x="-174.67488"
            y="-147.38441">sun</tspan></text>
       <text
          xml:space="preserve"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.23914px;line-height:1.25;font-family:'fira sans';-inkscape-font-specification:'fira sans';text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#bebebe;fill-opacity:1;stroke-width:0.264584"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.23914px;line-height:1.25;font-family:'Fira Sans', sans-serif;-inkscape-font-specification:'Fira Sans';text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#202225;fill-opacity:1;stroke-width:0.264584"
          x="-154.19855"
          y="-147.38441"
          id="text137108"><tspan
            sodipodi:role="line"
            id="tspan137106"
-           style="font-size:4.23914px;fill:#bebebe;fill-opacity:1;stroke-width:0.264584"
+           style="font-size:4.23914px;fill:#202225;fill-opacity:1;stroke-width:0.264584"
            x="-154.19855"
            y="-147.38441">sun-</tspan></text>
       <text
          xml:space="preserve"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.23914px;line-height:1.25;font-family:'fira sans';-inkscape-font-specification:'fira sans';text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#bebebe;fill-opacity:1;stroke-width:0.264584"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.23914px;line-height:1.25;font-family:'Fira Sans', sans-serif;-inkscape-font-specification:'Fira Sans';text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#202225;fill-opacity:1;stroke-width:0.264584"
          x="-133.72655"
          y="-147.38441"
          id="text141946"><tspan
            sodipodi:role="line"
            id="tspan141944"
-           style="font-size:4.23914px;fill:#bebebe;fill-opacity:1;stroke-width:0.264584"
+           style="font-size:4.23914px;fill:#202225;fill-opacity:1;stroke-width:0.264584"
            x="-133.72655"
            y="-147.38441">sky+</tspan></text>
       <text
          xml:space="preserve"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.23914px;line-height:1.25;font-family:'fira sans';-inkscape-font-specification:'fira sans';text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#bebebe;fill-opacity:1;stroke-width:0.264584"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.23914px;line-height:1.25;font-family:'Fira Sans', sans-serif;-inkscape-font-specification:'Fira Sans';text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#202225;fill-opacity:1;stroke-width:0.264584"
          x="-113.25031"
          y="-147.38441"
          id="text141952"><tspan
            sodipodi:role="line"
            id="tspan141950"
-           style="font-size:4.23914px;fill:#bebebe;fill-opacity:1;stroke-width:0.264584"
+           style="font-size:4.23914px;fill:#202225;fill-opacity:1;stroke-width:0.264584"
            x="-113.25031"
            y="-147.38441">sky</tspan></text>
       <text
          xml:space="preserve"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.23914px;line-height:1.25;font-family:'fira sans';-inkscape-font-specification:'fira sans';text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#bebebe;fill-opacity:1;stroke-width:0.264584"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.23914px;line-height:1.25;font-family:'Fira Sans', sans-serif;-inkscape-font-specification:'Fira Sans';text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#202225;fill-opacity:1;stroke-width:0.264584"
          x="-92.774078"
          y="-147.38441"
          id="text142036"><tspan
            sodipodi:role="line"
            id="tspan142034"
-           style="font-size:4.23914px;fill:#bebebe;fill-opacity:1;stroke-width:0.264584"
+           style="font-size:4.23914px;fill:#202225;fill-opacity:1;stroke-width:0.264584"
            x="-92.774078"
            y="-147.38441">sky-</tspan></text>
       <text
          xml:space="preserve"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.23914px;line-height:1.25;font-family:'fira sans';-inkscape-font-specification:'fira sans';text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#bebebe;fill-opacity:1;stroke-width:0.264584"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.23914px;line-height:1.25;font-family:'Fira Sans', sans-serif;-inkscape-font-specification:'Fira Sans';text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#202225;fill-opacity:1;stroke-width:0.264584"
          x="-72.297836"
          y="-147.38441"
          id="text142040"><tspan
            sodipodi:role="line"
            id="tspan142038"
-           style="font-size:4.23914px;fill:#bebebe;fill-opacity:1;stroke-width:0.264584"
+           style="font-size:4.23914px;fill:#202225;fill-opacity:1;stroke-width:0.264584"
            x="-72.297836"
            y="-147.38441">shade+</tspan></text>
       <text
          xml:space="preserve"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.23914px;line-height:1.25;font-family:'fira sans';-inkscape-font-specification:'fira sans';text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#bebebe;fill-opacity:1;stroke-width:0.264584"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.23914px;line-height:1.25;font-family:'Fira Sans', sans-serif;-inkscape-font-specification:'Fira Sans';text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#202225;fill-opacity:1;stroke-width:0.264584"
          x="-51.821617"
          y="-147.38441"
          id="text142044"><tspan
            sodipodi:role="line"
            id="tspan142042"
-           style="font-size:4.23914px;fill:#bebebe;fill-opacity:1;stroke-width:0.264584"
+           style="font-size:4.23914px;fill:#202225;fill-opacity:1;stroke-width:0.264584"
            x="-51.821617"
            y="-147.38441">shade</tspan></text>
       <text
          xml:space="preserve"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.23914px;line-height:1.25;font-family:'fira sans';-inkscape-font-specification:'fira sans';text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#bebebe;fill-opacity:1;stroke-width:0.264584"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.23914px;line-height:1.25;font-family:'Fira Sans', sans-serif;-inkscape-font-specification:'Fira Sans';text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#202225;fill-opacity:1;stroke-width:0.264584"
          x="-31.345388"
          y="-147.38441"
          id="text142048"><tspan
            sodipodi:role="line"
            id="tspan142046"
-           style="font-size:4.23914px;fill:#bebebe;fill-opacity:1;stroke-width:0.264584"
+           style="font-size:4.23914px;fill:#202225;fill-opacity:1;stroke-width:0.264584"
            x="-31.345388"
            y="-147.38441">shade-</tspan></text>
     </g>
     <text
        xml:space="preserve"
-       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.93889px;line-height:1.25;font-family:'fira sans';-inkscape-font-specification:'fira sans';text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;stroke-width:0.264583"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.93889px;line-height:1.25;font-family:'Fira Sans', sans-serif;-inkscape-font-specification:'Fira Sans';text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;stroke-width:0.264583"
        x="99.70298"
        y="47.003254"
        id="text194332"><tspan
          sodipodi:role="line"
          id="tspan194330"
-         style="font-size:4.93889px;fill:#bebebe;fill-opacity:1;stroke-width:0.264583"
+         style="font-size:4.93889px;fill:#202225;fill-opacity:1;stroke-width:0.264583"
          x="99.70298"
          y="47.003254">penumbra base balanced</tspan></text>
   </g>
