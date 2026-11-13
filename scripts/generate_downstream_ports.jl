@@ -27,7 +27,7 @@ Generates clean, verified configurations based on the solved v2 base and accent 
 
 using Printf
 using JSON: JSON
-using Colors: RGB, XYZ, Colorant, parse
+using Colors: RGB, XYZ, Colorant, parse, colordiff
 
 include(joinpath(@__DIR__, "..", "src", "palette_io.jl"))
 
@@ -162,69 +162,335 @@ end
 # 2. Vim / Neovim
 # =============================================================================
 
+const _XTERM256_PALETTE = let
+    steps = (0, 95, 135, 175, 215, 255)
+    pal = Vector{Tuple{Int,RGB{Float64}}}(undef, 240)
+    idx = 1
+    for r in steps, g in steps, b in steps
+        pal[idx] = (15 + idx, RGB{Float64}(r / 255, g / 255, b / 255))
+        idx += 1
+    end
+    for i in 0:23
+        v = (8 + 10 * i) / 255
+        pal[idx] = (232 + i, RGB{Float64}(v, v, v))
+        idx += 1
+    end
+    pal
+end
+
+const _XTERM256_CACHE = Dict{String,Int}()
+
+function _hex_to_xterm256(hex::AbstractString)
+    key = uppercase(hex)
+    return get!(_XTERM256_CACHE, key) do
+        c = parse(RGB{Float64}, "#" * key)
+        best_idx = 16
+        best_dist = Inf
+        for (xterm_idx, ref) in _XTERM256_PALETTE
+            d = colordiff(c, ref)
+            if d < best_dist
+                best_dist = d
+                best_idx = xterm_idx
+            end
+        end
+        best_idx
+    end
+end
+
+function _vim_hi(group::String, fg::String, bg::String="NONE";
+                 gui::String="NONE", cterm::String=gui, guisp::String="")
+    g_fg = fg == "NONE" ? "NONE" : "#" * fg
+    g_bg = bg == "NONE" ? "NONE" : "#" * bg
+    c_fg = fg == "NONE" ? "NONE" : string(_hex_to_xterm256(fg))
+    c_bg = bg == "NONE" ? "NONE" : string(_hex_to_xterm256(bg))
+    sp_part = isempty(guisp) ? "" : " guisp=#$guisp"
+    return @sprintf("hi %-17s guifg=%-7s guibg=%-7s%s gui=%s ctermfg=%-4s ctermbg=%-4s cterm=%s",
+                    group, g_fg, g_bg, sp_part, gui, c_fg, c_bg, cterm)
+end
+
 function generate_vim_theme(mode::Symbol, tier::Symbol; target_path::String, dry_run::Bool=true)
     is_dark = mode == :dark
     base = BASE_TONES[tier]
     acc = ACCENTS[mode][7]
+    p = get_terminal_ansi_palette(mode, tier)
 
     bg_canvas = is_dark ? base["shade"] : base["sun"]
-    bg_recessed = is_dark ? base["shade-"] : base["sun-"]
-    bg_elevated = is_dark ? base["shade+"] : base["sun+"]
+    bg_low = is_dark ? base["shade+"] : base["sun-"]
+    bg_high = is_dark ? base["shade-"] : base["sun+"]
+    bg_elevated = is_dark ? base["shade+"] : base["sun-"]
     fg_text = base["sky"]
     fg_comment = is_dark ? base["sky-"] : base["sky+"]
     fg_heading = is_dark ? base["sky+"] : base["sky-"]
     canvas_opp = is_dark ? base["sun"] : base["shade"]
 
-    theme_label = is_dark ? (tier == :balanced ? "penumbra_dark" : (tier == :contrast_plus ? "penumbra_dark_plus" : "penumbra_dark_plus_plus")) : "penumbra_light"
+    bg_cursorline = is_dark ? _blend_hex(bg_canvas, canvas_opp, 0.025) : _blend_hex(bg_canvas, canvas_opp, 0.10)
+    bg_visual = is_dark ? _blend_hex(bg_canvas, canvas_opp, 0.065) : _blend_hex(bg_canvas, canvas_opp, 0.20)
+    bg_search = is_dark ? _blend_hex(bg_canvas, acc["orange"], 0.14) : _blend_hex(bg_canvas, acc["orange"], 0.25)
+    bg_incsearch = is_dark ? _blend_hex(bg_canvas, acc["orange"], 0.26) : _blend_hex(bg_canvas, acc["orange"], 0.42)
+    bg_diff_add = is_dark ? _blend_hex(bg_canvas, acc["green"], 0.08) : _blend_hex(bg_canvas, acc["green"], 0.15)
+    bg_diff_change = is_dark ? _blend_hex(bg_canvas, acc["blue"], 0.08) : _blend_hex(bg_canvas, acc["blue"], 0.15)
+    bg_diff_delete = is_dark ? _blend_hex(bg_canvas, acc["red"], 0.08) : _blend_hex(bg_canvas, acc["red"], 0.15)
+    bg_diff_text = is_dark ? _blend_hex(bg_canvas, acc["blue"], 0.18) : _blend_hex(bg_canvas, acc["blue"], 0.30)
 
-    content = """\" Penumbra v2 -- Vim color scheme
-\" Mode: $mode, Tier: $tier
+    slug = _theme_slug(mode, tier)
+    bg_setting = is_dark ? "dark" : "light"
+
+    ui_lines = [
+        _vim_hi("Normal", fg_text, bg_canvas),
+        _vim_hi("NormalNC", fg_text, bg_canvas),
+        _vim_hi("NormalFloat", fg_text, bg_low),
+        _vim_hi("FloatBorder", fg_comment, bg_low),
+        _vim_hi("Terminal", fg_text, bg_canvas),
+        _vim_hi("ColorColumn", "NONE", bg_low),
+        _vim_hi("Conceal", fg_comment, "NONE"),
+        _vim_hi("Cursor", bg_canvas, canvas_opp),
+        _vim_hi("CursorColumn", "NONE", bg_cursorline),
+        _vim_hi("CursorLine", "NONE", bg_cursorline),
+        _vim_hi("CursorLineNr", fg_heading, bg_cursorline),
+        _vim_hi("CursorIM", bg_canvas, acc["yellow"]),
+        _vim_hi("Directory", acc["blue"], "NONE"),
+        _vim_hi("DiffAdd", acc["green"], bg_diff_add),
+        _vim_hi("DiffChange", acc["blue"], bg_diff_change),
+        _vim_hi("DiffDelete", acc["red"], bg_diff_delete),
+        _vim_hi("DiffText", fg_heading, bg_diff_text; gui="bold", cterm="bold"),
+        _vim_hi("EndOfBuffer", bg_elevated, "NONE"),
+        _vim_hi("ErrorMsg", acc["red"], bg_canvas),
+        _vim_hi("FoldColumn", fg_comment, bg_canvas),
+        _vim_hi("Folded", fg_comment, bg_low),
+        _vim_hi("IncSearch", fg_heading, bg_incsearch; gui="bold", cterm="bold"),
+        _vim_hi("LineNr", fg_comment, bg_canvas),
+        _vim_hi("MatchParen", fg_heading, bg_elevated; gui="bold", cterm="bold"),
+        _vim_hi("ModeMsg", acc["blue"], "NONE"),
+        _vim_hi("MoreMsg", acc["blue"], "NONE"),
+        _vim_hi("NonText", bg_elevated, "NONE"),
+        _vim_hi("Pmenu", fg_text, bg_low),
+        _vim_hi("PmenuSbar", "NONE", bg_low),
+        _vim_hi("PmenuSel", fg_heading, bg_high; gui="bold", cterm="bold"),
+        _vim_hi("PmenuThumb", "NONE", fg_comment),
+        _vim_hi("Question", acc["cyan"], "NONE"),
+        _vim_hi("QuickFixLine", "NONE", bg_visual),
+        _vim_hi("Search", fg_heading, bg_search),
+        _vim_hi("SignColumn", fg_comment, bg_canvas),
+        _vim_hi("SpecialKey", fg_comment, "NONE"),
+        _vim_hi("SpellBad", "NONE", "NONE"; gui="undercurl", cterm="underline", guisp=acc["red"]),
+        _vim_hi("SpellCap", "NONE", "NONE"; gui="undercurl", cterm="underline", guisp=acc["blue"]),
+        _vim_hi("SpellLocal", "NONE", "NONE"; gui="undercurl", cterm="underline", guisp=acc["cyan"]),
+        _vim_hi("SpellRare", "NONE", "NONE"; gui="undercurl", cterm="underline", guisp=acc["purple"]),
+        _vim_hi("StatusLine", fg_heading, bg_low),
+        _vim_hi("StatusLineNC", fg_comment, bg_low),
+        _vim_hi("TabLine", fg_text, bg_low),
+        _vim_hi("TabLineFill", fg_comment, bg_low),
+        _vim_hi("TabLineSel", fg_heading, bg_canvas; gui="bold", cterm="bold"),
+        _vim_hi("Title", fg_heading, "NONE"; gui="bold", cterm="bold"),
+        _vim_hi("VertSplit", bg_low, bg_low),
+        _vim_hi("WinSeparator", bg_low, bg_low),
+        _vim_hi("Visual", "NONE", bg_visual),
+        _vim_hi("VisualNOS", "NONE", bg_visual),
+        _vim_hi("WarningMsg", acc["orange"], "NONE"),
+        _vim_hi("WildMenu", fg_heading, bg_high; gui="bold", cterm="bold"),
+        _vim_hi("WinBar", fg_heading, bg_canvas),
+        _vim_hi("WinBarNC", fg_comment, bg_canvas),
+    ]
+
+    syntax_lines = [
+        _vim_hi("Comment", fg_comment),
+        _vim_hi("Constant", acc["orange"]),
+        _vim_hi("String", acc["green"]),
+        _vim_hi("Character", acc["green"]),
+        _vim_hi("Identifier", fg_text),
+        _vim_hi("Function", acc["blue"]),
+        _vim_hi("Statement", acc["purple"]),
+        _vim_hi("Operator", acc["cyan"]),
+        _vim_hi("PreProc", acc["red"]),
+        _vim_hi("Type", acc["yellow"]),
+        _vim_hi("Special", acc["red"]),
+        _vim_hi("Delimiter", fg_text),
+        _vim_hi("Underlined", acc["blue"]; gui="underline", cterm="underline"),
+        _vim_hi("Ignore", fg_comment),
+        _vim_hi("Error", acc["red"], bg_canvas),
+        _vim_hi("Todo", acc["yellow"], bg_canvas; gui="bold", cterm="bold"),
+    ]
+
+    term_colors = [
+        p.black, p.red, p.green, p.yellow, p.blue, p.magenta, p.cyan, p.white,
+        p.bright_black, p.bright_red, p.bright_green, p.bright_yellow,
+        p.bright_blue, p.bright_magenta, p.bright_cyan, p.bright_white,
+    ]
+    term_vim_list = join(["'#" * c * "'" for c in term_colors], ", ")
+    term_nvim_lines = join(["  let g:terminal_color_$(i - 1) = '#$(term_colors[i])'" for i in 1:16], "\n")
+
+    nvim_diag_lines = [
+        _vim_hi("DiagnosticError", acc["red"]),
+        _vim_hi("DiagnosticWarn", acc["orange"]),
+        _vim_hi("DiagnosticInfo", acc["blue"]),
+        _vim_hi("DiagnosticHint", acc["cyan"]),
+        _vim_hi("DiagnosticOk", acc["green"]),
+        _vim_hi("DiagnosticUnderlineError", "NONE"; gui="undercurl", cterm="underline", guisp=acc["red"]),
+        _vim_hi("DiagnosticUnderlineWarn", "NONE"; gui="undercurl", cterm="underline", guisp=acc["orange"]),
+        _vim_hi("DiagnosticUnderlineInfo", "NONE"; gui="undercurl", cterm="underline", guisp=acc["blue"]),
+        _vim_hi("DiagnosticUnderlineHint", "NONE"; gui="undercurl", cterm="underline", guisp=acc["cyan"]),
+        _vim_hi("DiagnosticUnderlineOk", "NONE"; gui="undercurl", cterm="underline", guisp=acc["green"]),
+    ]
+
+    fg16_heading = is_dark ? "15" : "8"
+    fg16_comment = "8"
+    bg16_chrome = is_dark ? "0" : "7"
+    fg16_sel = is_dark ? "0" : "0"
+    bg16_sel = is_dark ? "7" : "3"
+
+    content = """\" Penumbra v2 -- Vim / Neovim color scheme
+\" Theme: $slug (Mode: $mode, Tier: $tier)
+\" Opponent Scheme: N = 7 (Strict Upright Typography)
 \" Generated deterministically by Penumbra v2 pipeline.
+
+set background=$bg_setting
 
 hi clear
 if exists("syntax_on")
   syntax reset
 endif
 
-let g:colors_name = "$theme_label"
+let g:colors_name = "$slug"
 
-" Canvas & Basic Highlighting
-hi Normal       guifg=#$fg_text     guibg=#$bg_canvas   gui=NONE
-hi NonText      guifg=#$bg_elevated guibg=#$bg_canvas   gui=NONE
-hi Cursor       guifg=#$bg_canvas   guibg=#$canvas_opp  gui=NONE
-hi CursorLine   guibg=#$bg_elevated gui=NONE
-hi LineNr       guifg=#$fg_comment  guibg=#$bg_canvas   gui=NONE
-hi CursorLineNr guifg=#$fg_heading  guibg=#$bg_canvas   gui=NONE
-hi StatusLine   guifg=#$fg_heading  guibg=#$bg_recessed gui=NONE
-hi StatusLineNC guifg=#$fg_comment  guibg=#$bg_recessed gui=NONE
-hi VertSplit    guifg=#$bg_recessed guibg=#$bg_recessed gui=NONE
-hi Visual       guibg=#$bg_elevated gui=NONE
+" ---------------------------------------------------------------------------
+" Highlight Group Links
+" ---------------------------------------------------------------------------
+hi! link Number           Constant
+hi! link Boolean          Constant
+hi! link Float            Constant
+hi! link Conditional      Statement
+hi! link Repeat           Statement
+hi! link Label            Statement
+hi! link Keyword          Statement
+hi! link Exception        Statement
+hi! link Include          PreProc
+hi! link Define           PreProc
+hi! link Macro            PreProc
+hi! link PreCondit        PreProc
+hi! link StorageClass     Type
+hi! link Structure        Type
+hi! link Typedef          Type
+hi! link SpecialChar      Special
+hi! link Tag              Special
+hi! link Debug            Special
+hi! link SpecialComment   Comment
+hi! link CurSearch        IncSearch
+hi! link lCursor          Cursor
+hi! link PopupSelected    PmenuSel
+hi! link StatusLineTerm   StatusLine
+hi! link StatusLineTermNC StatusLineNC
+hi! link Whitespace       NonText
+hi! link Added            DiffAdd
+hi! link Changed          DiffChange
+hi! link Removed          DiffDelete
 
-" Syntax Equivalences (Strict Upright Roman)
-hi Comment      guifg=#$fg_comment  gui=NONE
-hi Keyword      guifg=#$(acc["purple"]) gui=NONE
-hi Statement    guifg=#$(acc["purple"]) gui=NONE
-hi Type         guifg=#$(acc["yellow"]) gui=NONE
-hi Function     guifg=#$(acc["blue"])   gui=NONE
-hi Identifier   guifg=#$fg_text     gui=NONE
-hi Operator     guifg=#$(acc["cyan"])   gui=NONE
-hi String       guifg=#$(acc["green"])  gui=NONE
-hi Constant     guifg=#$(acc["orange"]) gui=NONE
-hi Number       guifg=#$(acc["orange"]) gui=NONE
-hi Boolean      guifg=#$(acc["orange"]) gui=NONE
-hi PreProc      guifg=#$(acc["red"])    gui=NONE
-hi Special      guifg=#$(acc["red"])    gui=NONE
-hi Error        guifg=#$(acc["red"])    guibg=#$bg_canvas gui=NONE
-hi Todo         guifg=#$(acc["yellow"]) guibg=#$bg_canvas gui=NONE
+" ---------------------------------------------------------------------------
+" UI & Editor Canvas (GUI / termguicolors / xterm-256color)
+" ---------------------------------------------------------------------------
+$(join(ui_lines, "\n"))
+
+" ---------------------------------------------------------------------------
+" Syntax Groups (Strict Upright Roman)
+" ---------------------------------------------------------------------------
+$(join(syntax_lines, "\n"))
+
+" ---------------------------------------------------------------------------
+" 16-Color / 8-Color Terminal Fallback (assumes Penumbra terminal palette)
+" ---------------------------------------------------------------------------
+if !has('gui_running') && !(has('termguicolors') && &termguicolors) && &t_Co < 256
+  hi Normal       ctermfg=NONE          ctermbg=NONE         cterm=NONE
+  hi Terminal     ctermfg=NONE          ctermbg=NONE         cterm=NONE
+  hi ColorColumn  ctermfg=NONE          ctermbg=$bg16_chrome cterm=NONE
+  hi CursorLine   ctermfg=NONE          ctermbg=$bg16_chrome cterm=NONE
+  hi CursorLineNr ctermfg=$fg16_heading ctermbg=$bg16_chrome cterm=NONE
+  hi LineNr       ctermfg=$fg16_comment ctermbg=NONE         cterm=NONE
+  hi NonText      ctermfg=$fg16_comment ctermbg=NONE         cterm=NONE
+  hi StatusLine   ctermfg=$fg16_heading ctermbg=$bg16_chrome cterm=NONE
+  hi StatusLineNC ctermfg=$fg16_comment ctermbg=$bg16_chrome cterm=NONE
+  hi TabLine      ctermfg=NONE          ctermbg=$bg16_chrome cterm=NONE
+  hi TabLineFill  ctermfg=$fg16_comment ctermbg=$bg16_chrome cterm=NONE
+  hi TabLineSel   ctermfg=$fg16_heading ctermbg=NONE         cterm=bold
+  hi Pmenu        ctermfg=NONE          ctermbg=$bg16_chrome cterm=NONE
+  hi PmenuSbar    ctermfg=NONE          ctermbg=$bg16_chrome cterm=NONE
+  hi PmenuSel     ctermfg=$fg16_sel     ctermbg=$bg16_sel    cterm=bold
+  hi PmenuThumb   ctermfg=NONE          ctermbg=$fg16_comment cterm=NONE
+  hi VertSplit    ctermfg=$bg16_chrome  ctermbg=$bg16_chrome cterm=NONE
+  hi Visual       ctermfg=NONE          ctermbg=NONE         cterm=reverse
+  hi VisualNOS    ctermfg=NONE          ctermbg=NONE         cterm=reverse
+  hi Search       ctermfg=0             ctermbg=3            cterm=NONE
+  hi IncSearch    ctermfg=0             ctermbg=3            cterm=bold
+  hi MatchParen   ctermfg=$fg16_heading ctermbg=$bg16_chrome cterm=bold
+  hi DiffAdd      ctermfg=2             ctermbg=NONE         cterm=NONE
+  hi DiffChange   ctermfg=4             ctermbg=NONE         cterm=NONE
+  hi DiffDelete   ctermfg=1             ctermbg=NONE         cterm=NONE
+  hi DiffText     ctermfg=15            ctermbg=4            cterm=bold
+  hi Directory    ctermfg=4             ctermbg=NONE         cterm=NONE
+  hi ErrorMsg     ctermfg=1             ctermbg=NONE         cterm=NONE
+  hi WarningMsg   ctermfg=3             ctermbg=NONE         cterm=NONE
+  hi ModeMsg      ctermfg=4             ctermbg=NONE         cterm=NONE
+  hi MoreMsg      ctermfg=4             ctermbg=NONE         cterm=NONE
+  hi Question     ctermfg=6             ctermbg=NONE         cterm=NONE
+  hi Title        ctermfg=$fg16_heading ctermbg=NONE         cterm=bold
+  hi WildMenu     ctermfg=$fg16_sel     ctermbg=$bg16_sel    cterm=bold
+  hi Comment      ctermfg=$fg16_comment ctermbg=NONE         cterm=NONE
+  hi Constant     ctermfg=3             ctermbg=NONE         cterm=NONE
+  hi String       ctermfg=2             ctermbg=NONE         cterm=NONE
+  hi Character    ctermfg=2             ctermbg=NONE         cterm=NONE
+  hi Identifier   ctermfg=NONE          ctermbg=NONE         cterm=NONE
+  hi Function     ctermfg=4             ctermbg=NONE         cterm=NONE
+  hi Statement    ctermfg=5             ctermbg=NONE         cterm=NONE
+  hi Operator     ctermfg=6             ctermbg=NONE         cterm=NONE
+  hi PreProc      ctermfg=1             ctermbg=NONE         cterm=NONE
+  hi Type         ctermfg=3             ctermbg=NONE         cterm=NONE
+  hi Special      ctermfg=1             ctermbg=NONE         cterm=NONE
+  hi Delimiter    ctermfg=NONE          ctermbg=NONE         cterm=NONE
+  hi Underlined   ctermfg=4             ctermbg=NONE         cterm=underline
+  hi Error        ctermfg=1             ctermbg=NONE         cterm=NONE
+  hi Todo         ctermfg=3             ctermbg=NONE         cterm=bold
+endif
+
+" ---------------------------------------------------------------------------
+" Terminal Colors & Neovim Diagnostics / Treesitter Links
+" ---------------------------------------------------------------------------
+if has('nvim')
+$term_nvim_lines
+$(join(["  " * l for l in nvim_diag_lines], "\n"))
+  hi! link @comment             Comment
+  hi! link @constant            Constant
+  hi! link @constant.builtin    Constant
+  hi! link @number              Number
+  hi! link @boolean             Boolean
+  hi! link @string              String
+  hi! link @string.regexp       String
+  hi! link @character           Character
+  hi! link @variable            Identifier
+  hi! link @variable.parameter  Identifier
+  hi! link @variable.member     Identifier
+  hi! link @variable.builtin    Special
+  hi! link @property            Identifier
+  hi! link @function            Function
+  hi! link @function.builtin    Function
+  hi! link @function.method     Function
+  hi! link @function.macro      Macro
+  hi! link @constructor         Type
+  hi! link @type                Type
+  hi! link @type.builtin        Type
+  hi! link @attribute           PreProc
+  hi! link @keyword             Keyword
+  hi! link @keyword.operator    Operator
+  hi! link @keyword.directive   PreProc
+  hi! link @operator            Operator
+  hi! link @punctuation         Delimiter
+  hi! link @label               Special
+  hi! link @markup.heading      Title
+  hi! link @markup.raw          String
+  hi! link @markup.link         Underlined
+elseif (has('termguicolors') && &termguicolors) || has('gui_running')
+  let g:terminal_ansi_colors = [$term_vim_list]
+endif
 """
 
-    if dry_run
-        println("  [DRY RUN] Vim theme ($theme_label) target: $target_path ($(sizeof(content)) bytes)")
-    else
-        mkpath(dirname(target_path))
-        write(target_path, content)
-        println("  [WRITTEN] $target_path")
-    end
+    _write_port(target_path, content, "Vim theme ($slug)"; dry_run=dry_run)
 end
 
 # =============================================================================
