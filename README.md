@@ -34,7 +34,7 @@ Resolving fine character shapes and tracking smoothly along a line of text rely 
 
 ### 4. Optimal Hue Differentiability
 
-By using the [Revised CAM16-UCS](https://doi.org/10.1002/col.22792) colour appearance model together with its [Helmholtz–Kohlrausch extension](https://doi.org/10.1002/col.22793), Penumbra achieves equal perceptual hue steps and equal modelled brightness across all accent colours, adapted separately for dark and light backgrounds. Saturated colours appear brighter to the human eye than a neutral grey of the same physical luminance (the Helmholtz–Kohlrausch effect); compensating for this effect ensures that none of the accent colours stand out from or recede into the page more than others.
+By using the [Revised CAM16-UCS](https://doi.org/10.1002/col.22792) colour appearance model together with its [Helmholtz–Kohlrausch extension](https://doi.org/10.1002/col.22793), Penumbra achieves equal perceptual hue steps and equal modelled brightness across all accent colours, adapted separately for dark and light backgrounds. Saturated colours appear brighter to the human eye than a neutral grey of the same physical luminance (the Helmholtz–Kohlrausch effect). Compensating for this effect ensures that none of the accent colours stand out from or recede into the page more than others.
 
 ### 5. Perceptually Anchored Hues
 
@@ -93,26 +93,26 @@ The recommended font is `Fira Code`.
 #### For a dark theme
 
 * **Sun+** “white”, text in highlighted sections, emphasized borders
-* **Sun** selections, light borders, strongly emphasized content
+* **Sun** cursor, text selections (with transparency), light borders, strongly emphasized content
 * **Sun-** optional
 * **Sky+** emphasized content and emphasized UI text
 * **Sky** foreground, code, main content colour, text both in editors and UI elements
-* **Sky-** comments, de-emphasized content
-* **Shade+** foreground UI elements, sidebars, rulers, indentation guides and similar
+* **Sky-** comments, de-emphasized content, subtle borders (with transparency)
+* **Shade+** low-contrast UI chrome (sidebars, status bars, inactive tabs), rulers, indentation guides and similar
 * **Shade** main background colour
-* **Shade-** “black”, active/focused background elements, selections, recessed UI elements
+* **Shade-** “black”, active/focused background elements, UI list selections, recessed UI elements
 
 #### For a light theme
 
 * **Shade-** “black”, text in highlighted sections, emphasized borders
-* **Shade** selections, dark borders, strongly emphasized content
+* **Shade** cursor, text selections (with transparency), dark borders, strongly emphasized content
 * **Shade+** optional
 * **Sky-** emphasized content and emphasized UI text
 * **Sky** foreground, code, main content colour, text both in editors and UI elements
-* **Sky+** comments, de-emphasized content
-* **Sun-** foreground UI elements, sidebars, rulers, indentation guides and similar
+* **Sky+** comments, de-emphasized content, subtle borders (with transparency)
+* **Sun-** low-contrast UI chrome (sidebars, status bars, inactive tabs), rulers, indentation guides and similar
 * **Sun** main background colour
-* **Sun+** “white”, active/focused background elements, selections, elevated UI elements
+* **Sun+** “white”, active/focused background elements, UI list selections, elevated UI elements
 
 When additional in-between shades are desired, it’s recommended to use transparency to blend other appropriate base colours with the background colour.
 
