@@ -1,0 +1,20 @@
+GIMP Palette
+Name: Penumbra Light
+Columns: 3
+#
+255 246 233	sun+
+239 232 221	sun
+223 217 208	sun-
+180 177 173	sky+
+139 139 139	sky
+ 94  96  99	sky-
+ 56  58  61	shade+
+ 44  46  49	shade
+ 32  34  37	shade-
+180  99 127	red
+179 117  74	orange
+148 138  44	yellow
+ 80 144 100	green
+  0 137 148	cyan
+ 83 125 178	blue
+137 114 167	purple

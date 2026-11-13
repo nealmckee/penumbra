@@ -1,0 +1,38 @@
+# Penumbra v2 -- WezTerm Color Scheme
+# Theme: penumbra_dark++
+# Mode: dark, Tier: contrast_plus_plus
+
+[metadata]
+name = "Penumbra Dark++"
+author = "Neal McKee"
+
+[colors]
+foreground = "#8b8b8b"
+background = "#151619"
+cursor_bg = "#efe8dd"
+cursor_border = "#efe8dd"
+cursor_fg = "#151619"
+selection_bg = "#202225"
+selection_fg = "#8b8b8b"
+
+ansi = [
+  "#0a0b0d",
+  "#b7695f",
+  "#599159",
+  "#a38334",
+  "#5e7aaf",
+  "#986ba0",
+  "#008892",
+  "#b4b1ad",
+]
+
+brights = [
+  "#5e6063",
+  "#b7695f",
+  "#599159",
+  "#a38334",
+  "#5e7aaf",
+  "#986ba0",
+  "#008892",
+  "#efe8dd",
+]

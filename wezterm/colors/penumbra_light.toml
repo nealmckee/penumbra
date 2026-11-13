@@ -1,0 +1,38 @@
+# Penumbra v2 -- WezTerm Color Scheme
+# Theme: penumbra_light
+# Mode: light, Tier: balanced
+
+[metadata]
+name = "Penumbra Light"
+author = "Neal McKee"
+
+[colors]
+foreground = "#8b8b8b"
+background = "#efe8dd"
+cursor_bg = "#2c2e31"
+cursor_border = "#2c2e31"
+cursor_fg = "#efe8dd"
+selection_bg = "#dfd9d0"
+selection_fg = "#8b8b8b"
+
+ansi = [
+  "#202225",
+  "#b86960",
+  "#599159",
+  "#a48334",
+  "#5f7bb0",
+  "#996ca1",
+  "#008993",
+  "#fff6e9",
+]
+
+brights = [
+  "#2c2e31",
+  "#b86960",
+  "#599159",
+  "#a48334",
+  "#5f7bb0",
+  "#996ca1",
+  "#008993",
+  "#fff6e9",
+]

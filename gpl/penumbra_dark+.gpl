@@ -1,0 +1,20 @@
+GIMP Palette
+Name: Penumbra Dark Contrast+
+Columns: 3
+#
+255 246 233	sun+
+239 232 221	sun
+223 217 208	sun-
+180 177 173	sky+
+139 139 139	sky
+ 94  96  99	sky-
+ 44  46  49	shade+
+ 32  34  37	shade
+ 21  22  25	shade-
+178  99 126	red
+178 116  74	orange
+148 138  44	yellow
+ 80 143 100	green
+  0 136 146	cyan
+ 82 124 176	blue
+136 113 166	purple

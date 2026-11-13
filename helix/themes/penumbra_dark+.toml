@@ -1,0 +1,96 @@
+# Penumbra v2 -- Helix Editor Theme
+# Theme: penumbra_dark+
+# Mode: dark, Tier: contrast_plus
+# Opponent Scheme: N = 7 (Strict Upright Typography)
+
+"attribute" = "yellow"
+"type" = "yellow"
+"type.builtin" = "yellow"
+"type.parameter" = "yellow"
+"constructor" = "yellow"
+
+"constant" = "orange"
+"constant.numeric" = "orange"
+"constant.builtin.boolean" = "orange"
+"constant.character" = "orange"
+"constant.character.escape" = "orange"
+
+"string" = "green"
+"string.regexp" = "green"
+"string.special" = "green"
+
+"comment" = { fg = "sky_minus" }
+
+"variable" = "sky"
+"variable.builtin" = "red"
+"variable.parameter" = "sky"
+"variable.other.member" = "sky"
+
+"label" = "red"
+"special" = "red"
+
+"function" = "blue"
+"function.builtin" = "blue"
+"function.method" = "blue"
+"function.macro" = "red"
+
+"operator" = "cyan"
+
+"keyword" = "purple"
+"keyword.control" = "purple"
+"keyword.operator" = "cyan"
+"keyword.directive" = "red"
+
+# Markup / Markdown (Semantic styles for doc markup only)
+"markup.heading" = { fg = "blue", modifiers = ["bold"] }
+"markup.list" = "yellow"
+"markup.bold" = { modifiers = ["bold"] }
+"markup.italic" = { modifiers = ["italic"] }
+"markup.link.url" = { fg = "cyan", underline = { style = "line" } }
+"markup.link.text" = "purple"
+"markup.raw" = "green"
+
+# UI Canvas & Hierarchy
+"ui.background" = { bg = "bg_canvas" }
+"ui.background.separator" = { fg = "bg_recessed" }
+"ui.cursor" = { fg = "bg_canvas", bg = "cursor_color" }
+"ui.cursor.match" = { bg = "bg_elevated" }
+"ui.cursor.primary" = { fg = "bg_canvas", bg = "cursor_color" }
+"ui.selection" = { bg = "bg_elevated" }
+"ui.selection.primary" = { bg = "bg_elevated" }
+"ui.linenr" = { fg = "sky_minus" }
+"ui.linenr.selected" = { fg = "sky_plus", bg = "bg_elevated" }
+"ui.statusline" = { fg = "sky", bg = "bg_recessed" }
+"ui.statusline.inactive" = { fg = "sky_minus", bg = "bg_recessed" }
+"ui.popup" = { bg = "bg_recessed", fg = "sky" }
+"ui.window" = { fg = "bg_recessed" }
+"ui.help" = { bg = "bg_recessed", fg = "sky" }
+"ui.text" = "sky"
+"ui.text.focus" = "sky_plus"
+
+# Diagnostics & Alerts
+"warning" = "orange"
+"error" = "red"
+"info" = "blue"
+"hint" = "cyan"
+"diagnostic" = { underline = { style = "line" } }
+"diagnostic.warning" = { underline = { color = "orange", style = "curl" } }
+"diagnostic.error" = { underline = { color = "red", style = "curl" } }
+"diagnostic.info" = { underline = { color = "blue", style = "curl" } }
+"diagnostic.hint" = { underline = { color = "cyan", style = "curl" } }
+
+[palette]
+bg_canvas = "#202225"
+bg_recessed = "#151619"
+bg_elevated = "#2C2E31"
+cursor_color = "#EFE8DD"
+sky_minus = "#5E6063"
+sky = "#8B8B8B"
+sky_plus = "#B4B1AD"
+red = "#B2637E"
+orange = "#B2744A"
+yellow = "#948A2C"
+green = "#508F64"
+cyan = "#008892"
+blue = "#527CB0"
+purple = "#8871A6"

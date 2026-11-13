@@ -1,32 +1,33 @@
-#=
-execute
-] add OhMyREPL
-] add Crayons
-in your REPL, then copy the code below into your startup.jl file at ~\.julia\config\
-=#
+# SPDX-License-Identifier: PolyForm-Noncommercial-1.0.0
+# Copyright (c) 2021-2026 Neal McKee. All rights reserved.
+#
+# To install in Julia REPL:
+# ] add OhMyREPL Crayons
+# Then add to ~/.julia/config/startup.jl:
 
 try
     @eval using OhMyREPL
+    @eval using Crayons
+
+    import OhMyREPL: Passes.SyntaxHighlighter
+
+    # Penumbra Dark++ (CAM16-UCS Opponent Scheme, N = 7)
+    penumbra = SyntaxHighlighter.ColorScheme()
+    SyntaxHighlighter.symbol!(penumbra, crayon"#B2637E")
+    SyntaxHighlighter.comment!(penumbra, crayon"#5E6063")
+    SyntaxHighlighter.string!(penumbra, crayon"#508F64")
+    SyntaxHighlighter.call!(penumbra, crayon"#527CB0")
+    SyntaxHighlighter.op!(penumbra, crayon"#008892")
+    SyntaxHighlighter.keyword!(penumbra, crayon"#8871A6")
+    SyntaxHighlighter.function_def!(penumbra, crayon"#527CB0")
+    SyntaxHighlighter.error!(penumbra, crayon"#B2637E")
+    SyntaxHighlighter.argdef!(penumbra, crayon"#948A2C")
+    SyntaxHighlighter.macro!(penumbra, crayon"#B2637E")
+    SyntaxHighlighter.number!(penumbra, crayon"#B2744A")
+    SyntaxHighlighter.text!(penumbra, crayon"#8B8B8B")
+
+    SyntaxHighlighter.add!("Penumbra Dark++", penumbra)
+    colorscheme!("Penumbra Dark++")
 catch e
-    @warn "error while importing OhMyREPL" e
+    @warn "Error configuring OhMyREPL Penumbra Dark++ scheme" e
 end
-
-import OhMyREPL: Passes.SyntaxHighlighter
-using Crayons
-
-penumbra_darkest = SyntaxHighlighter.ColorScheme()
-SyntaxHighlighter.symbol!(penumbra_darkest, crayon"#1AC2E1")
-SyntaxHighlighter.comment!(penumbra_darkest, crayon"#636363")
-SyntaxHighlighter.string!(penumbra_darkest, crayon"#61C68A")
-SyntaxHighlighter.call!(penumbra_darkest, crayon"#97A6FF")
-SyntaxHighlighter.op!(penumbra_darkest, crayon"#F48E74")
-SyntaxHighlighter.keyword!(penumbra_darkest, crayon"#E18DCE")
-SyntaxHighlighter.function_def!(penumbra_darkest, crayon"#97A6FF")
-SyntaxHighlighter.error!(penumbra_darkest, crayon"#F48E74")
-SyntaxHighlighter.argdef!(penumbra_darkest, crayon"#1AC2E1")
-SyntaxHighlighter.macro!(penumbra_darkest, crayon"#97A6FF")
-SyntaxHighlighter.number!(penumbra_darkest, crayon"#C7AD40")
-SyntaxHighlighter.text!(penumbra_darkest, crayon"#AEAEAE")
-SyntaxHighlighter.add!("Penumbra Dark Contrast+", penumbra_darkest)
-
-colorscheme!("Penumbra Dark Contrast+")

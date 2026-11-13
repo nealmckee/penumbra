@@ -1,0 +1,29 @@
+# Penumbra v2 -- Warp Terminal Theme
+# Theme: penumbra_dark+
+# Mode: dark, Tier: contrast_plus
+
+name: "Penumbra Dark+"
+accent: "#527cb0"
+cursor: "#efe8dd"
+background: "#202225"
+foreground: "#8b8b8b"
+details: darker
+terminal_colors:
+  normal:
+    black: "#151619"
+    red: "#b7695f"
+    green: "#599159"
+    yellow: "#a38334"
+    blue: "#5e7aaf"
+    magenta: "#986ba0"
+    cyan: "#008892"
+    white: "#b4b1ad"
+  bright:
+    black: "#5e6063"
+    red: "#b7695f"
+    green: "#599159"
+    yellow: "#a38334"
+    blue: "#5e7aaf"
+    magenta: "#986ba0"
+    cyan: "#008892"
+    white: "#efe8dd"
