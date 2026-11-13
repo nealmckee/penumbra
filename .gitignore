@@ -1,2 +1,12 @@
 .vscode
 .DS_Store
+
+# Archives & notebooks
+*.zip
+*.ipynb
+
+# Reference literature PDFs
+docs/*.pdf
+
+# Scratch & inspection data
+data/
