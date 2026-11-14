@@ -21,6 +21,7 @@ Deterministic generator for auxiliary editor, terminal, and AI CLI theme ports:
 14. Codex Desktop App: `codex/penumbra_*.txt`
 15. Claude Code CLI: `claude-code/penumbra_*.json`
 16. Base16 (tinted-theming): `base16/penumbra_*.yaml`
+17. Zellij: `zellij/themes/penumbra_*.kdl`
 
 Generates clean, verified configurations based on the solved v2 base and accent palettes.
 """
@@ -1488,6 +1489,130 @@ palette:
 end
 
 # =============================================================================
+# 17. Zellij (KDL Component Theme)
+# =============================================================================
+
+struct KdlComponentStyle
+    name::String
+    base::String
+    background::String
+    emphases::Union{Nothing, NTuple{4,String}}
+end
+
+KdlComponentStyle(name::String, base::String, background::String) =
+    KdlComponentStyle(name, base, background, nothing)
+
+function _hex_to_rgb_space(hex::AbstractString)
+    r, g, b = _hex_to_rgb255(hex)
+    return "$r $g $b"
+end
+
+function _write_kdl_component(io::IO, c::KdlComponentStyle, default_emphases::NTuple{4,String})
+    emphases = something(c.emphases, default_emphases)
+    println(io, "        ", c.name, " {")
+    println(io, "            base ", _hex_to_rgb_space(c.base))
+    println(io, "            background ", _hex_to_rgb_space(c.background))
+    for (i, e) in enumerate(emphases)
+        println(io, "            emphasis_", i - 1, " ", e)
+    end
+    println(io, "        }")
+end
+
+function generate_zellij_theme(mode::Symbol, tier::Symbol; target_path::String, dry_run::Bool=true)
+    is_dark = mode == :dark
+    base = BASE_TONES[tier]
+    acc = ACCENTS[mode][tier][8]
+    p = get_terminal_ansi_palette(mode, tier)
+    slug = _theme_slug(mode, tier)
+    name = _display_name(mode, tier)
+
+    # Penumbra's three surface planes, matching the VSCode/Vim UI mapping:
+    # chrome (inactive tabs/status bar) -> canvas (main background) -> active (selections/focus)
+    bg_chrome = is_dark ? base["shade+"] : base["sun-"]
+    bg_canvas = is_dark ? base["shade"] : base["sun"]
+    bg_active = is_dark ? base["shade-"] : base["sun+"]
+
+    fg_text = base["sky"]
+    fg_muted = is_dark ? base["sky-"] : base["sky+"]
+    fg_heading = is_dark ? base["sky+"] : base["sky-"]
+    fg_inverse = is_dark ? base["sun+"] : base["shade-"]
+
+    # Zellij has four emphasis slots. Taking every other accent from N = 8 keeps
+    # them evenly spaced (90 degrees apart), unlike the 6- and 7-colour palettes.
+    e_names = ("orange", "green", "blue", "magenta")
+    emphases = ntuple(i -> _hex_to_rgb_space(acc[e_names[i]]), 4)
+
+    # Zellij paints the status-bar keygroup separator as
+    # `text_unselected.emphasis_0` (orange) against `ribbon_selected.base`, so
+    # that base doubles as a *background* and must be dark. Follow the bundled
+    # themes' ribbon convention instead: dark ink on a light fill, with dark
+    # emphases for the shortcut characters (a light base put orange on
+    # near-white, 1.8:1). Light mode uses its canonical highlighted surface.
+    ribbon_fill = is_dark ? base["sky+"] : base["sun+"]
+    ribbon_selected = KdlComponentStyle(
+        "ribbon_selected", base["shade-"], ribbon_fill,
+        ntuple(_ -> _hex_to_rgb_space(base["shade"]), 4),
+    )
+
+    components = KdlComponentStyle[
+        KdlComponentStyle("text_unselected", fg_text, bg_canvas),
+        KdlComponentStyle("text_selected", fg_heading, bg_active),
+        KdlComponentStyle("ribbon_unselected", fg_text, bg_chrome),
+        KdlComponentStyle("ribbon_hover", fg_heading, bg_canvas),
+        ribbon_selected,
+        KdlComponentStyle("table_title", fg_heading, bg_canvas),
+        KdlComponentStyle("table_cell_unselected", fg_text, bg_canvas),
+        KdlComponentStyle("table_cell_selected", fg_heading, bg_active),
+        KdlComponentStyle("list_unselected", fg_text, bg_canvas),
+        KdlComponentStyle("list_selected", fg_heading, bg_active),
+        KdlComponentStyle("frame_unselected", fg_muted, bg_canvas),
+        KdlComponentStyle("frame_selected", acc["blue"], bg_canvas),
+        KdlComponentStyle("frame_highlight", acc["orange"], bg_canvas),
+        KdlComponentStyle("exit_code_success", acc["green"], bg_canvas),
+        KdlComponentStyle("exit_code_error", acc["red"], bg_canvas),
+    ]
+
+    players = [
+        acc["magenta"], acc["blue"], acc["green"], acc["yellow"],
+        acc["purple"], acc["cyan"], acc["orange"], acc["red"],
+        fg_heading, fg_inverse,
+    ]
+
+    ansi = [
+        ("black", p.black), ("red", p.red), ("green", p.green), ("yellow", p.yellow),
+        ("blue", p.blue), ("magenta", p.magenta), ("cyan", p.cyan), ("white", p.white),
+        ("bright_black", p.bright_black), ("bright_red", p.bright_red),
+        ("bright_green", p.bright_green), ("bright_yellow", p.bright_yellow),
+        ("bright_blue", p.bright_blue), ("bright_magenta", p.bright_magenta),
+        ("bright_cyan", p.bright_cyan), ("bright_white", p.bright_white),
+    ]
+
+    io = IOBuffer()
+    println(io, "// Penumbra v2 -- Zellij Theme ($name)")
+    println(io, "// Mode: $mode, Tier: $tier")
+    println(io, "// Opponent Scheme: N = 8\n")
+    println(io, "themes {")
+    println(io, "    $slug {")
+    for c in components
+        _write_kdl_component(io, c, emphases)
+    end
+    println(io, "        multiplayer_user_colors {")
+    for (i, hex) in enumerate(players)
+        println(io, "            player_$i ", _hex_to_rgb_space(hex))
+    end
+    println(io, "        }")
+    println(io, "        // ANSI colours for the Zellij terminal; the host terminal palette applies otherwise.")
+    println(io, "        terminal_colors {")
+    for (color_name, hex) in ansi
+        println(io, "            $color_name ", _hex_to_rgb_space(hex))
+    end
+    println(io, "        }")
+    println(io, "    }")
+    println(io, "}")
+    _write_port(target_path, String(take!(io)), "Zellij theme ($slug)"; dry_run=dry_run)
+end
+
+# =============================================================================
 # Main Entry Point
 # =============================================================================
 
@@ -1515,6 +1640,7 @@ function main(; dry_run::Bool=true)
         ("Codex Desktop", generate_codex_theme, "codex", ".txt"),
         ("Claude Code CLI", generate_claude_code_theme, "claude-code", ".json"),
         ("Base16", generate_base16_theme, "base16", ".yaml"),
+        ("Zellij", generate_zellij_theme, joinpath("zellij", "themes"), ".kdl"),
     ]
 
     tier_configs = [

@@ -1,0 +1,159 @@
+// Penumbra v2 -- Zellij Theme (Penumbra Dark++)
+// Mode: dark, Tier: contrast_plus_plus
+// Opponent Scheme: N = 8
+
+themes {
+    penumbra_dark++ {
+        text_unselected {
+            base 169 169 169
+            background 16 19 23
+            emphasis_0 216 143 76
+            emphasis_1 98 176 108
+            emphasis_2 0 158 219
+            emphasis_3 190 127 196
+        }
+        text_selected {
+            base 194 192 189
+            background 7 8 11
+            emphasis_0 216 143 76
+            emphasis_1 98 176 108
+            emphasis_2 0 158 219
+            emphasis_3 190 127 196
+        }
+        ribbon_unselected {
+            base 169 169 169
+            background 27 30 35
+            emphasis_0 216 143 76
+            emphasis_1 98 176 108
+            emphasis_2 0 158 219
+            emphasis_3 190 127 196
+        }
+        ribbon_hover {
+            base 194 192 189
+            background 16 19 23
+            emphasis_0 216 143 76
+            emphasis_1 98 176 108
+            emphasis_2 0 158 219
+            emphasis_3 190 127 196
+        }
+        ribbon_selected {
+            base 7 8 11
+            background 194 192 189
+            emphasis_0 16 19 23
+            emphasis_1 16 19 23
+            emphasis_2 16 19 23
+            emphasis_3 16 19 23
+        }
+        table_title {
+            base 194 192 189
+            background 16 19 23
+            emphasis_0 216 143 76
+            emphasis_1 98 176 108
+            emphasis_2 0 158 219
+            emphasis_3 190 127 196
+        }
+        table_cell_unselected {
+            base 169 169 169
+            background 16 19 23
+            emphasis_0 216 143 76
+            emphasis_1 98 176 108
+            emphasis_2 0 158 219
+            emphasis_3 190 127 196
+        }
+        table_cell_selected {
+            base 194 192 189
+            background 7 8 11
+            emphasis_0 216 143 76
+            emphasis_1 98 176 108
+            emphasis_2 0 158 219
+            emphasis_3 190 127 196
+        }
+        list_unselected {
+            base 169 169 169
+            background 16 19 23
+            emphasis_0 216 143 76
+            emphasis_1 98 176 108
+            emphasis_2 0 158 219
+            emphasis_3 190 127 196
+        }
+        list_selected {
+            base 194 192 189
+            background 7 8 11
+            emphasis_0 216 143 76
+            emphasis_1 98 176 108
+            emphasis_2 0 158 219
+            emphasis_3 190 127 196
+        }
+        frame_unselected {
+            base 87 91 98
+            background 16 19 23
+            emphasis_0 216 143 76
+            emphasis_1 98 176 108
+            emphasis_2 0 158 219
+            emphasis_3 190 127 196
+        }
+        frame_selected {
+            base 0 158 219
+            background 16 19 23
+            emphasis_0 216 143 76
+            emphasis_1 98 176 108
+            emphasis_2 0 158 219
+            emphasis_3 190 127 196
+        }
+        frame_highlight {
+            base 216 143 76
+            background 16 19 23
+            emphasis_0 216 143 76
+            emphasis_1 98 176 108
+            emphasis_2 0 158 219
+            emphasis_3 190 127 196
+        }
+        exit_code_success {
+            base 98 176 108
+            background 16 19 23
+            emphasis_0 216 143 76
+            emphasis_1 98 176 108
+            emphasis_2 0 158 219
+            emphasis_3 190 127 196
+        }
+        exit_code_error {
+            base 225 119 130
+            background 16 19 23
+            emphasis_0 216 143 76
+            emphasis_1 98 176 108
+            emphasis_2 0 158 219
+            emphasis_3 190 127 196
+        }
+        multiplayer_user_colors {
+            player_1 190 127 196
+            player_2 0 158 219
+            player_3 98 176 108
+            player_4 180 167 36
+            player_5 138 144 212
+            player_6 0 168 164
+            player_7 216 143 76
+            player_8 225 119 130
+            player_9 194 192 189
+            player_10 255 246 233
+        }
+        // ANSI colours for the Zellij terminal; the host terminal palette applies otherwise.
+        terminal_colors {
+            black 7 8 11
+            red 226 112 146
+            green 142 176 42
+            yellow 218 143 62
+            blue 0 155 226
+            magenta 160 136 211
+            cyan 0 170 152
+            white 238 232 221
+            bright_black 87 91 98
+            bright_red 226 112 146
+            bright_green 142 176 42
+            bright_yellow 218 143 62
+            bright_blue 0 155 226
+            bright_magenta 160 136 211
+            bright_cyan 0 170 152
+            bright_white 255 246 233
+        }
+    }
+}

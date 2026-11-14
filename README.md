@@ -78,6 +78,7 @@ All terminal themes default to the equally spaced 6-colour ANSI palette (`penumb
 * **WezTerm** colour scheme files in [`wezterm/colors/`](./wezterm/colors)
 * **Warp** theme files in [`warp/themes/`](./warp/themes)
 * **Windows Terminal** scheme definitions in [`windows-terminal/penumbra.json`](./windows-terminal/penumbra.json)
+* **Zellij** theme files in [`zellij/themes/`](./zellij/themes)
 
 ### Other
 
