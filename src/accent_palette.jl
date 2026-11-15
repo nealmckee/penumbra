@@ -117,32 +117,85 @@ const CAM16_UNIQUE_HUES = (
     ("blue", 237.53, 1.2),
 )
 
+function _align_h0_to_canonical_names(h0_mod::Real, N::Integer, names::Vector{String})
+    step = 360.0 / N
+    best_shift = 0
+    best_err = Inf
+    for m in 0:(N - 1)
+        err = 0.0
+        for (name, h_tgt, e) in CAM16_UNIQUE_HUES
+            k = findfirst(==(name), names)
+            k === nothing && continue
+            hk = mod(h0_mod + (m + k - 1) * step, 360.0)
+            dh = angdiff(hk, h_tgt)
+            err += (dh / e)^2
+        end
+        if err < best_err
+            best_err = err
+            best_shift = m
+        end
+    end
+    return mod(h0_mod + best_shift * step, 360.0)
+end
+
+function _solve_max_chroma_h0(J_hk_target::Real, N::Integer, env::ViewingEnvironment, names::Vector{String}; alpha::Real=1.0)
+    step = 360.0 / N
+    best_h0 = 0.0
+    best_c = -Inf
+    for h in 0.0:0.25:step
+        c = polygon_gamut_chroma(J_hk_target, h, N, env; alpha=alpha)
+        if c > best_c
+            best_c = c
+            best_h0 = h
+        end
+    end
+    # Local refinement around coarse optimum
+    lo = best_h0 - 0.5
+    hi = best_h0 + 0.5
+    phi_g = (sqrt(5.0) - 1.0) / 2.0
+    c1 = hi - phi_g * (hi - lo)
+    c2 = lo + phi_g * (hi - lo)
+    f1 = polygon_gamut_chroma(J_hk_target, mod(c1, step), N, env; alpha=alpha)
+    f2 = polygon_gamut_chroma(J_hk_target, mod(c2, step), N, env; alpha=alpha)
+    for _ in 1:25
+        if f1 < f2
+            lo = c1
+            c1 = c2
+            f1 = f2
+            c2 = lo + phi_g * (hi - lo)
+            f2 = polygon_gamut_chroma(J_hk_target, mod(c2, step), N, env; alpha=alpha)
+        else
+            hi = c2
+            c2 = c1
+            f2 = f1
+            c1 = hi - phi_g * (hi - lo)
+            f1 = polygon_gamut_chroma(J_hk_target, mod(c1, step), N, env; alpha=alpha)
+        end
+    end
+    opt_h0 = mod(0.5 * (lo + hi), step)
+    return _align_h0_to_canonical_names(opt_h0, N, names)
+end
+
 """
     optimize_accent_palette(N::Integer, J_hk_target::Real, env::ViewingEnvironment; alpha::Real=1.0)
 
-Solves the N-color accent palette rotated along the polygonal gamut boundary via analytical
-circular mean alignment across all four CAM16 Unique Hues (Red 20.14°, Yellow 90.00°,
-Green 164.25°, Blue 237.53°), weighted by inverse CAM16 eccentricity squared (1 / e_i^2).
+Solves the N-color accent palette rotated along the polygonal gamut boundary by
+maximizing uniform polygon chroma `C'_N(h0, alpha)` over `h0` and aligning vertices
+to canonical names.
 """
-function optimize_accent_palette(N::Integer, J_hk_target::Real, env::ViewingEnvironment; alpha::Real=1.0)
+function optimize_accent_palette(
+    N::Integer,
+    J_hk_target::Real,
+    env::ViewingEnvironment;
+    alpha::Real=1.0,
+)
     names = get(CANONICAL_ACCENT_NAMES, N) do
         error("Unsupported accent palette size N=$N. Supported sizes: 6, 7, 8")
     end
     step = 360.0 / N
 
     c_inscribed = minimum(max_gamut_chroma(J_hk_target, h, env; alpha=alpha, max_iters=35) for h in 0.0:1.0:359.0)
-
-    sin_sum = 0.0
-    cos_sum = 0.0
-    for (name, h_tgt, e) in CAM16_UNIQUE_HUES
-        k = findfirst(==(name), names)
-        k === nothing && continue
-        phi = deg2rad(h_tgt - (k - 1) * step)
-        w = 1.0 / (e^2)
-        sin_sum += w * sin(phi)
-        cos_sum += w * cos(phi)
-    end
-    best_h0 = mod(rad2deg(atan(sin_sum, cos_sum)), 360.0)
+    best_h0 = _solve_max_chroma_h0(J_hk_target, N, env, names; alpha=alpha)
     c_final = polygon_gamut_chroma(J_hk_target, best_h0, N, env; alpha=alpha)
 
     dhs = Float64[]

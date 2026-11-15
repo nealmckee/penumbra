@@ -3,18 +3,19 @@ Name: Penumbra Dark Contrast++
 Columns: 3
 #
 255 246 233	sun+
-239 232 221	sun
-223 217 208	sun-
-180 177 173	sky+
-139 139 139	sky
- 94  96  99	sky-
- 32  34  37	shade+
- 21  22  25	shade
- 10  11  13	shade-
-178  99 126	red
-178 116  74	orange
-148 138  44	yellow
- 80 143 100	green
-  0 136 146	cyan
- 82 124 176	blue
-136 113 166	purple
+238 232 221	sun
+222 217 210	sun-
+194 192 189	sky+
+169 169 169	sky
+ 87  91  98	sky-
+ 27  30  35	shade+
+ 16  19  23	shade
+  7   8  11	shade-
+225 119 130	red
+216 143  76	orange
+180 167  36	yellow
+ 98 176 108	green
+  0 168 164	cyan
+  0 158 219	blue
+138 144 212	purple
+190 127 196	magenta

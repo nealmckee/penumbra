@@ -1,7 +1,7 @@
 # Penumbra v2 -- Helix Editor Theme
 # Theme: penumbra_dark
 # Mode: dark, Tier: balanced
-# Opponent Scheme: N = 7 (Strict Upright Typography)
+# Opponent Scheme: N = 8 (Strict Upright Typography)
 
 "attribute" = "yellow"
 "type" = "yellow"
@@ -13,21 +13,21 @@
 "constant.numeric" = "orange"
 "constant.builtin.boolean" = "orange"
 "constant.character" = "orange"
-"constant.character.escape" = "orange"
+"constant.character.escape" = "magenta"
 
 "string" = "green"
-"string.regexp" = "green"
+"string.regexp" = "magenta"
 "string.special" = "green"
 
 "comment" = { fg = "sky_minus" }
 
 "variable" = "sky"
-"variable.builtin" = "red"
+"variable.builtin" = "magenta"
 "variable.parameter" = "sky"
 "variable.other.member" = "sky"
 
 "label" = "red"
-"special" = "red"
+"special" = "magenta"
 
 "function" = "blue"
 "function.builtin" = "blue"
@@ -87,10 +87,11 @@ cursor_color = "#EFE8DD"
 sky_minus = "#5E6063"
 sky = "#8B8B8B"
 sky_plus = "#B4B1AD"
-red = "#B2637E"
-orange = "#B2744A"
-yellow = "#948A2C"
-green = "#508F64"
-cyan = "#008892"
-blue = "#527CB0"
-purple = "#8871A6"
+red = "#BA616A"
+orange = "#B3763E"
+yellow = "#948A1D"
+green = "#4F9158"
+cyan = "#008986"
+blue = "#0081B4"
+purple = "#7176AE"
+magenta = "#9C67A1"

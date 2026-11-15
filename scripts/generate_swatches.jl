@@ -27,62 +27,54 @@ function generate_base_swatches(swatches_dir::String, base_tones)
     tones_c1  = Dict(k => lowercase(v) for (k, v) in base_tones[:contrast_plus])
     tones_c2  = Dict(k => lowercase(v) for (k, v) in base_tones[:contrast_plus_plus])
 
-    sun_plus    = tones_bal["sun+"]
-    sun         = tones_bal["sun"]
-    sun_minus   = tones_bal["sun-"]
-    sky_plus    = tones_bal["sky+"]
-    sky         = tones_bal["sky"]
-    sky_minus   = tones_bal["sky-"]
-    shade_minus = tones_bal["shade-"]
-
     # 1. Standardize font family to Fira Sans
     content = replace(content, "font-family:'fira sans'" => "font-family:'Fira Sans', sans-serif")
     content = replace(content, "-inkscape-font-specification:'fira sans'" => "-inkscape-font-specification:'Fira Sans'")
 
-    # 2. Outer background rect209496 -> sky
-    content = replace(content, r"style=\"fill:#[0-9a-fA-F]{6};fill-opacity:1;stroke:none;stroke-width:0.264582;paint-order:stroke fill markers\"\s+id=\"rect209496\"" =>
-                               SubstitutionString("style=\"fill:#$sky;fill-opacity:1;stroke:none;stroke-width:0.264582;paint-order:stroke fill markers\"\n       id=\"rect209496\""))
-
-    # 3. Swap 1px outline: put on sky (rect40235-6), remove from sky- (rect40237-2)
-    # rect40235-6 (sky) gets black outline
+    # Ensure sky (rect40235-6) keeps the 1px black outline and sky- (rect40237-2) does not
     content = replace(content, r"style=\"fill:#[0-9a-fA-F]{6};fill-opacity:1;stroke-width:0.264998;stroke-dasharray:0.264998, 0.264998;paint-order:stroke fill markers\"\s+id=\"rect40235-6\"" =>
-                               SubstitutionString("style=\"fill:#$sky;fill-opacity:1;stroke:#010101;stroke-width:0.264583;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:stroke fill markers\"\n         id=\"rect40235-6\""))
-    # rect40237-2 (sky-) loses black outline
+                               SubstitutionString("style=\"fill:#000000;fill-opacity:1;stroke:#010101;stroke-width:0.264583;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:stroke fill markers\"\n         id=\"rect40235-6\""))
     content = replace(content, r"style=\"fill:#[0-9a-fA-F]{6};fill-opacity:1;stroke:#010101;stroke-width:0.264583;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:stroke fill markers\"\s+id=\"rect40237-2\"" =>
-                               SubstitutionString("style=\"fill:#$sky_minus;fill-opacity:1;stroke-width:0.264998;stroke-dasharray:0.264998, 0.264998;paint-order:stroke fill markers\"\n         id=\"rect40237-2\""))
+                               SubstitutionString("style=\"fill:#000000;fill-opacity:1;stroke-width:0.264998;stroke-dasharray:0.264998, 0.264998;paint-order:stroke fill markers\"\n         id=\"rect40237-2\""))
 
-    # 4. Sun & sky bar fills (shared across all tiers)
-    content = replace(content, r"style=\"fill:#[0-9a-fA-F]{6}(;fill-opacity:1;stroke-width:0.264998;stroke-dasharray:0.264998, 0.264998;paint-order:stroke fill markers\"\s+id=\"rect40227-9\")" =>
-                               SubstitutionString("style=\"fill:#$sun_plus\\1"))
-    content = replace(content, r"style=\"fill:#[0-9a-fA-F]{6}(;fill-opacity:1;stroke-width:0.264998;stroke-dasharray:0.264998, 0.264998;paint-order:stroke fill markers\"\s+id=\"rect40229-3\")" =>
-                               SubstitutionString("style=\"fill:#$sun\\1"))
-    content = replace(content, r"style=\"fill:#[0-9a-fA-F]{6}(;fill-opacity:1;stroke-width:0.264998;stroke-dasharray:0.264998, 0.264998;paint-order:stroke fill markers\"\s+id=\"rect40231-6\")" =>
-                               SubstitutionString("style=\"fill:#$sun_minus\\1"))
-    content = replace(content, r"style=\"fill:#[0-9a-fA-F]{6}(;fill-opacity:1;stroke-width:0.264998;stroke-dasharray:0.264998, 0.264998;paint-order:stroke fill markers\"\s+id=\"rect40233-0\")" =>
-                               SubstitutionString("style=\"fill:#$sky_plus\\1"))
-
-    # 5. Label and title fills -> shade- for high contrast (>5:1) against sky
-    content = replace(content, r"(<tspan[^>]*style=\"[^\"]*fill:)#[0-9a-fA-F]{6}" => SubstitutionString("\\1#$shade_minus"))
-    content = replace(content, r"(<text[^>]*style=\"[^\"]*fill:)#[0-9a-fA-F]{6}" => SubstitutionString("\\1#$shade_minus"))
-
-    # Function to build tier base swatch
     function build_base_tier(tier_tones, title_text)
         tc = content
-        sh_plus = tier_tones["shade+"]
-        sh = tier_tones["shade"]
-        sh_minus = tier_tones["shade-"]
-        # Shade+ (rect40239-6)
-        tc = replace(tc, r"style=\"fill:#[0-9a-fA-F]{6};fill-opacity:1;stroke-width:0.264998;stroke-dasharray:0.264998, 0.264998;paint-order:stroke fill markers\"\s+id=\"rect40239-6\"" =>
-                         SubstitutionString("style=\"fill:#$sh_plus;fill-opacity:1;stroke-width:0.264998;stroke-dasharray:0.264998, 0.264998;paint-order:stroke fill markers\"\n         id=\"rect40239-6\""))
-        # Shade (rect40241-1)
-        tc = replace(tc, r"style=\"fill:#[0-9a-fA-F]{6};fill-opacity:1;stroke-width:0.264998;stroke-dasharray:0.264998, 0.264998;paint-order:stroke fill markers\"\s+id=\"rect40241-1\"" =>
-                         SubstitutionString("style=\"fill:#$sh;fill-opacity:1;stroke-width:0.264998;stroke-dasharray:0.264998, 0.264998;paint-order:stroke fill markers\"\n         id=\"rect40241-1\""))
-        # Shade- (rect133712)
-        tc = replace(tc, r"style=\"fill:#[0-9a-fA-F]{6};fill-opacity:1;stroke-width:0.264998;stroke-dasharray:0.264998, 0.264998;paint-order:stroke fill markers\"\s+id=\"rect133712\"" =>
-                         SubstitutionString("style=\"fill:#$sh_minus;fill-opacity:1;stroke-width:0.264998;stroke-dasharray:0.264998, 0.264998;paint-order:stroke fill markers\"\n         id=\"rect133712\""))
+        sun_plus  = tier_tones["sun+"]
+        sun       = tier_tones["sun"]
+        sun_minus = tier_tones["sun-"]
+        sky_plus  = tier_tones["sky+"]
+        sky       = tier_tones["sky"]
+        sky_minus = tier_tones["sky-"]
+        sh_plus   = tier_tones["shade+"]
+        sh        = tier_tones["shade"]
+        sh_minus  = tier_tones["shade-"]
+
+        # Outer background rect209496 -> tier sky
+        tc = replace(tc, r"style=\"fill:#[0-9a-fA-F]{6}(;fill-opacity:1;stroke:none;stroke-width:0.264582;paint-order:stroke fill markers\"\s+id=\"rect209496\")" =>
+                         SubstitutionString("style=\"fill:#$sky\\1"))
+
+        for (rect_id, hex_val) in (
+            ("rect40227-9", sun_plus),
+            ("rect40229-3", sun),
+            ("rect40231-6", sun_minus),
+            ("rect40233-0", sky_plus),
+            ("rect40235-6", sky),
+            ("rect40237-2", sky_minus),
+            ("rect40239-6", sh_plus),
+            ("rect40241-1", sh),
+            ("rect133712",  sh_minus),
+        )
+            rx = Regex("style=\\\"fill:#[0-9a-fA-F]{6}(;[^\\\"]*\\\"\\s+id=\\\"$rect_id\\\")")
+            tc = replace(tc, rx => SubstitutionString("style=\"fill:#$hex_val\\1"))
+        end
+
+        # Label and title fills -> tier shade- for >5:1 contrast against tier sky
+        tc = replace(tc, r"(<tspan[^>]*style=\"[^\"]*fill:)#[0-9a-fA-F]{6}" => SubstitutionString("\\1#$sh_minus"))
+        tc = replace(tc, r"(<text[^>]*style=\"[^\"]*fill:)#[0-9a-fA-F]{6}" => SubstitutionString("\\1#$sh_minus"))
+
         # Frame border (rect240049) -> stroke: shade
-        tc = replace(tc, r"stroke:#[0-9a-fA-F]{6};stroke-width:0.264583;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:stroke fill markers\"\s+id=\"rect240049\"" =>
-                         SubstitutionString("stroke:#$sh;stroke-width:0.264583;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:stroke fill markers\"\n         id=\"rect240049\""))
+        tc = replace(tc, r"stroke:#[0-9a-fA-F]{6}(;stroke-width:0.264583;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:stroke fill markers\"\s+id=\"rect240049\")" =>
+                         SubstitutionString("stroke:#$sh\\1"))
         # Title text (case-insensitive replace for lowercase heading)
         tc = replace(tc, r"penumbra base [a-z+]+"i => title_text)
         return tc
@@ -148,48 +140,44 @@ function generate_accent_swatches(swatches_dir::String, base_tones, accents)
     tones_c1  = Dict(k => lowercase(v) for (k, v) in base_tones[:contrast_plus])
     tones_c2  = Dict(k => lowercase(v) for (k, v) in base_tones[:contrast_plus_plus])
 
-    sky = tones_bal["sky"]
-    shade_minus = tones_bal["shade-"]
+    sky_bal = tones_bal["sky"]
+    shade_minus_bal = tones_bal["shade-"]
 
-    accs_d = Dict(n => Dict(k => lowercase(v) for (k, v) in accents[:dark][n]) for n in (6, 7, 8))
-    accs_l = Dict(n => Dict(k => lowercase(v) for (k, v) in accents[:light][n]) for n in (6, 7, 8))
+    accs_l = Dict(n => Dict(k => lowercase(v) for (k, v) in accents[:light][:balanced][n]) for n in (6, 7, 8))
 
     # 1. Font family updates
     content_dark = replace(content_dark, "font-family:'fira sans'" => "font-family:'Fira Sans', sans-serif")
     content_dark = replace(content_dark, "-inkscape-font-specification:'fira sans'" => "-inkscape-font-specification:'Fira Sans'")
 
-    # 2. Outer background rect209496 -> sky
-    content_dark = replace(content_dark, r"style=\"fill:#[0-9a-fA-F]{6};fill-opacity:1;stroke:none;stroke-width:0.264582;paint-order:stroke fill markers\"\s+id=\"rect209496\"" =>
-                                         SubstitutionString("style=\"fill:#$sky;fill-opacity:1;stroke:none;stroke-width:0.264582;paint-order:stroke fill markers\"\n       id=\"rect209496\""))
-
-    # 3. Title text fill -> shade-
-    content_dark = replace(content_dark, r"(id=\"text194332\"><tspan[^>]*style=\"fill:)#[0-9a-fA-F]{6}" => SubstitutionString("\\1#$shade_minus"))
-
-    # 4. Canvas labels -> sky
-    content_dark = replace(content_dark, "fill:#aeaeae" => "fill:#$sky")
-
-    # 5. Accent swatches (N = 8, 7, 6)
-    content_dark = _apply_accent_rects(content_dark, DARK_ACCENT_RECTS, accs_d)
-
-    # Function to build dark tier swatch
-    function build_dark_tier(shade_hex, title_text)
+    function build_dark_tier(tier_sym::Symbol, tier_tones, title_text)
         tc = content_dark
+        tier_sky = tier_tones["sky"]
+        tier_shade = tier_tones["shade"]
+        tier_shade_minus = tier_tones["shade-"]
+        accs_d = Dict(n => Dict(k => lowercase(v) for (k, v) in accents[:dark][tier_sym][n]) for n in (6, 7, 8))
+
+        tc = replace(tc, r"style=\"fill:#[0-9a-fA-F]{6}(;fill-opacity:1;stroke:none;stroke-width:0.264582;paint-order:stroke fill markers\"\s+id=\"rect209496\")" =>
+                         SubstitutionString("style=\"fill:#$tier_sky\\1"))
+        tc = replace(tc, r"(<tspan[^>]*style=\"[^\"]*fill:)#[0-9a-fA-F]{6}" => SubstitutionString("\\1#$tier_sky"))
+        tc = replace(tc, r"(<text[^>]*style=\"[^\"]*fill:)#[0-9a-fA-F]{6}" => SubstitutionString("\\1#$tier_sky"))
+        tc = replace(tc, r"(id=\"text194332\"><tspan[^>]*style=\"fill:)#[0-9a-fA-F]{6}" => SubstitutionString("\\1#$tier_shade_minus"))
+        tc = _apply_accent_rects(tc, DARK_ACCENT_RECTS, accs_d)
         tc = replace(tc, r"style=\"fill:#[0-9a-fA-F]{6}(;fill-opacity:1;stroke:none;stroke-width:0.264999;stroke-dasharray:0.264999, 0.264999;paint-order:stroke fill markers\"\s+id=\"rect2032\")" =>
-                         SubstitutionString("style=\"fill:#$shade_hex\\1"))
+                         SubstitutionString("style=\"fill:#$tier_shade\\1"))
         tc = replace(tc, r"penumbra dark [a-z+]+"i => title_text)
         return tc
     end
 
-    c_d_bal = build_dark_tier(tones_bal["shade"], "penumbra dark balanced")
+    c_d_bal = build_dark_tier(:balanced, tones_bal, "penumbra dark balanced")
     write(bal_dark_path, c_d_bal)
     println("  [UPDATED SVG] $bal_dark_path")
 
-    c_d_c1 = build_dark_tier(tones_c1["shade"], "penumbra dark contrast+")
+    c_d_c1 = build_dark_tier(:contrast_plus, tones_c1, "penumbra dark contrast+")
     p_d_c1 = joinpath(swatches_dir, "penumbra_swatch_dark_contrast+.svg")
     write(p_d_c1, c_d_c1)
     println("  [UPDATED SVG] $p_d_c1")
 
-    c_d_c2 = build_dark_tier(tones_c2["shade"], "penumbra dark contrast++")
+    c_d_c2 = build_dark_tier(:contrast_plus_plus, tones_c2, "penumbra dark contrast++")
     p_d_c2 = joinpath(swatches_dir, "penumbra_swatch_dark_contrast++.svg")
     write(p_d_c2, c_d_c2)
     println("  [UPDATED SVG] $p_d_c2")
@@ -202,8 +190,8 @@ function generate_accent_swatches(swatches_dir::String, base_tones, accents)
     content_light = replace(content_light, "-inkscape-font-specification:'fira sans'" => "-inkscape-font-specification:'Fira Sans'")
 
     # Outer bg -> sky
-    content_light = replace(content_light, r"style=\"fill:#[0-9a-fA-F]{6};fill-opacity:1;stroke:none;stroke-width:0.264582;paint-order:stroke fill markers\"\s+id=\"rect209496\"" =>
-                                           SubstitutionString("style=\"fill:#$sky;fill-opacity:1;stroke:none;stroke-width:0.264582;paint-order:stroke fill markers\"\n       id=\"rect209496\""))
+    content_light = replace(content_light, r"style=\"fill:#[0-9a-fA-F]{6}(;fill-opacity:1;stroke:none;stroke-width:0.264582;paint-order:stroke fill markers\"\s+id=\"rect209496\")" =>
+                                           SubstitutionString("style=\"fill:#$sky_bal\\1"))
 
     # Canvas rect170570 -> sun
     sun_hex = tones_bal["sun"]
@@ -211,7 +199,7 @@ function generate_accent_swatches(swatches_dir::String, base_tones, accents)
                                            SubstitutionString("style=\"fill:#$sun_hex\\1"))
 
     # Title text fill -> shade-
-    content_light = replace(content_light, r"(id=\"text194332\"><tspan[^>]*style=\"fill:)#[0-9a-fA-F]{6}" => SubstitutionString("\\1#$shade_minus"))
+    content_light = replace(content_light, r"(id=\"text194332\"><tspan[^>]*style=\"fill:)#[0-9a-fA-F]{6}" => SubstitutionString("\\1#$shade_minus_bal"))
 
     # Light accents (N = 8, 7, 6)
     content_light = _apply_accent_rects(content_light, LIGHT_ACCENT_RECTS, accs_l)

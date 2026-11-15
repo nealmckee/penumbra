@@ -11,10 +11,11 @@ Columns: 3
  56  58  61	shade+
  44  46  49	shade
  32  34  37	shade-
-178  99 126	red
-178 116  74	orange
-148 138  44	yellow
- 80 143 100	green
-  0 136 146	cyan
- 82 124 176	blue
-136 113 166	purple
+186  97 106	red
+179 118  62	orange
+148 138  29	yellow
+ 79 145  88	green
+  0 137 134	cyan
+  0 129 180	blue
+113 118 174	purple
+156 103 161	magenta

@@ -1,0 +1,38 @@
+# Penumbra v2 -- WezTerm Color Scheme
+# Theme: penumbra_light_semantic6
+# Mode: light, Tier: balanced
+
+[metadata]
+name = "Penumbra Light (Semantic 6)"
+author = "Neal McKee"
+
+[colors]
+foreground = "#8b8b8b"
+background = "#efe8dd"
+cursor_bg = "#2c2e31"
+cursor_border = "#2c2e31"
+cursor_fg = "#efe8dd"
+selection_bg = "#dfd9d0"
+selection_fg = "#8b8b8b"
+
+ansi = [
+  "#dfd9d0",
+  "#bb626b",
+  "#509259",
+  "#958a1c",
+  "#0082b5",
+  "#9d68a2",
+  "#008a87",
+  "#2c2e31",
+]
+
+brights = [
+  "#b4b1ad",
+  "#bb626b",
+  "#509259",
+  "#958a1c",
+  "#0082b5",
+  "#9d68a2",
+  "#008a87",
+  "#202225",
+]

@@ -36,7 +36,7 @@
 				<key>activeGuide</key>
 				<string>#B4B1AD</string>
 				<key>findHighlight</key>
-				<string>#DCC9BA</string>
+				<string>#DDCAB9</string>
 			</dict>
 		</dict>
 		<dict>
@@ -58,7 +58,7 @@
 			<key>settings</key>
 			<dict>
 				<key>foreground</key>
-				<string>#8972A7</string>
+				<string>#7177B0</string>
 			</dict>
 		</dict>
 		<dict>
@@ -69,7 +69,7 @@
 			<key>settings</key>
 			<dict>
 				<key>foreground</key>
-				<string>#537DB2</string>
+				<string>#0082B5</string>
 			</dict>
 		</dict>
 		<dict>
@@ -80,7 +80,7 @@
 			<key>settings</key>
 			<dict>
 				<key>foreground</key>
-				<string>#948A2C</string>
+				<string>#958A1C</string>
 			</dict>
 		</dict>
 		<dict>
@@ -91,7 +91,7 @@
 			<key>settings</key>
 			<dict>
 				<key>foreground</key>
-				<string>#008994</string>
+				<string>#008A87</string>
 			</dict>
 		</dict>
 		<dict>
@@ -107,13 +107,24 @@
 		</dict>
 		<dict>
 			<key>name</key>
-			<string>Strings &amp; RegExp</string>
+			<string>Strings &amp; Code</string>
 			<key>scope</key>
-			<string>string, string.quoted, string.template, constant.character.escape, string.regexp</string>
+			<string>string, string.quoted, string.template</string>
 			<key>settings</key>
 			<dict>
 				<key>foreground</key>
-				<string>#509064</string>
+				<string>#509259</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>String Escapes &amp; RegExp</string>
+			<key>scope</key>
+			<string>constant.character.escape, string.regexp</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key>
+				<string>#9D68A2</string>
 			</dict>
 		</dict>
 		<dict>
@@ -124,18 +135,40 @@
 			<key>settings</key>
 			<dict>
 				<key>foreground</key>
-				<string>#B3754A</string>
+				<string>#B4763E</string>
 			</dict>
 		</dict>
 		<dict>
 			<key>name</key>
-			<string>Macros, Decorators, Symbols &amp; Special Bindings</string>
+			<string>Macros &amp; Decorators</string>
 			<key>scope</key>
-			<string>entity.name.function.macro, support.function.macro, entity.name.function.decorator, constant.other.symbol, variable.language.special, variable.language.this, variable.language.self, invalid, invalid.illegal</string>
+			<string>entity.name.function.macro, support.function.macro, entity.name.function.decorator</string>
 			<key>settings</key>
 			<dict>
 				<key>foreground</key>
-				<string>#B4637F</string>
+				<string>#BB626B</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Symbols &amp; Special Bindings</string>
+			<key>scope</key>
+			<string>constant.other.symbol, variable.language.special, variable.language.this, variable.language.self</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key>
+				<string>#9D68A2</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Errors &amp; Invalid Syntax</string>
+			<key>scope</key>
+			<string>invalid, invalid.illegal</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key>
+				<string>#BB626B</string>
 			</dict>
 		</dict>
 		<dict>
@@ -170,7 +203,7 @@
 			<key>settings</key>
 			<dict>
 				<key>foreground</key>
-				<string>#948A2C</string>
+				<string>#958A1C</string>
 				<key>fontStyle</key>
 				<string>bold</string>
 			</dict>
@@ -183,7 +216,7 @@
 			<key>settings</key>
 			<dict>
 				<key>foreground</key>
-				<string>#8972A7</string>
+				<string>#7177B0</string>
 				<key>fontStyle</key>
 				<string>italic</string>
 			</dict>
@@ -196,7 +229,7 @@
 			<key>settings</key>
 			<dict>
 				<key>foreground</key>
-				<string>#509064</string>
+				<string>#509259</string>
 			</dict>
 		</dict>
 		<dict>
@@ -207,7 +240,7 @@
 			<key>settings</key>
 			<dict>
 				<key>foreground</key>
-				<string>#537DB2</string>
+				<string>#0082B5</string>
 			</dict>
 		</dict>
 		<dict>
@@ -229,7 +262,7 @@
 			<key>settings</key>
 			<dict>
 				<key>foreground</key>
-				<string>#008994</string>
+				<string>#008A87</string>
 			</dict>
 		</dict>
 		<dict>
@@ -240,7 +273,7 @@
 			<key>settings</key>
 			<dict>
 				<key>foreground</key>
-				<string>#537DB2</string>
+				<string>#0082B5</string>
 			</dict>
 		</dict>
 		<dict>
@@ -251,7 +284,7 @@
 			<key>settings</key>
 			<dict>
 				<key>foreground</key>
-				<string>#537DB2</string>
+				<string>#0082B5</string>
 			</dict>
 		</dict>
 		<dict>
@@ -273,7 +306,7 @@
 			<key>settings</key>
 			<dict>
 				<key>foreground</key>
-				<string>#948A2C</string>
+				<string>#958A1C</string>
 			</dict>
 		</dict>
 		<dict>
@@ -284,7 +317,7 @@
 			<key>settings</key>
 			<dict>
 				<key>foreground</key>
-				<string>#509064</string>
+				<string>#509259</string>
 			</dict>
 		</dict>
 		<dict>
@@ -295,7 +328,7 @@
 			<key>settings</key>
 			<dict>
 				<key>foreground</key>
-				<string>#B4637F</string>
+				<string>#BB626B</string>
 			</dict>
 		</dict>
 		<dict>
@@ -306,7 +339,7 @@
 			<key>settings</key>
 			<dict>
 				<key>foreground</key>
-				<string>#537DB2</string>
+				<string>#0082B5</string>
 			</dict>
 		</dict>
 	</array>

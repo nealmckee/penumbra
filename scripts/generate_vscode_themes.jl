@@ -11,9 +11,10 @@ Deterministic compiler for Penumbra v2 VSCode themes:
 - Penumbra Light (balanced)
 
 Architecture:
-- LSP Semantic Tokens (`semanticTokenColors`): Complete, canonical 26-token mapping.
-- TextMate Scopes (`tokenColors`): Canonical root and 2nd-level scopes across all languages.
+- LSP Semantic Tokens (`semanticTokenColors`): Complete, canonical 26-token mapping (`N = 8`).
+- TextMate Scopes (`tokenColors`): Canonical root and 2nd-level scopes across all languages (`N = 8`).
 - Workbench Chrome (`colors`): Curated keys mapped to Penumbra's 3-tier contrast lattice.
+- Terminal ANSI (`terminal.ansi*`): Equidistant `N = 6` palette (`sun`/`sun+` whites in dark, `shade`/`shade-` in light).
 - Typography: Strict upright roman font style (zero italics in code/comments).
 """
 
@@ -23,11 +24,17 @@ using Printf
 include(joinpath(@__DIR__, "..", "src", "palette_io.jl"))
 
 """
-    build_theme_dict(mode::Symbol, tier::Symbol, base_dict, accent_dict)
+    build_theme_dict(mode::Symbol, tier::Symbol, base_dict, accent_dict, term_dict)
 
 Constructs the complete VSCode theme dictionary for the specified mode and contrast tier.
 """
-function build_theme_dict(mode::Symbol, tier::Symbol, base_dict::Dict{String,String}, accent_dict::Dict{String,String})
+function build_theme_dict(
+    mode::Symbol,
+    tier::Symbol,
+    base_dict::Dict{String,String},
+    accent_dict::Dict{String,String},
+    term_dict::Dict{String,String}=accent_dict,
+)
     is_dark = mode == :dark
 
     # 1. Surface plane mappings (contrast-monotonic from chrome -> canvas -> interactive focus)
@@ -60,14 +67,23 @@ function build_theme_dict(mode::Symbol, tier::Symbol, base_dict::Dict{String,Str
     fg_badge = bg_high
     border_subtle = "#$fg_comment" * "40"
 
-    # 5. Accent mappings (N = 7 canonical opponent scheme)
-    c_red = accent_dict["red"]     # Macros, symbols, self, errors
-    c_orange = accent_dict["orange"]  # Numbers, booleans, numeric constants
-    c_yellow = accent_dict["yellow"]  # Types, classes, structs, modules
-    c_green = accent_dict["green"]   # Strings, character literals, regexp
-    c_cyan = accent_dict["cyan"]    # Operators, delimiters, type annotations
-    c_blue = accent_dict["blue"]    # Functions, methods, callables
-    c_purple = accent_dict["purple"]  # Keywords, control flow, declarations
+    # 5. Accent mappings (N = 8 canonical opponent scheme)
+    c_red = accent_dict["red"]         # Errors, invalid, deletions, macros, decorators
+    c_orange = accent_dict["orange"]   # Numbers, booleans, numeric constants
+    c_yellow = accent_dict["yellow"]   # Types, classes, structs, modules
+    c_green = accent_dict["green"]     # Strings, character literals
+    c_cyan = accent_dict["cyan"]       # Operators, delimiters, type annotations
+    c_blue = accent_dict["blue"]       # Functions, methods, callables
+    c_purple = accent_dict["purple"]   # Keywords, control flow, declarations
+    c_magenta = accent_dict["magenta"] # Escapes, regexp, symbols, self/defaultLibrary
+
+    # 6. Terminal ANSI 6-color equidistant palette
+    t_red = term_dict["red"]
+    t_green = term_dict["green"]
+    t_yellow = term_dict["yellow"]
+    t_blue = term_dict["blue"]
+    t_magenta = term_dict["magenta"]
+    t_cyan = term_dict["cyan"]
 
     # --- WORKBENCH UI COLORS (~190 curated keys) ---
     colors = Dict{String,String}(
@@ -455,21 +471,21 @@ function build_theme_dict(mode::Symbol, tier::Symbol, base_dict::Dict{String,Str
         "terminalCursor.foreground" => "#$canvas_opposite",
         "terminalCursor.background" => "#$bg_canvas",
         "terminal.ansiBlack" => is_dark ? "#$bg_high" : "#$bg_low",
-        "terminal.ansiRed" => "#$c_red",
-        "terminal.ansiGreen" => "#$c_green",
-        "terminal.ansiYellow" => "#$c_yellow",
-        "terminal.ansiBlue" => "#$c_blue",
-        "terminal.ansiMagenta" => "#$c_purple",
-        "terminal.ansiCyan" => "#$c_cyan",
-        "terminal.ansiWhite" => "#$fg_heading",
+        "terminal.ansiRed" => "#$t_red",
+        "terminal.ansiGreen" => "#$t_green",
+        "terminal.ansiYellow" => "#$t_yellow",
+        "terminal.ansiBlue" => "#$t_blue",
+        "terminal.ansiMagenta" => "#$t_magenta",
+        "terminal.ansiCyan" => "#$t_cyan",
+        "terminal.ansiWhite" => "#$canvas_opposite",
         "terminal.ansiBrightBlack" => "#$fg_comment",
-        "terminal.ansiBrightRed" => "#$c_red",
-        "terminal.ansiBrightGreen" => "#$c_green",
-        "terminal.ansiBrightYellow" => "#$c_yellow",
-        "terminal.ansiBrightBlue" => "#$c_blue",
-        "terminal.ansiBrightMagenta" => "#$c_purple",
-        "terminal.ansiBrightCyan" => "#$c_cyan",
-        "terminal.ansiBrightWhite" => "#$canvas_opposite",
+        "terminal.ansiBrightRed" => "#$t_red",
+        "terminal.ansiBrightGreen" => "#$t_green",
+        "terminal.ansiBrightYellow" => "#$t_yellow",
+        "terminal.ansiBrightBlue" => "#$t_blue",
+        "terminal.ansiBrightMagenta" => "#$t_magenta",
+        "terminal.ansiBrightCyan" => "#$t_cyan",
+        "terminal.ansiBrightWhite" => is_dark ? "#$(base_dict["sun+"])" : "#$(base_dict["shade-"])",
 
         # Git Decorations
         "gitDecoration.addedResourceForeground" => "#$c_green",
@@ -534,14 +550,14 @@ function build_theme_dict(mode::Symbol, tier::Symbol, base_dict::Dict{String,Str
         "stringLiteral" => Dict("foreground" => "#$c_green", "fontStyle" => ""),
         "number" => Dict("foreground" => "#$c_orange", "fontStyle" => ""),
         "numberLiteral" => Dict("foreground" => "#$c_orange", "fontStyle" => ""),
-        "regexp" => Dict("foreground" => "#$c_green", "fontStyle" => ""),
+        "regexp" => Dict("foreground" => "#$c_magenta", "fontStyle" => ""),
         "operator" => Dict("foreground" => "#$c_cyan", "fontStyle" => ""),
         "macro" => Dict("foreground" => "#$c_red", "fontStyle" => ""),
         "enumMember" => Dict("foreground" => "#$c_orange", "fontStyle" => ""),
         "variable" => Dict("foreground" => "#$fg_text", "fontStyle" => ""),
         "parameter" => Dict("foreground" => "#$fg_text", "fontStyle" => ""),
         "property" => Dict("foreground" => "#$fg_text", "fontStyle" => ""),
-        "variable.defaultLibrary" => Dict("foreground" => "#$c_red", "fontStyle" => "")
+        "variable.defaultLibrary" => Dict("foreground" => "#$c_magenta", "fontStyle" => "")
     )
 
     # --- TEXTMATE SCOPES (Canonical Root Hierarchy, Upright Roman) ---
@@ -659,7 +675,7 @@ function build_theme_dict(mode::Symbol, tier::Symbol, base_dict::Dict{String,Str
                 "constant.character.escape",
                 "string.regexp"
             ],
-            "settings" => Dict("foreground" => "#$c_green", "fontStyle" => "")
+            "settings" => Dict("foreground" => "#$c_magenta", "fontStyle" => "")
         ),
         Dict(
             "name" => "Numbers, Units & Booleans",
@@ -674,17 +690,23 @@ function build_theme_dict(mode::Symbol, tier::Symbol, base_dict::Dict{String,Str
 
         # 7. Macros, Symbols, Special Bindings & Errors
         Dict(
-            "name" => "Macros, Decorators & Symbols",
+            "name" => "Macros, Decorators & Directives",
             "scope" => [
                 "entity.name.function.macro",
                 "support.function.macro",
-                "entity.name.function.decorator",
+                "entity.name.function.decorator"
+            ],
+            "settings" => Dict("foreground" => "#$c_red", "fontStyle" => "")
+        ),
+        Dict(
+            "name" => "Symbols & Special Language Bindings",
+            "scope" => [
                 "constant.other.symbol",
                 "variable.language.special",
                 "variable.language.this",
                 "variable.language.self"
             ],
-            "settings" => Dict("foreground" => "#$c_red", "fontStyle" => "")
+            "settings" => Dict("foreground" => "#$c_magenta", "fontStyle" => "")
         ),
         Dict(
             "name" => "Invalid & Errors",
@@ -833,6 +855,24 @@ end
 Computes the base and accent palettes and creates the VSCode theme JSON files.
 If dry_run is true, displays file stats without overwriting disk.
 """
+function _write_theme(theme, target_dir::String, dry_run::Bool)
+    target_path = joinpath(target_dir, theme.file_name)
+    json_str = JSON.json(theme.data, 2)
+    n_lines = count(==('\n'), json_str) + 1
+    n_bytes = sizeof(json_str)
+
+    @printf("Theme: %-38s -> %-42s (%5d lines, %6d bytes)\n",
+        theme.data["name"], theme.file_name, n_lines, n_bytes)
+
+    if !dry_run
+        mkpath(dirname(target_path))
+        write(target_path, json_str)
+        println("  [WRITTEN] $target_path")
+    else
+        println("  [DRY RUN] Target: $target_path (file preserved)")
+    end
+end
+
 function generate_all_themes(; target_dir::String=joinpath(@__DIR__, "..", "..", "penumbra_vscode", "themes"), dry_run::Bool=true)
     println("="^80)
     println("PENUMBRA V2 VSCODE THEME COMPILER (dry_run = $dry_run)")
@@ -840,42 +880,25 @@ function generate_all_themes(; target_dir::String=joinpath(@__DIR__, "..", "..",
 
     base_tones, accents = load_palettes(joinpath(@__DIR__, ".."))
 
-    accents_dark = Dict(k => lowercase(v) for (k, v) in accents[:dark][7])
-    accents_light = Dict(k => lowercase(v) for (k, v) in accents[:light][7])
-
     # 4 Theme configurations matching package.json
     configs = [
-        (:dark, :balanced, accents_dark),
-        (:dark, :contrast_plus, accents_dark),
-        (:dark, :contrast_plus_plus, accents_dark),
-        (:light, :balanced, accents_light)
+        (:dark, :balanced),
+        (:dark, :contrast_plus),
+        (:dark, :contrast_plus_plus),
+        (:light, :balanced)
     ]
 
-    for (mode, tier, accents_dict) in configs
+    for (mode, tier) in configs
         base_dict = Dict(k => lowercase(v) for (k, v) in base_tones[tier])
-        theme = build_theme_dict(mode, tier, base_dict, accents_dict)
-        target_path = joinpath(target_dir, theme.file_name)
-
-        json_str = JSON.json(theme.data, 2)
-        n_lines = count(==('\n'), json_str) + 1
-        n_bytes = sizeof(json_str)
-
-        @printf("Theme: %-28s -> %-32s (%5d lines, %6d bytes)\n",
-            theme.data["name"], theme.file_name, n_lines, n_bytes)
-
-        if !dry_run
-            mkpath(dirname(target_path))
-            write(target_path, json_str)
-            println("  [WRITTEN] $target_path")
-        else
-            println("  [DRY RUN] Target: $target_path (file preserved)")
-        end
+        acc_dict = Dict(k => lowercase(v) for (k, v) in accents[mode][tier][8])
+        term_dict = Dict(k => lowercase(v) for (k, v) in accents[mode][tier][6])
+        theme = build_theme_dict(mode, tier, base_dict, acc_dict, term_dict)
+        _write_theme(theme, target_dir, dry_run)
     end
     println("="^80)
 end
 
 if abspath(PROGRAM_FILE) == @__FILE__
-    # Run in dry_run mode by default
     dry_run = !("--write" in ARGS)
     generate_all_themes(; dry_run=dry_run)
 end

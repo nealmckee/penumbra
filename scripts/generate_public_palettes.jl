@@ -37,9 +37,9 @@ function generate_public_base_tsv(target_path::String)
     ]
     rows = Any[header]
 
-    # 1. Deduplicated shared sun and sky tones
+    # 1. Shared sun+ boundary (5772 K)
     for t in tones
-        if t.tier == :balanced && startswith(t.name, "s") && !startswith(t.name, "shade")
+        if t.tier == :balanced && t.name == "sun+"
             r, g, b, h, s, l = _tone_color_channels(t.rgb)
             push!(rows, Any[
                 t.name, "shared", t.hex, r, g, b, h, s, l,
@@ -48,11 +48,11 @@ function generate_public_base_tsv(target_path::String)
         end
     end
 
-    # 2. Telescoping shade triad per contrast tier
+    # 2. Per-tier tones (sun..shade-) across balanced and re-anchored contrast+/++
     for tier in [:balanced, :contrast_plus, :contrast_plus_plus]
         tier_label = tier == :balanced ? "balanced" : (tier == :contrast_plus ? "contrast+" : "contrast++")
         for t in tones
-            if t.tier == tier && startswith(t.name, "shade")
+            if t.tier == tier && t.name != "sun+"
                 r, g, b, h, s, l = _tone_color_channels(t.rgb)
                 push!(rows, Any[
                     t.name, tier_label, t.hex, r, g, b, h, s, l,
@@ -68,24 +68,32 @@ end
 
 function generate_public_accents_tsv(target_path::String)
     sol = solve_base_palette()
-    modes = [(:dark, sol.env_dark), (:light, sol.env_light)]
+    j_sky_dark = convert(CAM16UCSJCh, convert(XYZ, sol.curve(sol.J_sky)), sol.env_dark).j
+    j_sky_light = convert(CAM16UCSJCh, convert(XYZ, sol.curve(sol.J_sky)), sol.env_light).j
+    cp_res = solve_contrast_tier_base(sol, 4.0, 13.0)
+    cpp_res = solve_contrast_tier_base(sol, 3.0, 14.0)
+
+    configs = [
+        ("dark", "balanced", j_sky_dark, sol.env_dark),
+        ("dark", "contrast+", cp_res.J_sky_dark, cp_res.env),
+        ("dark", "contrast++", cpp_res.J_sky_dark, cpp_res.env),
+        ("light", "balanced", j_sky_light, sol.env_light),
+    ]
     pal_names = Dict(6 => "six", 7 => "seven", 8 => "eight")
 
     header = [
-        "mode", "palette", "name", "rgb_hex", "r", "g", "b", "h", "s", "l",
+        "mode", "tier", "palette", "name", "rgb_hex", "r", "g", "b", "h", "s", "l",
         "cam16_ucs_lightness", "cam16_ucs_chroma", "cam16_ucs_hue"
     ]
     rows = Any[header]
 
-    for (mode_sym, env) in modes
-        mode_str = string(mode_sym)
-        J_target = convert(CAM16UCSJCh, convert(XYZ, sol.curve(sol.J_sky)), env).j
+    for (mode_str, tier_str, J_target, env) in configs
         for N in (6, 7, 8)
             pal = optimize_accent_palette(N, J_target, env; alpha=1.0)
             for t in pal.tones
                 r, g, b, h, s, l = _tone_color_channels(t.rgb)
                 push!(rows, Any[
-                    mode_str, pal_names[N], t.name, t.hex, r, g, b, h, s, l,
+                    mode_str, tier_str, pal_names[N], t.name, t.hex, r, g, b, h, s, l,
                     round(t.J_hk_ucs, digits=2), round(t.C_ucs, digits=2), round(t.h, digits=2)
                 ])
             end

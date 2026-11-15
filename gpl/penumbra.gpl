@@ -3,59 +3,111 @@ Name: Penumbra v2 (All Tiers & Accents)
 Columns: 3
 #
 255 246 233	sun+
-239 232 221	sun
-223 217 208	sun-
-180 177 173	sky+
-139 139 139	sky
- 94  96  99	sky-
+239 232 221	balanced sun
+223 217 208	balanced sun-
+180 177 173	balanced sky+
+139 139 139	balanced sky
+ 94  96  99	balanced sky-
  56  58  61	balanced shade+
  44  46  49	balanced shade
  32  34  37	balanced shade-
- 44  46  49	contrast+ shade+
- 32  34  37	contrast+ shade
- 21  22  25	contrast+ shade-
- 32  34  37	contrast++ shade+
- 21  22  25	contrast++ shade
- 10  11  13	contrast++ shade-
-183 105  95	dark 6 red
-163 131  52	dark 6 yellow
- 89 145  89	dark 6 green
-  0 136 146	dark 6 cyan
- 94 122 175	dark 6 blue
-152 107 160	dark 6 magenta
-178  99 126	dark 7 red
-178 116  74	dark 7 orange
-148 138  44	dark 7 yellow
- 80 143 100	dark 7 green
-  0 136 146	dark 7 cyan
- 82 124 176	dark 7 blue
-136 113 166	dark 7 purple
-186  97 107	dark 8 red
-179 117  63	dark 8 orange
-149 137  30	dark 8 yellow
- 81 145  88	dark 8 green
-  7 137 134	dark 8 cyan
-  0 129 179	dark 8 blue
-112 118 174	dark 8 purple
-155 104 161	dark 8 magenta
-184 105  96	light 6 red
-164 131  52	light 6 yellow
- 89 145  89	light 6 green
-  0 137 147	light 6 cyan
- 95 123 176	light 6 blue
-153 108 161	light 6 magenta
-180  99 127	light 7 red
-179 117  74	light 7 orange
-148 138  44	light 7 yellow
- 80 144 100	light 7 green
-  0 137 148	light 7 cyan
- 83 125 178	light 7 blue
-137 114 167	light 7 purple
-187  98 108	light 8 red
-179 118  63	light 8 orange
-149 138  29	light 8 yellow
- 81 146  88	light 8 green
-  7 138 135	light 8 cyan
+239 232 221	contrast+ sun
+223 217 209	contrast+ sun-
+186 184 180	contrast+ sky+
+153 153 153	contrast+ sky
+ 91  93  98	contrast+ sky-
+ 41  43  48	contrast+ shade+
+ 29  32  36	contrast+ shade
+ 19  20  24	contrast+ shade-
+238 232 221	contrast++ sun
+222 217 210	contrast++ sun-
+194 192 189	contrast++ sky+
+169 169 169	contrast++ sky
+ 87  91  98	contrast++ sky-
+ 27  30  35	contrast++ shade+
+ 16  19  23	contrast++ shade
+  7   8  11	contrast++ shade-
+186  91 120	dark balanced 6 red
+180 118  50	dark balanced 6 yellow
+117 145  34	dark balanced 6 green
+  0 139 124	dark balanced 6 cyan
+  0 127 186	dark balanced 6 blue
+131 111 174	dark balanced 6 magenta
+171  96 148	dark balanced 7 red
+186 105  79	dark balanced 7 orange
+165 130  34	dark balanced 7 yellow
+ 93 146  69	dark balanced 7 green
+  0 138 130	dark balanced 7 cyan
+  0 128 182	dark balanced 7 blue
+121 115 174	dark balanced 7 purple
+186  97 106	dark balanced 8 red
+179 118  62	dark balanced 8 orange
+148 138  29	dark balanced 8 yellow
+ 79 145  88	dark balanced 8 green
+  0 137 134	dark balanced 8 cyan
+  0 129 180	dark balanced 8 blue
+113 118 174	dark balanced 8 purple
+156 103 161	dark balanced 8 magenta
+205 101 132	dark contrast+ 6 red
+198 130  55	dark contrast+ 6 yellow
+129 160  38	dark contrast+ 6 green
+  0 153 137	dark contrast+ 6 cyan
+  0 140 205	dark contrast+ 6 blue
+145 123 191	dark contrast+ 6 magenta
+189 106 163	dark contrast+ 7 red
+205 116  88	dark contrast+ 7 orange
+182 143  38	dark contrast+ 7 yellow
+102 161  76	dark contrast+ 7 green
+  0 152 144	dark contrast+ 7 cyan
+  0 142 201	dark contrast+ 7 blue
+133 127 192	dark contrast+ 7 purple
+205 107 118	dark contrast+ 8 red
+197 129  69	dark contrast+ 8 orange
+163 151  32	dark contrast+ 8 yellow
+ 88 160  97	dark contrast+ 8 green
+  0 152 148	dark contrast+ 8 cyan
+  0 143 198	dark contrast+ 8 blue
+125 130 192	dark contrast+ 8 purple
+172 114 178	dark contrast+ 8 magenta
+226 112 146	dark contrast++ 6 red
+218 143  62	dark contrast++ 6 yellow
+142 176  42	dark contrast++ 6 green
+  0 170 152	dark contrast++ 6 cyan
+  0 155 226	dark contrast++ 6 blue
+160 136 211	dark contrast++ 6 magenta
+208 118 180	dark contrast++ 7 red
+226 128  97	dark contrast++ 7 orange
+200 157  42	dark contrast++ 7 yellow
+113 178  84	dark contrast++ 7 green
+  0 168 159	dark contrast++ 7 cyan
+  0 157 222	dark contrast++ 7 blue
+147 141 211	dark contrast++ 7 purple
+225 119 130	dark contrast++ 8 red
+216 143  76	dark contrast++ 8 orange
+180 167  36	dark contrast++ 8 yellow
+ 98 176 108	dark contrast++ 8 green
+  0 168 164	dark contrast++ 8 cyan
+  0 158 219	dark contrast++ 8 blue
+138 144 212	dark contrast++ 8 purple
+190 127 196	dark contrast++ 8 magenta
+187  92 120	light 6 red
+181 118  50	light 6 yellow
+117 146  33	light 6 green
+  0 140 125	light 6 cyan
+  0 128 187	light 6 blue
+132 112 175	light 6 magenta
+172  97 149	light 7 red
+188 105  80	light 7 orange
+166 130  34	light 7 yellow
+ 93 147  69	light 7 green
+  0 139 131	light 7 cyan
+  0 129 184	light 7 blue
+122 116 175	light 7 purple
+187  98 107	light 8 red
+180 118  62	light 8 orange
+149 138  28	light 8 yellow
+ 80 146  89	light 8 green
+  0 138 135	light 8 cyan
   0 130 181	light 8 blue
-113 119 175	light 8 purple
-156 105 162	light 8 magenta
+113 119 176	light 8 purple
+157 104 162	light 8 magenta

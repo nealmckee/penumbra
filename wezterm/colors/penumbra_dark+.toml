@@ -7,32 +7,32 @@ name = "Penumbra Dark+"
 author = "Neal McKee"
 
 [colors]
-foreground = "#8b8b8b"
-background = "#202225"
+foreground = "#999999"
+background = "#1d2024"
 cursor_bg = "#efe8dd"
 cursor_border = "#efe8dd"
-cursor_fg = "#202225"
-selection_bg = "#2c2e31"
-selection_fg = "#8b8b8b"
+cursor_fg = "#1d2024"
+selection_bg = "#292b30"
+selection_fg = "#999999"
 
 ansi = [
-  "#151619",
-  "#b7695f",
-  "#599159",
-  "#a38334",
-  "#5e7aaf",
-  "#986ba0",
-  "#008892",
-  "#b4b1ad",
+  "#131418",
+  "#cd6584",
+  "#81a026",
+  "#c68237",
+  "#008ccd",
+  "#917bbf",
+  "#009989",
+  "#efe8dd",
 ]
 
 brights = [
-  "#5e6063",
-  "#b7695f",
-  "#599159",
-  "#a38334",
-  "#5e7aaf",
-  "#986ba0",
-  "#008892",
-  "#efe8dd",
+  "#5b5d62",
+  "#cd6584",
+  "#81a026",
+  "#c68237",
+  "#008ccd",
+  "#917bbf",
+  "#009989",
+  "#fff6e9",
 ]

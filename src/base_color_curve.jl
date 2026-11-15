@@ -294,14 +294,12 @@ function base_palette_tones(sol)
     jb_sh6 = solve_in_env(c, 6.0 * dJ, env_d)
     jb_sh5 = sol.J_shade
     jb_sh4 = solve_in_env(c, 4.0 * dJ, env_d)
-    jb_sh3 = solve_in_env(c, 3.0 * dJ, env_d)
-    jb_sh2 = solve_in_env(c, 2.0 * dJ, env_d)
 
-    function make_tone(tier_sym::Symbol, name::AbstractString, jb::Real)
+    function make_tone(tier_sym::Symbol, name::AbstractString, curve_t::BaseColorCurve, env_t::ViewingEnvironment, jb::Real)
         T = typeof(sol.dJ)
-        cam = c(jb)
+        cam = curve_t(jb)
         xyz = convert(XYZ, cam)
-        jd = convert(CAM16UCSJCh, xyz, env_d).j
+        jd = convert(CAM16UCSJCh, xyz, env_t).j
         jl = convert(CAM16UCSJCh, xyz, env_l).j
         rgb = convert(RGB, xyz)
         r = clamp(rgb.r, zero(rgb.r), one(rgb.r))
@@ -313,7 +311,7 @@ function base_palette_tones(sol)
             string(name),
             T(jb),
             T(xyz.y),
-            T(temperature(c, jb)),
+            T(temperature(curve_t, jb)),
             T(jd),
             T(jl),
             cam,
@@ -322,30 +320,102 @@ function base_palette_tones(sol)
         )
     end
 
-    tier_specs = [
-        (:balanced, [
-            ("sun+", jb_sun_plus), ("sun", jb_sun), ("sun-", jb_sun_minus),
-            ("sky+", jb_sky_plus), ("sky", jb_sky), ("sky-", jb_sky_minus),
-            ("shade+", jb_sh6), ("shade", jb_sh5), ("shade-", jb_sh4)
-        ]),
-        (:contrast_plus, [
-            ("sun+", jb_sun_plus), ("sun", jb_sun), ("sun-", jb_sun_minus),
-            ("sky+", jb_sky_plus), ("sky", jb_sky), ("sky-", jb_sky_minus),
-            ("shade+", jb_sh5), ("shade", jb_sh4), ("shade-", jb_sh3)
-        ]),
-        (:contrast_plus_plus, [
-            ("sun+", jb_sun_plus), ("sun", jb_sun), ("sun-", jb_sun_minus),
-            ("sky+", jb_sky_plus), ("sky", jb_sky), ("sky-", jb_sky_minus),
-            ("shade+", jb_sh4), ("shade", jb_sh3), ("shade-", jb_sh2)
-        ])
-    ]
-
     C_TYPE = typeof(c(jb_sky))
     tones = BaseTone{typeof(sol.dJ),C_TYPE}[]
-    for (tier, list) in tier_specs
-        for (name, jb) in list
-            push!(tones, make_tone(tier, name, jb))
+
+    bal_list = [
+        ("sun+", jb_sun_plus), ("sun", jb_sun), ("sun-", jb_sun_minus),
+        ("sky+", jb_sky_plus), ("sky", jb_sky), ("sky-", jb_sky_minus),
+        ("shade+", jb_sh6), ("shade", jb_sh5), ("shade-", jb_sh4)
+    ]
+    for (name, jb) in bal_list
+        push!(tones, make_tone(:balanced, name, c, env_d, jb))
+    end
+
+    for (tier_sym, sh_step, sk_step) in ((:contrast_plus, 4.0, 13.0), (:contrast_plus_plus, 3.0, 14.0))
+        res = solve_contrast_tier_base(sol, sh_step, sk_step)
+        for (name, jb) in res.jb_specs
+            push!(tones, make_tone(tier_sym, name, res.curve, res.env, jb))
         end
     end
+
     return tones
+end
+
+function _xyz_to_hex(xyz::XYZ)
+    rgb = convert(RGB, xyz)
+    r = clamp(rgb.r, zero(rgb.r), one(rgb.r))
+    g = clamp(rgb.g, zero(rgb.g), one(rgb.g))
+    b = clamp(rgb.b, zero(rgb.b), one(rgb.b))
+    return string(hex(RGB(r, g, b)))
+end
+
+"""
+    solve_contrast_tier_base(sol, sh_step::Real, sk_step::Real; T_top::Real=5772.0)
+
+Builds a dark contrast-tier 9-tone base dictionary by re-anchoring `BaseColorCurve` so
+`shade` sits at `sh_step * dJ`, `sky` remains at D65 (6504 K) at `sk_step * dJ`, and
+`sun+` stays pinned at `T_top`.
+"""
+function solve_contrast_tier_base(sol, sh_step::Real, sk_step::Real; T_top::Real=5772.0)
+    dJ = sol.dJ
+    env_base = sol.curve.env
+    jb_sun_minus_ref = solve_in_env(
+        sol.curve,
+        convert(CAM16UCSJCh, convert(XYZ, sol.curve(sol.J_sun)), sol.env_light).j - dJ,
+        sol.env_light,
+    )
+    xyz_sun_ref = convert(XYZ, sol.curve(sol.J_sun))
+    xyz_sunm_ref = convert(XYZ, sol.curve(jb_sun_minus_ref))
+
+    jb_sh = solve_in_env(sol.curve, sh_step * dJ, sol.env_dark)
+    Y_sh = convert(XYZ, sol.curve(jb_sh)).y
+    c_t = sol.curve
+    env_t = sol.env_dark
+
+    for _ in 1:30
+        env_t = ViewingEnvironment(
+            whitepoint=env_base.WP_xyz,
+            adapting_luminance=24.0,
+            relative_background_luminance=Y_sh,
+            surround=:average,
+            discounting=true,
+        )
+        Y_sk = luminance_for_cam16ucs_j(_WP_D65.x, _WP_D65.y, sk_step * dJ, env_t)
+        xyz_sk = convert(XYZ, xyY(_WP_D65.x, _WP_D65.y, Y_sk))
+        J_sky_base = convert(CAM16UCSJCh, xyz_sk, env_base).j
+        k_mu_t = (1e6 / T_top - MIRED_D65) / (sol.J_sun_plus - J_sky_base)
+        c_t = BaseColorCurve(J_sky_base, k_mu_t, env_base)
+        jb_sh = solve_in_env(c_t, sh_step * dJ, env_t)
+        Y_sh = convert(XYZ, c_t(jb_sh)).y
+    end
+    env_t = ViewingEnvironment(
+        whitepoint=env_base.WP_xyz,
+        adapting_luminance=24.0,
+        relative_background_luminance=Y_sh,
+        surround=:average,
+        discounting=true,
+    )
+
+    j_sunp = convert(CAM16UCSJCh, convert(XYZ, c_t(sol.J_sun_plus)), env_t).j
+    j_sun = convert(CAM16UCSJCh, xyz_sun_ref, env_t).j
+    j_sunm = convert(CAM16UCSJCh, xyz_sunm_ref, env_t).j
+    j_sk = sk_step * dJ
+    j_skyp = 0.5 * (j_sk + j_sunm)
+    j_skym = 0.5 * ((sh_step + 1.0) * dJ + j_sk)
+
+    specs = (
+        ("sun+", j_sunp), ("sun", j_sun), ("sun-", j_sunm),
+        ("sky+", j_skyp), ("sky", j_sk), ("sky-", j_skym),
+        ("shade+", (sh_step + 1.0) * dJ), ("shade", sh_step * dJ), ("shade-", (sh_step - 1.0) * dJ),
+    )
+    jb_specs = [
+        (name, solve_in_env(c_t, jt, env_t))
+        for (name, jt) in specs
+    ]
+    dict = Dict{String,String}(
+        name => _xyz_to_hex(convert(XYZ, c_t(jb)))
+        for (name, jb) in jb_specs
+    )
+    return (dict=dict, env=env_t, J_sky_dark=j_sk, curve=c_t, jb_specs=jb_specs)
 end

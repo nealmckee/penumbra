@@ -3,33 +3,33 @@
 # Mode: dark, Tier: contrast_plus
 
 [colors.primary]
-background = "#202225"
-foreground = "#8b8b8b"
+background = "#1d2024"
+foreground = "#999999"
 
 [colors.cursor]
-text = "#202225"
+text = "#1d2024"
 cursor = "#efe8dd"
 
 [colors.selection]
-text = "#8b8b8b"
-background = "#2c2e31"
+text = "#999999"
+background = "#292b30"
 
 [colors.normal]
-black   = "#151619"
-red     = "#b7695f"
-green   = "#599159"
-yellow  = "#a38334"
-blue    = "#5e7aaf"
-magenta = "#986ba0"
-cyan    = "#008892"
-white   = "#b4b1ad"
+black   = "#131418"
+red     = "#cd6584"
+green   = "#81a026"
+yellow  = "#c68237"
+blue    = "#008ccd"
+magenta = "#917bbf"
+cyan    = "#009989"
+white   = "#efe8dd"
 
 [colors.bright]
-black   = "#5e6063"
-red     = "#b7695f"
-green   = "#599159"
-yellow  = "#a38334"
-blue    = "#5e7aaf"
-magenta = "#986ba0"
-cyan    = "#008892"
-white   = "#efe8dd"
+black   = "#5b5d62"
+red     = "#cd6584"
+green   = "#81a026"
+yellow  = "#c68237"
+blue    = "#008ccd"
+magenta = "#917bbf"
+cyan    = "#009989"
+white   = "#fff6e9"

@@ -33,7 +33,7 @@ function generate_snippet_svg(theme_name::Symbol, base_tones, accents; width::In
     end
 
     bg = is_light ? "#" * base_tones[tier]["sun"] : "#" * base_tones[tier]["shade"]
-    acc = accents[mode][7]
+    acc = accents[mode][tier][8]
 
     red     = "#" * acc["red"]
     orange  = "#" * acc["orange"]
@@ -42,6 +42,7 @@ function generate_snippet_svg(theme_name::Symbol, base_tones, accents; width::In
     cyan    = "#" * acc["cyan"]
     blue    = "#" * acc["blue"]
     purple  = "#" * acc["purple"]
+    magenta = "#" * acc["magenta"]
     sky     = "#" * base_tones[tier]["sky"]
     comment = is_light ? "#" * base_tones[tier]["sky+"] : "#" * base_tones[tier]["sky-"]
     gutter  = is_light ? "#" * base_tones[tier]["sky+"] : "#" * base_tones[tier]["sky-"]
@@ -52,7 +53,7 @@ function generate_snippet_svg(theme_name::Symbol, base_tones, accents; width::In
         ("2", """<tspan fill="$purple">def</tspan> <tspan fill="$blue">somefunc</tspan><tspan fill="$sky">(</tspan><tspan fill="$sky">param1</tspan><tspan fill="$cyan">=</tspan><tspan fill="$green">&#39;&#39;</tspan><tspan fill="$sky">, </tspan><tspan fill="$sky">param2</tspan><tspan fill="$cyan">=</tspan><tspan fill="$orange">0</tspan><tspan fill="$sky">):</tspan>"""),
         ("3", """    <tspan fill="$green">r&#39;&#39;&#39;A docstring&#39;&#39;&#39;</tspan>"""),
         ("4", """    <tspan fill="$purple">if</tspan> <tspan fill="$sky">param1</tspan> <tspan fill="$cyan">&gt;</tspan> <tspan fill="$sky">param2</tspan><tspan fill="$sky">:</tspan> <tspan fill="$comment"># interesting</tspan>"""),
-        ("5", """        <tspan fill="$blue">print</tspan><tspan fill="$sky">(</tspan><tspan fill="$purple">f</tspan><tspan fill="$green">&#39;Gre\\&#39;ater </tspan><tspan fill="$sky">{</tspan><tspan fill="$sky">param1</tspan><tspan fill="$sky">}</tspan><tspan fill="$green">&#39;</tspan><tspan fill="$sky">)</tspan>"""),
+        ("5", """        <tspan fill="$blue">print</tspan><tspan fill="$sky">(</tspan><tspan fill="$purple">f</tspan><tspan fill="$green">&#39;Gre</tspan><tspan fill="$magenta">\\&#39;</tspan><tspan fill="$green">ater </tspan><tspan fill="$sky">{</tspan><tspan fill="$sky">param1</tspan><tspan fill="$sky">}</tspan><tspan fill="$green">&#39;</tspan><tspan fill="$sky">)</tspan>"""),
         ("6", """        <tspan fill="$purple">return</tspan> <tspan fill="$sky">(</tspan><tspan fill="$sky">param2</tspan> <tspan fill="$cyan">-</tspan> <tspan fill="$sky">param1</tspan> <tspan fill="$cyan">+</tspan> <tspan fill="$orange">1</tspan> <tspan fill="$cyan">+</tspan> <tspan fill="$orange">0b10</tspan><tspan fill="$sky">)</tspan> <tspan fill="$purple">or</tspan> <tspan fill="$orange">None</tspan>"""),
         ("",  ""),
         ("8", """<tspan fill="$purple">class</tspan> <tspan fill="$yellow">SomeClass</tspan><tspan fill="$sky">:</tspan>"""),

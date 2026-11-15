@@ -1,0 +1,27 @@
+# Penumbra v2 -- Ghostty Color Scheme
+# Theme: penumbra_dark
+# Mode: dark, Tier: balanced
+
+palette = 0=#202225
+palette = 1=#ba616a
+palette = 2=#4f9158
+palette = 3=#948a1d
+palette = 4=#0081b4
+palette = 5=#9c67a1
+palette = 6=#008986
+palette = 7=#efe8dd
+palette = 8=#5e6063
+palette = 9=#ba616a
+palette = 10=#4f9158
+palette = 11=#948a1d
+palette = 12=#0081b4
+palette = 13=#9c67a1
+palette = 14=#008986
+palette = 15=#fff6e9
+
+background = #2c2e31
+foreground = #8b8b8b
+cursor-color = #efe8dd
+cursor-text = #2c2e31
+selection-background = #383a3d
+selection-foreground = #8b8b8b

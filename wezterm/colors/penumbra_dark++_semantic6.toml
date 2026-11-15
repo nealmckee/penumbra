@@ -1,0 +1,38 @@
+# Penumbra v2 -- WezTerm Color Scheme
+# Theme: penumbra_dark++_semantic6
+# Mode: dark, Tier: contrast_plus_plus
+
+[metadata]
+name = "Penumbra Dark++ (Semantic 6)"
+author = "Neal McKee"
+
+[colors]
+foreground = "#a9a9a9"
+background = "#101317"
+cursor_bg = "#eee8dd"
+cursor_border = "#eee8dd"
+cursor_fg = "#101317"
+selection_bg = "#1b1e23"
+selection_fg = "#a9a9a9"
+
+ansi = [
+  "#07080b",
+  "#e17782",
+  "#62b06c",
+  "#b4a724",
+  "#009edb",
+  "#be7fc4",
+  "#00a8a4",
+  "#eee8dd",
+]
+
+brights = [
+  "#575b62",
+  "#e17782",
+  "#62b06c",
+  "#b4a724",
+  "#009edb",
+  "#be7fc4",
+  "#00a8a4",
+  "#fff6e9",
+]

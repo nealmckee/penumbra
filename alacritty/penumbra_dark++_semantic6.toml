@@ -1,0 +1,35 @@
+# Penumbra v2 -- Alacritty Color Scheme
+# Theme: penumbra_dark++
+# Mode: dark, Tier: contrast_plus_plus
+
+[colors.primary]
+background = "#101317"
+foreground = "#a9a9a9"
+
+[colors.cursor]
+text = "#101317"
+cursor = "#eee8dd"
+
+[colors.selection]
+text = "#a9a9a9"
+background = "#1b1e23"
+
+[colors.normal]
+black   = "#07080b"
+red     = "#e17782"
+green   = "#62b06c"
+yellow  = "#b4a724"
+blue    = "#009edb"
+magenta = "#be7fc4"
+cyan    = "#00a8a4"
+white   = "#eee8dd"
+
+[colors.bright]
+black   = "#575b62"
+red     = "#e17782"
+green   = "#62b06c"
+yellow  = "#b4a724"
+blue    = "#009edb"
+magenta = "#be7fc4"
+cyan    = "#00a8a4"
+white   = "#fff6e9"

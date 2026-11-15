@@ -1,5 +1,5 @@
 <p align="center">
-     <img align="center" width="200" height="200" src="./logo/penumbra_6.svg" alt="penumbra logo"/>
+     <img align="center" width="200" height="200" src="./logo/penumbra_8.svg" alt="penumbra logo"/>
  </p>
 
 ![dark theme code example](./examples/penumbra_example_header.png)
@@ -36,9 +36,9 @@ Resolving fine character shapes and tracking smoothly along a line of text rely 
 
 By using the [Revised CAM16-UCS](https://doi.org/10.1002/col.22792) colour appearance model together with its [Helmholtz–Kohlrausch extension](https://doi.org/10.1002/col.22793), Penumbra achieves equal perceptual hue steps and equal modelled brightness across all accent colours, adapted separately for dark and light backgrounds. Saturated colours appear brighter to the human eye than a neutral grey of the same physical luminance (the Helmholtz–Kohlrausch effect). Compensating for this effect ensures that none of the accent colours stand out from or recede into the page more than others.
 
-### 5. Perceptually Anchored Hues
+### 5. Maximized Gamut Chroma
 
-Within the constraints of equal hue spacing and constant chroma, the hue rotation of each palette is aligned to minimize the angular distance to the four psychological unique hues of human opponent colour vision in CAM16: red, yellow, green and blue. This anchors the palettes directly in the colour appearance model rather than relying on culturally specific colour naming surveys, while the equal hue spacing naturally places the remaining colours in the intermediate regions (orange, cyan, purple, magenta).
+Within the constraints of equal hue spacing and uniform perceived lightness (including Helmholtz–Kohlrausch compensation), each discrete polygon of $N$ accent hues is rotated to maximize its constant chroma along the exact sRGB gamut boundary. Placing the discrete vertices around the gamut boundary preserves maximum chroma and categorical discriminability while keeping every accent colour balanced at the same perceived brightness.
 
 ## Examples
 
@@ -68,6 +68,8 @@ Within the constraints of equal hue spacing and constant chroma, the hue rotatio
 * **Sublime Text / TextMate (`tmTheme`)** theme files in [`tmtheme/`](./tmtheme) (also compatible with `bat` and `delta`)
 
 ### Terminal Emulators
+
+All terminal themes default to the equally spaced 6-colour ANSI palette (`penumbra_dark`, `penumbra_dark+`, `penumbra_dark++`, `penumbra_light`) and also include semantic variants (`*_semantic6`, or `(Semantic 6)` in Windows Terminal) that map the six standard ANSI slots directly to the corresponding colours of the 8-colour syntax palette:
 
 * **iTerm2** import `.itermcolors` files from [`iTerm2/`](./iTerm2) in the preferences pane
 * **Ghostty** theme files in [`ghostty/themes/`](./ghostty/themes)
@@ -122,7 +124,7 @@ See the VS Code theme for an example of canonical usage.
 
 Used for syntax highlighting and wherever colour is required in the UI. If avoidable, do not use additional colours in the UI that aren’t required for content highlighting. Usually, context is enough to not confuse their uses – each additional colour just reduces differentiability.
 
-**Choose one palette (as large as necessary, as small as possible) and never mix and match!** Otherwise, the advantages of hue optimization are lost. The 6-colour palette matches standard ANSI terminal slots, the 7-colour palette suits rich syntax highlighting, and the 8-colour palette provides four symmetric opponent pairs when an additional category is needed.
+**Choose one palette (as large as necessary, as small as possible) and never mix and match!** Otherwise, the advantages of hue optimization are lost. Editor and UI themes use the 8-colour palette to provide distinct hue categories across syntax roles. For ANSI terminals, the equidistant 6-colour palette is the default for maximum 60° hue spacing and highest chroma, while `*_semantic6` builds select the matching six colours (`red`, `yellow`, `green`, `cyan`, `blue`, `magenta`) from the 8-colour syntax palette when visual consistency between editor and terminal is preferred. A 7-colour palette is also exported in [`penumbra_accents.tsv`](penumbra_accents.tsv).
 
 If palettes smaller than 6 are desired, choose subsets as following:
 
@@ -134,7 +136,7 @@ If palettes smaller than 6 are desired, choose subsets as following:
 
 ## Construction
 
-While the first version of Penumbra used Oklab and hand-tuned luminances as a practical approximation, v2 formulates the entire scheme in Revised CAM16-UCS with Helmholtz–Kohlrausch brightness compensation. This accounts for how a dark (`shade`) versus a bright (`sun`) background alters perceived lightness, and replaces manual tuning and survey fitting with closed-form constraints.
+Penumbra is formulated in Revised CAM16-UCS with Helmholtz–Kohlrausch brightness compensation. This accounts for how a dark (`shade`) versus a bright (`sun`) background alters perceived lightness and derives all base and accent colours from closed-form perceptual and gamut constraints.
 
 ### Base Colours
 
@@ -142,13 +144,13 @@ The nine base colours lie on a single continuous curve in CAM16-UCS coupling per
 
 Along this curve, the colours sit on a regular lightness lattice evaluated under their respective dark and light background environments. Because thin font strokes require much larger lightness differences than broad UI surfaces to be clearly distinguished, the lattice uses a 3:1 ratio between typographic steps (separating background, comments, main text and emphasized text) and surface steps (separating the three `sun` or three `shade` background planes). From these boundary and symmetry constraints alone, a ~3:1 reading contrast in the light theme and a shade colour temperature matching standard north-sky daylight (CIE D75) emerge naturally.
 
-Because `sky` acts as a fixed neutral pivot, the `sky` and `sun` colours remain identical across all variants. The `contrast+` and `contrast++` dark themes are formed simply by shifting the three `shade` roles down the same lattice by one and two surface steps respectively (so `shade` in `contrast+` is identical to `shade-` in `balanced`).
+In the enhanced-contrast dark variants (`contrast+` and `contrast++`), `shade` is lowered while `sky` is lifted symmetrically, widening the background-to-text separation along the typographic lattice (`7Δ → 9Δ → 11Δ`). Each contrast tier re-anchors the daylight trajectory so `sky` always passes through neutral CIE D65 (`6504 K`), keeping text achromatic while subtly deepening the cool tint of the `shade` surfaces.
 
 ### Accent Colour Palettes
 
-Each accent palette (6, 7 or 8 colours) consists of equally spaced hues on a circle of constant CAM16-UCS chroma whose Helmholtz–Kohlrausch perceived lightness matches `sky`. Because `sky` is shared across all contrast tiers, a single dark accent set and a single light accent set serve all theme variants.
+Each accent palette (6, 7 or 8 colours) consists of equally spaced hues on a circle of constant CAM16-UCS chroma whose Helmholtz–Kohlrausch adjusted perceived lightness matches `sky`. Because each dark contrast tier lifts `sky` and re-anchors the base curve, `balanced`, `contrast+` and `contrast++` each derive their own adapted dark accent palette at progressively higher lightness and higher available chroma, alongside a single `balanced` light accent palette.
 
-Rather than restricting chroma to a full circle inside the sRGB gamut, the maximum chroma is determined only for the discrete points of the palette at a given hue rotation (forming a regular polygon in colour space). Because the sRGB gamut at this lightness is most restricted around cyan, rotating the palette so that no colour lands directly on that minimum allows for slightly higher chroma across all colours without clipping. The hue rotation of the polygon is solved analytically via the circular weighted mean aligning the vertices with the four CAM16 unique hues.
+Each palette forms a regular $N$-gon rotated around the constant-lightness hue circle in CAM16-UCS. Because the sRGB gamut boundary at this lightness varies substantially with hue and pinches inward around cyan, evaluating uniform chroma strictly at the discrete $N$ vertices and choosing the hue rotation $h_0$ to avoid that constriction maximizes achievable chroma across all colours without clipping.
 
 ## Limitations
 
@@ -167,27 +169,50 @@ Finally, some legacy terminal applications rely on the large luminance differenc
 | name | balanced | contrast+ | contrast++ |
 | --- | --- | --- | --- |
 | sun+ | `#FFF6E9` | `#FFF6E9` | `#FFF6E9` |
-| sun | `#EFE8DD` | `#EFE8DD` | `#EFE8DD` |
-| sun- | `#DFD9D0` | `#DFD9D0` | `#DFD9D0` |
-| sky+ | `#B4B1AD` | `#B4B1AD` | `#B4B1AD` |
-| sky | `#8B8B8B` | `#8B8B8B` | `#8B8B8B` |
-| sky- | `#5E6063` | `#5E6063` | `#5E6063` |
-| shade+ | `#383A3D` | `#2C2E31` | `#202225` |
-| shade | `#2C2E31` | `#202225` | `#151619` |
-| shade- | `#202225` | `#151619` | `#0A0B0D` |
+| sun | `#EFE8DD` | `#EFE8DD` | `#EEE8DD` |
+| sun- | `#DFD9D0` | `#DFD9D1` | `#DED9D2` |
+| sky+ | `#B4B1AD` | `#BAB8B4` | `#C2C0BD` |
+| sky | `#8B8B8B` | `#999999` | `#A9A9A9` |
+| sky- | `#5E6063` | `#5B5D62` | `#575B62` |
+| shade+ | `#383A3D` | `#292B30` | `#1B1E23` |
+| shade | `#2C2E31` | `#1D2024` | `#101317` |
+| shade- | `#202225` | `#131418` | `#07080B` |
 
-### Accent Colour Palettes
+### 8-Colour Accent Palette (Syntax & UI)
 
-| colour | 6 dark | 7 dark | 8 dark | 6 light | 7 light | 8 light |
-| --- | --- | --- | --- | --- | --- | --- |
-| red | `#B7695F` | `#B2637E` | `#BA616B` | `#B86960` | `#B4637F` | `#BB626C` |
-| orange | | `#B2744A` | `#B3753F` | | `#B3754A` | `#B3763F` |
-| yellow | `#A38334` | `#948A2C` | `#95891E` | `#A48334` | `#948A2C` | `#958A1D` |
-| green | `#599159` | `#508F64` | `#519158` | `#599159` | `#509064` | `#519258` |
-| cyan | `#008892` | `#008892` | `#078986` | `#008993` | `#008994` | `#078A87` |
-| blue | `#5E7AAF` | `#527CB0` | `#0081B3` | `#5F7BB0` | `#537DB2` | `#0082B5` |
-| purple | | `#8871A6` | `#7076AE` | | `#8972A7` | `#7177AF` |
-| magenta | `#986BA0` | | `#9B68A1` | `#996CA1` | | `#9C69A2` |
+| colour | dark balanced | dark contrast+ | dark contrast++ | light balanced |
+| --- | --- | --- | --- | --- |
+| red | `#BA616A` | `#CD6B76` | `#E17782` | `#BB626B` |
+| orange | `#B3763E` | `#C58145` | `#D88F4C` | `#B4763E` |
+| yellow | `#948A1D` | `#A39720` | `#B4A724` | `#958A1C` |
+| green | `#4F9158` | `#58A061` | `#62B06C` | `#509259` |
+| cyan | `#008986` | `#009894` | `#00A8A4` | `#008A87` |
+| blue | `#0081B4` | `#008FC6` | `#009EDB` | `#0082B5` |
+| purple | `#7176AE` | `#7D82C0` | `#8A90D4` | `#7177B0` |
+| magenta | `#9C67A1` | `#AC72B2` | `#BE7FC4` | `#9D68A2` |
+
+### 6-Colour Accent Palette (Equidistant Terminal Default)
+
+| colour | dark balanced | dark contrast+ | dark contrast++ | light balanced |
+| --- | --- | --- | --- | --- |
+| red | `#BA5B78` | `#CD6584` | `#E27092` | `#BB5C78` |
+| yellow | `#B47632` | `#C68237` | `#DA8F3E` | `#B57632` |
+| green | `#759122` | `#81A026` | `#8EB02A` | `#759221` |
+| cyan | `#008B7C` | `#009989` | `#00AA98` | `#008C7D` |
+| blue | `#007FBA` | `#008CCD` | `#009BE2` | `#0080BB` |
+| magenta | `#836FAE` | `#917BBF` | `#A088D3` | `#8470AF` |
+
+### 7-Colour Accent Palette
+
+| colour | dark balanced | dark contrast+ | dark contrast++ | light balanced |
+| --- | --- | --- | --- | --- |
+| red | `#AB6094` | `#BD6AA3` | `#D076B4` | `#AC6195` |
+| orange | `#BA694F` | `#CD7458` | `#E28061` | `#BC6950` |
+| yellow | `#A58222` | `#B68F26` | `#C89D2A` | `#A68222` |
+| green | `#5D9245` | `#66A14C` | `#71B254` | `#5D9345` |
+| cyan | `#008A82` | `#009890` | `#00A89F` | `#008B83` |
+| blue | `#0080B6` | `#008EC9` | `#009DDE` | `#0081B8` |
+| purple | `#7973AE` | `#857FC0` | `#938DD3` | `#7A74AF` |
 
 ## Releases & Legacy Versions
 

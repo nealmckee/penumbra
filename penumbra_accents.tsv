@@ -1,43 +1,85 @@
-mode	palette	name	rgb_hex	r	g	b	h	s	l	cam16_ucs_lightness	cam16_ucs_chroma	cam16_ucs_hue
-dark	six	red	B7695F	183	105	95	7	38	55	65.99	28.29	25.61
-dark	six	yellow	A38334	163	131	52	42	52	42	65.99	28.29	85.61
-dark	six	green	599159	89	145	89	119	24	46	65.99	28.29	145.61
-dark	six	cyan	008892	0	136	146	184	100	29	65.99	28.29	205.61
-dark	six	blue	5E7AAF	94	122	175	219	33	53	65.99	28.29	265.61
-dark	six	magenta	986BA0	152	107	160	290	22	53	65.99	28.29	325.61
-dark	seven	red	B2637E	178	99	126	339	34	54	65.99	28.25	0.27
-dark	seven	orange	B2744A	178	116	74	24	41	49	65.99	28.25	51.7
-dark	seven	yellow	948A2C	148	138	44	54	54	38	65.99	28.25	103.12
-dark	seven	green	508F64	80	143	100	139	28	44	65.99	28.25	154.55
-dark	seven	cyan	008892	0	136	146	184	100	29	65.99	28.25	205.98
-dark	seven	blue	527CB0	82	124	176	213	38	51	65.99	28.25	257.41
-dark	seven	purple	8871A6	136	113	166	266	23	55	65.99	28.25	308.84
-dark	eight	red	BA616B	186	97	107	353	39	55	65.99	29.72	13.1
-dark	eight	orange	B3753F	179	117	63	28	48	47	65.99	29.72	58.1
-dark	eight	yellow	95891E	149	137	30	54	66	35	65.99	29.72	103.1
-dark	eight	green	519158	81	145	88	127	29	44	65.99	29.72	148.1
-dark	eight	cyan	078986	7	137	134	178	90	28	65.99	29.72	193.1
-dark	eight	blue	0081B3	0	129	179	197	100	35	65.99	29.72	238.1
-dark	eight	purple	7076AE	112	118	174	235	28	56	65.99	29.72	283.1
-dark	eight	magenta	9B68A1	155	104	161	294	23	52	65.99	29.72	328.1
-light	six	red	B86960	184	105	96	7	38	55	53.34	28.41	25.61
-light	six	yellow	A48334	164	131	52	42	52	42	53.34	28.41	85.61
-light	six	green	599159	89	145	89	119	24	46	53.34	28.41	145.61
-light	six	cyan	008993	0	137	147	184	100	29	53.34	28.41	205.61
-light	six	blue	5F7BB0	95	123	176	219	34	53	53.34	28.41	265.61
-light	six	magenta	996CA1	153	108	161	290	22	53	53.34	28.41	325.61
-light	seven	red	B4637F	180	99	127	339	35	55	53.34	28.37	0.27
-light	seven	orange	B3754A	179	117	74	24	41	50	53.34	28.37	51.7
-light	seven	yellow	948A2C	148	138	44	54	55	38	53.34	28.37	103.12
-light	seven	green	509064	80	144	100	139	28	44	53.34	28.37	154.55
-light	seven	cyan	008994	0	137	148	184	100	29	53.34	28.37	205.98
-light	seven	blue	537DB2	83	125	178	213	38	51	53.34	28.37	257.41
-light	seven	purple	8972A7	137	114	167	266	23	55	53.34	28.37	308.84
-light	eight	red	BB626C	187	98	108	353	39	56	53.34	29.85	13.1
-light	eight	orange	B3763F	179	118	63	28	48	48	53.34	29.85	58.1
-light	eight	yellow	958A1D	149	138	29	54	67	35	53.34	29.85	103.1
-light	eight	green	519258	81	146	88	127	29	44	53.34	29.85	148.1
-light	eight	cyan	078A87	7	138	135	178	90	29	53.34	29.85	193.1
-light	eight	blue	0082B5	0	130	181	197	100	35	53.34	29.85	238.1
-light	eight	purple	7177AF	113	119	175	235	28	57	53.34	29.85	283.1
-light	eight	magenta	9C69A2	156	105	162	294	24	52	53.34	29.85	328.1
+mode	tier	palette	name	rgb_hex	r	g	b	h	s	l	cam16_ucs_lightness	cam16_ucs_chroma	cam16_ucs_hue
+dark	balanced	six	red	BA5B78	186	91	120	342	41	54	65.99	31.31	3.43
+dark	balanced	six	yellow	B47632	180	118	50	31	57	45	65.99	31.31	63.43
+dark	balanced	six	green	759122	117	145	34	75	62	35	65.99	31.31	123.43
+dark	balanced	six	cyan	008B7C	0	139	124	174	100	27	65.99	31.31	183.43
+dark	balanced	six	blue	007FBA	0	127	186	199	100	36	65.99	31.31	243.43
+dark	balanced	six	magenta	836FAE	131	111	174	260	28	56	65.99	31.31	303.43
+dark	balanced	seven	red	AB6094	171	96	148	319	31	52	65.99	30.45	343.59
+dark	balanced	seven	orange	BA694F	186	105	79	14	44	52	65.99	30.45	35.02
+dark	balanced	seven	yellow	A58222	165	130	34	44	66	39	65.99	30.45	86.45
+dark	balanced	seven	green	5D9245	93	146	69	101	36	42	65.99	30.45	137.88
+dark	balanced	seven	cyan	008A82	0	138	130	177	100	27	65.99	30.45	189.31
+dark	balanced	seven	blue	0080B6	0	128	182	198	100	36	65.99	30.45	240.74
+dark	balanced	seven	purple	7973AE	121	115	174	246	27	57	65.99	30.45	292.17
+dark	balanced	eight	red	BA616A	186	97	106	354	39	55	65.99	29.84	13.56
+dark	balanced	eight	orange	B3763E	179	118	62	28	48	47	65.99	29.84	58.56
+dark	balanced	eight	yellow	948A1D	148	138	29	55	67	35	65.99	29.84	103.56
+dark	balanced	eight	green	4F9158	79	145	88	128	29	44	65.99	29.84	148.56
+dark	balanced	eight	cyan	008986	0	137	134	179	100	27	65.99	29.84	193.56
+dark	balanced	eight	blue	0081B4	0	129	180	197	100	35	65.99	29.84	238.56
+dark	balanced	eight	purple	7176AE	113	118	174	235	28	56	65.99	29.84	283.56
+dark	balanced	eight	magenta	9C67A1	156	103	161	295	23	52	65.99	29.84	328.56
+dark	contrast+	six	red	CD6584	205	101	132	342	51	60	71.49	32.91	3.41
+dark	contrast+	six	yellow	C68237	198	130	55	31	56	50	71.49	32.91	63.41
+dark	contrast+	six	green	81A026	129	160	38	75	62	39	71.49	32.91	123.41
+dark	contrast+	six	cyan	009989	0	153	137	174	100	30	71.49	32.91	183.41
+dark	contrast+	six	blue	008CCD	0	140	205	199	100	40	71.49	32.91	243.41
+dark	contrast+	six	magenta	917BBF	145	123	191	260	35	62	71.49	32.91	303.41
+dark	contrast+	seven	red	BD6AA3	189	106	163	319	38	58	71.49	32.03	343.58
+dark	contrast+	seven	orange	CD7458	205	116	88	14	54	57	71.49	32.03	35.01
+dark	contrast+	seven	yellow	B68F26	182	143	38	44	65	43	71.49	32.03	86.44
+dark	contrast+	seven	green	66A14C	102	161	76	101	36	46	71.49	32.03	137.87
+dark	contrast+	seven	cyan	009890	0	152	144	177	100	30	71.49	32.03	189.3
+dark	contrast+	seven	blue	008EC9	0	142	201	198	100	39	71.49	32.03	240.73
+dark	contrast+	seven	purple	857FC0	133	127	192	246	34	63	71.49	32.03	292.15
+dark	contrast+	eight	red	CD6B76	205	107	118	354	49	61	71.49	31.4	13.56
+dark	contrast+	eight	orange	C58145	197	129	69	28	52	52	71.49	31.4	58.56
+dark	contrast+	eight	yellow	A39720	163	151	32	55	67	38	71.49	31.4	103.56
+dark	contrast+	eight	green	58A061	88	160	97	128	29	49	71.49	31.4	148.56
+dark	contrast+	eight	cyan	009894	0	152	148	179	100	30	71.49	31.4	193.56
+dark	contrast+	eight	blue	008FC6	0	143	198	197	100	39	71.49	31.4	238.56
+dark	contrast+	eight	purple	7D82C0	125	130	192	235	35	62	71.49	31.4	283.56
+dark	contrast+	eight	magenta	AC72B2	172	114	178	295	29	57	71.49	31.4	328.56
+dark	contrast++	six	red	E27092	226	112	146	342	66	66	76.99	34.57	3.4
+dark	contrast++	six	yellow	DA8F3E	218	143	62	31	68	55	76.99	34.57	63.4
+dark	contrast++	six	green	8EB02A	142	176	42	75	62	43	76.99	34.57	123.4
+dark	contrast++	six	cyan	00AA98	0	170	152	174	100	33	76.99	34.57	183.4
+dark	contrast++	six	blue	009BE2	0	155	226	199	100	44	76.99	34.57	243.4
+dark	contrast++	six	magenta	A088D3	160	136	211	260	46	68	76.99	34.57	303.4
+dark	contrast++	seven	red	D076B4	208	118	180	318	49	64	76.99	33.66	343.57
+dark	contrast++	seven	orange	E28061	226	128	97	14	69	63	76.99	33.66	35.0
+dark	contrast++	seven	yellow	C89D2A	200	157	42	44	65	48	76.99	33.66	86.43
+dark	contrast++	seven	green	71B254	113	178	84	101	38	51	76.99	33.66	137.86
+dark	contrast++	seven	cyan	00A89F	0	168	159	177	100	33	76.99	33.66	189.29
+dark	contrast++	seven	blue	009DDE	0	157	222	198	100	44	76.99	33.66	240.72
+dark	contrast++	seven	purple	938DD3	147	141	211	246	45	69	76.99	33.66	292.15
+dark	contrast++	eight	red	E17782	225	119	130	354	64	67	76.99	33.02	13.55
+dark	contrast++	eight	orange	D88F4C	216	143	76	28	64	57	76.99	33.02	58.55
+dark	contrast++	eight	yellow	B4A724	180	167	36	55	67	42	76.99	33.02	103.55
+dark	contrast++	eight	green	62B06C	98	176	108	128	33	54	76.99	33.02	148.55
+dark	contrast++	eight	cyan	00A8A4	0	168	164	179	100	33	76.99	33.02	193.55
+dark	contrast++	eight	blue	009EDB	0	158	219	197	100	43	76.99	33.02	238.55
+dark	contrast++	eight	purple	8A90D4	138	144	212	235	46	69	76.99	33.02	283.55
+dark	contrast++	eight	magenta	BE7FC4	190	127	196	295	37	63	76.99	33.02	328.55
+light	balanced	six	red	BB5C78	187	92	120	342	42	55	53.34	31.44	3.42
+light	balanced	six	yellow	B57632	181	118	50	31	57	45	53.34	31.44	63.42
+light	balanced	six	green	759221	117	146	33	75	63	35	53.34	31.44	123.42
+light	balanced	six	cyan	008C7D	0	140	125	174	100	27	53.34	31.44	183.42
+light	balanced	six	blue	0080BB	0	128	187	199	100	37	53.34	31.44	243.42
+light	balanced	six	magenta	8470AF	132	112	175	260	28	56	53.34	31.44	303.42
+light	balanced	seven	red	AC6195	172	97	149	319	31	53	53.34	30.58	343.59
+light	balanced	seven	orange	BC6950	188	105	80	14	44	52	53.34	30.58	35.02
+light	balanced	seven	yellow	A68222	166	130	34	44	66	39	53.34	30.58	86.44
+light	balanced	seven	green	5D9345	93	147	69	101	36	42	53.34	30.58	137.87
+light	balanced	seven	cyan	008B83	0	139	131	177	100	27	53.34	30.58	189.3
+light	balanced	seven	blue	0081B8	0	129	184	198	100	36	53.34	30.58	240.73
+light	balanced	seven	purple	7A74AF	122	116	175	246	27	57	53.34	30.58	292.16
+light	balanced	eight	red	BB626B	187	98	107	354	40	56	53.34	29.97	13.56
+light	balanced	eight	orange	B4763E	180	118	62	28	49	47	53.34	29.97	58.56
+light	balanced	eight	yellow	958A1C	149	138	28	55	68	35	53.34	29.97	103.56
+light	balanced	eight	green	509259	80	146	89	128	29	44	53.34	29.97	148.56
+light	balanced	eight	cyan	008A87	0	138	135	179	100	27	53.34	29.97	193.56
+light	balanced	eight	blue	0082B5	0	130	181	197	100	36	53.34	29.97	238.56
+light	balanced	eight	purple	7177B0	113	119	176	235	28	57	53.34	29.97	283.56
+light	balanced	eight	magenta	9D68A2	157	104	162	295	24	52	53.34	29.97	328.56

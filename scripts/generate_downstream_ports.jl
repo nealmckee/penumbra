@@ -62,10 +62,10 @@ struct TerminalAnsiPalette
     bright_white::String
 end
 
-function get_terminal_ansi_palette(mode::Symbol, tier::Symbol)
+function get_terminal_ansi_palette(mode::Symbol, tier::Symbol; ansi_n::Int=6)
     is_dark = mode == :dark
     base = BASE_TONES[tier]
-    acc = ACCENTS[mode][6]
+    acc = ACCENTS[mode][tier][ansi_n]
 
     bg = is_dark ? base["shade"] : base["sun"]
     fg = base["sky"]
@@ -74,11 +74,11 @@ function get_terminal_ansi_palette(mode::Symbol, tier::Symbol)
     sel_bg = is_dark ? base["shade+"] : base["sun-"]
     sel_fg = fg
 
-    # ANSI color roles
-    black = base["shade-"]
-    white = is_dark ? base["sky+"] : base["sun+"]
-    bright_black = is_dark ? base["sky-"] : base["shade"]
-    bright_white = is_dark ? base["sun"] : base["sun+"]
+    # ANSI color roles (matches VSCode terminal.ansiBlack/White/Bright*)
+    black = is_dark ? base["shade-"] : base["sun-"]
+    white = is_dark ? base["sun"] : base["shade"]
+    bright_black = is_dark ? base["sky-"] : base["sky+"]
+    bright_white = is_dark ? base["sun+"] : base["shade-"]
 
     return TerminalAnsiPalette(
         bg, fg, cursor, cursor_text, sel_bg, sel_fg,
@@ -98,7 +98,7 @@ end
 function generate_ohmyrepl_theme(mode::Symbol, tier::Symbol; target_path::String, dry_run::Bool=true)
     is_dark = mode == :dark
     base = BASE_TONES[tier]
-    acc = ACCENTS[mode][7]
+    acc = ACCENTS[mode][tier][8]
 
     scheme_name = if is_dark
         tier == :balanced ? "Penumbra" : (tier == :contrast_plus ? "Penumbra Dark+" : "Penumbra Dark++")
@@ -121,9 +121,9 @@ try
 
     import OhMyREPL: Passes.SyntaxHighlighter
 
-    # $scheme_name (CAM16-UCS Opponent Scheme, N = 7)
+    # $scheme_name (CAM16-UCS Opponent Scheme, N = 8)
     penumbra = SyntaxHighlighter.ColorScheme()
-    SyntaxHighlighter.symbol!(penumbra, crayon"#$(acc["red"])")
+    SyntaxHighlighter.symbol!(penumbra, crayon"#$(acc["magenta"])")
     SyntaxHighlighter.comment!(penumbra, crayon"#$fg_comment")
     SyntaxHighlighter.string!(penumbra, crayon"#$(acc["green"])")
     SyntaxHighlighter.call!(penumbra, crayon"#$(acc["blue"])")
@@ -211,7 +211,7 @@ end
 function generate_vim_theme(mode::Symbol, tier::Symbol; target_path::String, dry_run::Bool=true)
     is_dark = mode == :dark
     base = BASE_TONES[tier]
-    acc = ACCENTS[mode][7]
+    acc = ACCENTS[mode][tier][8]
     p = get_terminal_ansi_palette(mode, tier)
 
     bg_canvas = is_dark ? base["shade"] : base["sun"]
@@ -303,7 +303,7 @@ function generate_vim_theme(mode::Symbol, tier::Symbol; target_path::String, dry
         _vim_hi("Operator", acc["cyan"]),
         _vim_hi("PreProc", acc["red"]),
         _vim_hi("Type", acc["yellow"]),
-        _vim_hi("Special", acc["red"]),
+        _vim_hi("Special", acc["magenta"]),
         _vim_hi("Delimiter", fg_text),
         _vim_hi("Underlined", acc["blue"]; gui="underline", cterm="underline"),
         _vim_hi("Ignore", fg_comment),
@@ -340,7 +340,7 @@ function generate_vim_theme(mode::Symbol, tier::Symbol; target_path::String, dry
 
     content = """\" Penumbra v2 -- Vim / Neovim color scheme
 \" Theme: $slug (Mode: $mode, Tier: $tier)
-\" Opponent Scheme: N = 7 (Strict Upright Typography)
+\" Opponent Scheme: N = 8 (Strict Upright Typography)
 \" Generated deterministically by Penumbra v2 pipeline.
 
 set background=$bg_setting
@@ -500,7 +500,7 @@ end
 function generate_helix_theme(mode::Symbol, tier::Symbol; target_path::String, dry_run::Bool=true)
     is_dark = mode == :dark
     base = BASE_TONES[tier]
-    acc = ACCENTS[mode][7]
+    acc = ACCENTS[mode][tier][8]
 
     bg_canvas = is_dark ? base["shade"] : base["sun"]
     bg_recessed = is_dark ? base["shade-"] : base["sun-"]
@@ -513,7 +513,7 @@ function generate_helix_theme(mode::Symbol, tier::Symbol; target_path::String, d
     content = """# Penumbra v2 -- Helix Editor Theme
 # Theme: $theme_name
 # Mode: $mode, Tier: $tier
-# Opponent Scheme: N = 7 (Strict Upright Typography)
+# Opponent Scheme: N = 8 (Strict Upright Typography)
 
 "attribute" = "yellow"
 "type" = "yellow"
@@ -525,21 +525,21 @@ function generate_helix_theme(mode::Symbol, tier::Symbol; target_path::String, d
 "constant.numeric" = "orange"
 "constant.builtin.boolean" = "orange"
 "constant.character" = "orange"
-"constant.character.escape" = "orange"
+"constant.character.escape" = "magenta"
 
 "string" = "green"
-"string.regexp" = "green"
+"string.regexp" = "magenta"
 "string.special" = "green"
 
 "comment" = { fg = "$comment_ref" }
 
 "variable" = "sky"
-"variable.builtin" = "red"
+"variable.builtin" = "magenta"
 "variable.parameter" = "sky"
 "variable.other.member" = "sky"
 
 "label" = "red"
-"special" = "red"
+"special" = "magenta"
 
 "function" = "blue"
 "function.builtin" = "blue"
@@ -606,6 +606,7 @@ green = "#$(acc["green"])"
 cyan = "#$(acc["cyan"])"
 blue = "#$(acc["blue"])"
 purple = "#$(acc["purple"])"
+magenta = "#$(acc["magenta"])"
 """
 
     if dry_run
@@ -621,11 +622,11 @@ end
 # 4. iTerm2
 # =============================================================================
 
-function generate_iterm2_profile(mode::Symbol, tier::Symbol; target_path::String, dry_run::Bool=true)
+function generate_iterm2_profile(mode::Symbol, tier::Symbol; target_path::String, ansi_n::Int=6, dry_run::Bool=true)
     is_dark = mode == :dark
     base = BASE_TONES[tier]
-    acc = ACCENTS[mode][7]
-    p = get_terminal_ansi_palette(mode, tier)
+    acc = ACCENTS[mode][tier][8]
+    p = get_terminal_ansi_palette(mode, tier; ansi_n=ansi_n)
 
     bg_canvas = is_dark ? base["shade"] : base["sun"]
     fg_comment = is_dark ? base["sky-"] : base["sky+"]
@@ -702,8 +703,8 @@ end
 # 5. Ghostty Terminal
 # =============================================================================
 
-function generate_ghostty_theme(mode::Symbol, tier::Symbol; target_path::String, dry_run::Bool=true)
-    p = get_terminal_ansi_palette(mode, tier)
+function generate_ghostty_theme(mode::Symbol, tier::Symbol; target_path::String, ansi_n::Int=6, dry_run::Bool=true)
+    p = get_terminal_ansi_palette(mode, tier; ansi_n=ansi_n)
     theme_label = mode == :dark ? "penumbra_dark$(tier_suffix(tier))" : "penumbra_light"
 
     content = """# Penumbra v2 -- Ghostty Color Scheme
@@ -747,8 +748,8 @@ end
 # 6. Alacritty Terminal
 # =============================================================================
 
-function generate_alacritty_theme(mode::Symbol, tier::Symbol; target_path::String, dry_run::Bool=true)
-    p = get_terminal_ansi_palette(mode, tier)
+function generate_alacritty_theme(mode::Symbol, tier::Symbol; target_path::String, ansi_n::Int=6, dry_run::Bool=true)
+    p = get_terminal_ansi_palette(mode, tier; ansi_n=ansi_n)
     theme_label = mode == :dark ? "penumbra_dark$(tier_suffix(tier))" : "penumbra_light"
 
     content = """# Penumbra v2 -- Alacritty Color Scheme
@@ -800,8 +801,8 @@ end
 # 7. Kitty Terminal
 # =============================================================================
 
-function generate_kitty_theme(mode::Symbol, tier::Symbol; target_path::String, dry_run::Bool=true)
-    p = get_terminal_ansi_palette(mode, tier)
+function generate_kitty_theme(mode::Symbol, tier::Symbol; target_path::String, ansi_n::Int=6, dry_run::Bool=true)
+    p = get_terminal_ansi_palette(mode, tier; ansi_n=ansi_n)
     theme_label = mode == :dark ? "penumbra_dark$(tier_suffix(tier))" : "penumbra_light"
 
     content = """# Penumbra v2 -- Kitty Color Scheme
@@ -858,31 +859,33 @@ function generate_windows_terminal_schemes(; target_path::String, dry_run::Bool=
         (:light, :balanced, "Penumbra Light")
     ]
 
-    for (mode, tier, name) in targets
-        p = get_terminal_ansi_palette(mode, tier)
-        push!(schemes, Dict{String,Any}(
-            "name" => name,
-            "background" => "#" * p.bg,
-            "foreground" => "#" * p.fg,
-            "cursorColor" => "#" * p.cursor,
-            "selectionBackground" => "#" * p.selection_bg,
-            "black" => "#" * p.black,
-            "red" => "#" * p.red,
-            "green" => "#" * p.green,
-            "yellow" => "#" * p.yellow,
-            "blue" => "#" * p.blue,
-            "purple" => "#" * p.magenta,
-            "cyan" => "#" * p.cyan,
-            "white" => "#" * p.white,
-            "brightBlack" => "#" * p.bright_black,
-            "brightRed" => "#" * p.bright_red,
-            "brightGreen" => "#" * p.bright_green,
-            "brightYellow" => "#" * p.bright_yellow,
-            "brightBlue" => "#" * p.bright_blue,
-            "brightPurple" => "#" * p.bright_magenta,
-            "brightCyan" => "#" * p.bright_cyan,
-            "brightWhite" => "#" * p.bright_white
-        ))
+    for (ansi_n, name_suffix) in ((6, ""), (8, " (Semantic 6)"))
+        for (mode, tier, name) in targets
+            p = get_terminal_ansi_palette(mode, tier; ansi_n=ansi_n)
+            push!(schemes, Dict{String,Any}(
+                "name" => name * name_suffix,
+                "background" => "#" * p.bg,
+                "foreground" => "#" * p.fg,
+                "cursorColor" => "#" * p.cursor,
+                "selectionBackground" => "#" * p.selection_bg,
+                "black" => "#" * p.black,
+                "red" => "#" * p.red,
+                "green" => "#" * p.green,
+                "yellow" => "#" * p.yellow,
+                "blue" => "#" * p.blue,
+                "purple" => "#" * p.magenta,
+                "cyan" => "#" * p.cyan,
+                "white" => "#" * p.white,
+                "brightBlack" => "#" * p.bright_black,
+                "brightRed" => "#" * p.bright_red,
+                "brightGreen" => "#" * p.bright_green,
+                "brightYellow" => "#" * p.bright_yellow,
+                "brightBlue" => "#" * p.bright_blue,
+                "brightPurple" => "#" * p.bright_magenta,
+                "brightCyan" => "#" * p.bright_cyan,
+                "brightWhite" => "#" * p.bright_white
+            ))
+        end
     end
 
     data = Dict{String,Any}("schemes" => schemes)
@@ -921,29 +924,34 @@ function generate_css_tokens(; target_path::String, dry_run::Bool=true)
     ]
 
     balanced = BASE_TONES[:balanced]
-    for name in ("sun+", "sun", "sun-", "sky+", "sky", "sky-")
+    push!(lines, @sprintf("  --penumbra-%s: #%s;", _css_token_name("sun+"), balanced["sun+"]))
+    for name in ("sun", "sun-", "sky+", "sky", "sky-")
         push!(lines, @sprintf("  --penumbra-%s: #%s;", _css_token_name(name), balanced[name]))
     end
 
     push!(lines, "")
-    push!(lines, "  /* Contrast-tiered shade base tokens */")
+    push!(lines, "  /* Re-anchored contrast-tiered base tokens */")
     for (tier, tier_slug) in ((:balanced, "balanced"), (:contrast_plus, "contrast-plus"), (:contrast_plus_plus, "contrast-plus-plus"))
         base = BASE_TONES[tier]
-        for name in ("shade+", "shade", "shade-")
+        for name in ("sun", "sun-", "sky+", "sky", "sky-", "shade+", "shade", "shade-")
             push!(lines, @sprintf("  --penumbra-%s-%s: #%s;", tier_slug, _css_token_name(name), base[name]))
         end
     end
 
     pal_slugs = Dict(6 => "six", 7 => "seven", 8 => "eight")
 
-    for mode in (:dark, :light)
-        mode_str = string(mode)
+    for (mode, tier, tier_prefix) in (
+        (:dark, :balanced, "dark"),
+        (:dark, :contrast_plus, "dark-contrast-plus"),
+        (:dark, :contrast_plus_plus, "dark-contrast-plus-plus"),
+        (:light, :balanced, "light"),
+    )
         for n in (6, 7, 8)
             push!(lines, "")
-            push!(lines, "  /* $mode_str mode accents (N = $n) */")
-            acc = ACCENTS[mode][n]
+            push!(lines, "  /* $tier_prefix accents (N = $n) */")
+            acc = ACCENTS[mode][tier][n]
             for cname in ACCENT_ORDERS[n]
-                push!(lines, @sprintf("  --penumbra-%s-%s-%s: #%s;", mode_str, pal_slugs[n], cname, acc[cname]))
+                push!(lines, @sprintf("  --penumbra-%s-%s-%s: #%s;", tier_prefix, pal_slugs[n], cname, acc[cname]))
             end
         end
     end
@@ -951,26 +959,25 @@ function generate_css_tokens(; target_path::String, dry_run::Bool=true)
 
     # Semantic theme bindings
     themes = [
-        (":root,\n[data-theme=\"penumbra-dark\"],\n.penumbra-dark", :dark, :balanced, "balanced"),
-        ("[data-theme=\"penumbra-dark-contrast-plus\"],\n.penumbra-dark-contrast-plus", :dark, :contrast_plus, "contrast-plus"),
-        ("[data-theme=\"penumbra-dark-contrast-plus-plus\"],\n.penumbra-dark-contrast-plus-plus", :dark, :contrast_plus_plus, "contrast-plus-plus"),
-        ("[data-theme=\"penumbra-light\"],\n.penumbra-light", :light, :balanced, "balanced"),
+        (":root,\n[data-theme=\"penumbra-dark\"],\n.penumbra-dark", :dark, :balanced, "balanced", "dark"),
+        ("[data-theme=\"penumbra-dark-contrast-plus\"],\n.penumbra-dark-contrast-plus", :dark, :contrast_plus, "contrast-plus", "dark-contrast-plus"),
+        ("[data-theme=\"penumbra-dark-contrast-plus-plus\"],\n.penumbra-dark-contrast-plus-plus", :dark, :contrast_plus_plus, "contrast-plus-plus", "dark-contrast-plus-plus"),
+        ("[data-theme=\"penumbra-light\"],\n.penumbra-light", :light, :balanced, "balanced", "light"),
     ]
 
-    for (selector, mode, tier, tier_slug) in themes
+    for (selector, mode, tier, tier_slug, accent_prefix) in themes
         is_dark = mode == :dark
-        mode_str = string(mode)
         push!(lines, "")
         push!(lines, "$selector {")
         if is_dark
             push!(lines, "  --penumbra-bg: var(--penumbra-$tier_slug-shade);")
             push!(lines, "  --penumbra-bg-recessed: var(--penumbra-$tier_slug-shade-minus);")
             push!(lines, "  --penumbra-bg-elevated: var(--penumbra-$tier_slug-shade-plus);")
-            push!(lines, "  --penumbra-fg: var(--penumbra-sky);")
-            push!(lines, "  --penumbra-fg-muted: var(--penumbra-sky-minus);")
-            push!(lines, "  --penumbra-fg-emphasis: var(--penumbra-sky-plus);")
+            push!(lines, "  --penumbra-fg: var(--penumbra-$tier_slug-sky);")
+            push!(lines, "  --penumbra-fg-muted: var(--penumbra-$tier_slug-sky-minus);")
+            push!(lines, "  --penumbra-fg-emphasis: var(--penumbra-$tier_slug-sky-plus);")
             push!(lines, "  --penumbra-selection: var(--penumbra-$tier_slug-shade-plus);")
-            push!(lines, "  --penumbra-cursor: var(--penumbra-sun);")
+            push!(lines, "  --penumbra-cursor: var(--penumbra-$tier_slug-sun);")
             push!(lines, "  --penumbra-border: var(--penumbra-$tier_slug-shade-plus);")
         else
             push!(lines, "  --penumbra-bg: var(--penumbra-sun);")
@@ -983,8 +990,8 @@ function generate_css_tokens(; target_path::String, dry_run::Bool=true)
             push!(lines, "  --penumbra-cursor: var(--penumbra-balanced-shade);")
             push!(lines, "  --penumbra-border: var(--penumbra-sun-minus);")
         end
-        for cname in ACCENT_ORDERS[7]
-            push!(lines, "  --penumbra-$cname: var(--penumbra-$mode_str-seven-$cname);")
+        for cname in ACCENT_ORDERS[8]
+            push!(lines, "  --penumbra-$cname: var(--penumbra-$accent_prefix-eight-$cname);")
         end
         push!(lines, "}")
     end
@@ -1012,7 +1019,7 @@ end
 
 function generate_gpl_palette(mode::Symbol, tier::Symbol; target_path::String, dry_run::Bool=true)
     base = BASE_TONES[tier]
-    acc = ACCENTS[mode][7]
+    acc = ACCENTS[mode][tier][8]
     tier_label = tier == :balanced ? "" : (tier == :contrast_plus ? " Contrast+" : " Contrast++")
     mode_label = mode == :dark ? "Dark" : "Light"
 
@@ -1027,7 +1034,7 @@ function generate_gpl_palette(mode::Symbol, tier::Symbol; target_path::String, d
         r, g, b = _hex_to_rgb255(base[name])
         push!(lines, @sprintf("%3d %3d %3d\t%s", r, g, b, name))
     end
-    for cname in ("red", "orange", "yellow", "green", "cyan", "blue", "purple")
+    for cname in ACCENT_ORDERS[8]
         r, g, b = _hex_to_rgb255(acc[cname])
         push!(lines, @sprintf("%3d %3d %3d\t%s", r, g, b, cname))
     end
@@ -1051,25 +1058,27 @@ function generate_gpl_all(; target_path::String, dry_run::Bool=true)
     ]
 
     balanced = BASE_TONES[:balanced]
-    for name in ("sun+", "sun", "sun-", "sky+", "sky", "sky-")
-        r, g, b = _hex_to_rgb255(balanced[name])
-        push!(lines, @sprintf("%3d %3d %3d\t%s", r, g, b, name))
-    end
+    r_sp, g_sp, b_sp = _hex_to_rgb255(balanced["sun+"])
+    push!(lines, @sprintf("%3d %3d %3d\t%s", r_sp, g_sp, b_sp, "sun+"))
     for (tier, prefix) in ((:balanced, "balanced"), (:contrast_plus, "contrast+"), (:contrast_plus_plus, "contrast++"))
         base = BASE_TONES[tier]
-        for name in ("shade+", "shade", "shade-")
+        for name in ("sun", "sun-", "sky+", "sky", "sky-", "shade+", "shade", "shade-")
             r, g, b = _hex_to_rgb255(base[name])
             push!(lines, @sprintf("%3d %3d %3d\t%s %s", r, g, b, prefix, name))
         end
     end
 
-    for mode in (:dark, :light)
-        mode_str = string(mode)
+    for (mode, tier, label) in (
+        (:dark, :balanced, "dark balanced"),
+        (:dark, :contrast_plus, "dark contrast+"),
+        (:dark, :contrast_plus_plus, "dark contrast++"),
+        (:light, :balanced, "light"),
+    )
         for n in (6, 7, 8)
-            acc = ACCENTS[mode][n]
+            acc = ACCENTS[mode][tier][n]
             for cname in ACCENT_ORDERS[n]
                 r, g, b = _hex_to_rgb255(acc[cname])
-                push!(lines, @sprintf("%3d %3d %3d\t%s %d %s", r, g, b, mode_str, n, cname))
+                push!(lines, @sprintf("%3d %3d %3d\t%s %d %s", r, g, b, label, n, cname))
             end
         end
     end
@@ -1125,10 +1134,10 @@ end
 # 11. WezTerm Terminal
 # =============================================================================
 
-function generate_wezterm_theme(mode::Symbol, tier::Symbol; target_path::String, dry_run::Bool=true)
-    p = get_terminal_ansi_palette(mode, tier)
-    name = _display_name(mode, tier)
-    slug = _theme_slug(mode, tier)
+function generate_wezterm_theme(mode::Symbol, tier::Symbol; target_path::String, ansi_n::Int=6, dry_run::Bool=true)
+    p = get_terminal_ansi_palette(mode, tier; ansi_n=ansi_n)
+    name = _display_name(mode, tier) * (ansi_n == 8 ? " (Semantic 6)" : "")
+    slug = _theme_slug(mode, tier) * (ansi_n == 8 ? "_semantic6" : "")
 
     content = """# Penumbra v2 -- WezTerm Color Scheme
 # Theme: $slug
@@ -1176,10 +1185,11 @@ end
 # 12. Warp Terminal
 # =============================================================================
 
-function generate_warp_theme(mode::Symbol, tier::Symbol; target_path::String, dry_run::Bool=true)
-    p = get_terminal_ansi_palette(mode, tier)
-    acc = ACCENTS[mode][7]
-    name = _display_name(mode, tier)
+function generate_warp_theme(mode::Symbol, tier::Symbol; target_path::String, ansi_n::Int=6, dry_run::Bool=true)
+    p = get_terminal_ansi_palette(mode, tier; ansi_n=ansi_n)
+    acc = ACCENTS[mode][tier][8]
+    suffix = ansi_n == 8 ? " (Semantic 6)" : ""
+    name = _display_name(mode, tier) * suffix
     slug = _theme_slug(mode, tier)
     details = mode == :dark ? "darker" : "lighter"
 
@@ -1245,7 +1255,7 @@ end
 function generate_tmtheme(mode::Symbol, tier::Symbol; target_path::String, dry_run::Bool=true)
     is_dark = mode == :dark
     base = BASE_TONES[tier]
-    acc = ACCENTS[mode][7]
+    acc = ACCENTS[mode][tier][8]
     name = _display_name(mode, tier)
     slug = _theme_slug(mode, tier)
     uuid = TMTHEME_UUIDS[(mode, tier)]
@@ -1265,9 +1275,12 @@ function generate_tmtheme(mode::Symbol, tier::Symbol; target_path::String, dry_r
         _tmtheme_rule("Types, Classes &amp; Modules", "entity.name.type, entity.name.class, entity.name.namespace, entity.name.scope-resolution, entity.other.inherited-class, support.type, support.class", acc["yellow"]),
         _tmtheme_rule("Operators", "keyword.operator, storage.type.function.arrow, punctuation.definition.template-expression.begin, punctuation.definition.template-expression.end, punctuation.section.embedded", acc["cyan"]),
         _tmtheme_rule("Syntactic Punctuation &amp; Brackets", "punctuation, punctuation.separator, punctuation.terminator, meta.brace, meta.template.expression, meta.embedded", fg_text),
-        _tmtheme_rule("Strings &amp; RegExp", "string, string.quoted, string.template, constant.character.escape, string.regexp", acc["green"]),
+        _tmtheme_rule("Strings &amp; Code", "string, string.quoted, string.template", acc["green"]),
+        _tmtheme_rule("String Escapes &amp; RegExp", "constant.character.escape, string.regexp", acc["magenta"]),
         _tmtheme_rule("Numbers, Units &amp; Booleans", "constant.numeric, constant.language.boolean, constant.language.null, constant.language", acc["orange"]),
-        _tmtheme_rule("Macros, Decorators, Symbols &amp; Special Bindings", "entity.name.function.macro, support.function.macro, entity.name.function.decorator, constant.other.symbol, variable.language.special, variable.language.this, variable.language.self, invalid, invalid.illegal", acc["red"]),
+        _tmtheme_rule("Macros &amp; Decorators", "entity.name.function.macro, support.function.macro, entity.name.function.decorator", acc["red"]),
+        _tmtheme_rule("Symbols &amp; Special Bindings", "constant.other.symbol, variable.language.special, variable.language.this, variable.language.self", acc["magenta"]),
+        _tmtheme_rule("Errors &amp; Invalid Syntax", "invalid, invalid.illegal", acc["red"]),
         _tmtheme_rule("Variables &amp; Parameters", "variable, variable.parameter, variable.other", fg_text),
         _tmtheme_rule("Markdown Headings", "markup.heading, entity.name.section", fg_heading; font_style="bold"),
         _tmtheme_rule("Markdown Bold", "markup.bold", acc["yellow"]; font_style="bold"),
@@ -1341,7 +1354,7 @@ end
 function generate_codex_theme(mode::Symbol, tier::Symbol; target_path::String, dry_run::Bool=true)
     is_dark = mode == :dark
     base = BASE_TONES[tier]
-    acc = ACCENTS[mode][7]
+    acc = ACCENTS[mode][tier][8]
     slug = _theme_slug(mode, tier)
 
     bg_canvas = is_dark ? base["shade"] : base["sun"]
@@ -1376,7 +1389,7 @@ end
 function generate_claude_code_theme(mode::Symbol, tier::Symbol; target_path::String, dry_run::Bool=true)
     is_dark = mode == :dark
     base = BASE_TONES[tier]
-    acc = ACCENTS[mode][7]
+    acc = ACCENTS[mode][tier][8]
     name = _display_name(mode, tier)
     slug = _theme_slug(mode, tier)
 
@@ -1406,7 +1419,7 @@ function generate_claude_code_theme(mode::Symbol, tier::Symbol; target_path::Str
         "ide" => "#" * acc["cyan"],
         "remember" => "#" * acc["yellow"],
         "skill" => "#" * acc["purple"],
-        "effortUltra" => "#" * acc["red"],
+        "effortUltra" => "#" * acc["magenta"],
         "success" => "#" * acc["green"],
         "warning" => "#" * acc["orange"],
         "error" => "#" * acc["red"],
@@ -1436,7 +1449,7 @@ end
 function generate_base16_theme(mode::Symbol, tier::Symbol; target_path::String, dry_run::Bool=true)
     is_dark = mode == :dark
     base = BASE_TONES[tier]
-    acc = ACCENTS[mode][8]
+    acc = ACCENTS[mode][tier][8]
     name = _display_name(mode, tier)
     slug = _theme_slug(mode, tier)
     variant = is_dark ? "dark" : "light"
@@ -1514,9 +1527,27 @@ function main(; dry_run::Bool=true)
     for (label, fn, dir, ext) in multi_tier_targets
         println("\n[$label]")
         for (mode, tier) in tier_configs
-            fname = (mode == :dark ? "penumbra_dark$(tier_suffix(tier))" : "penumbra_light") * ext
-            target_path = joinpath(@__DIR__, "..", dir, fname)
+            stem = mode == :dark ? "penumbra_dark$(tier_suffix(tier))" : "penumbra_light"
+            target_path = joinpath(@__DIR__, "..", dir, stem * ext)
             fn(mode, tier; target_path=target_path, dry_run=dry_run)
+        end
+    end
+
+    # Terminal ANSI Option A ("6 from N = 8" semantic subset)
+    semantic6_terminal_targets = [
+        ("iTerm2 (Semantic 6)", generate_iterm2_profile, "iTerm2", ".itermcolors"),
+        ("Ghostty (Semantic 6)", generate_ghostty_theme, joinpath("ghostty", "themes"), ""),
+        ("Alacritty (Semantic 6)", generate_alacritty_theme, "alacritty", ".toml"),
+        ("Kitty (Semantic 6)", generate_kitty_theme, "kitty", ".conf"),
+        ("WezTerm (Semantic 6)", generate_wezterm_theme, joinpath("wezterm", "colors"), ".toml"),
+        ("Warp (Semantic 6)", generate_warp_theme, joinpath("warp", "themes"), ".yaml"),
+    ]
+    for (label, fn, dir, ext) in semantic6_terminal_targets
+        println("\n[$label]")
+        for (mode, tier) in tier_configs
+            stem = mode == :dark ? "penumbra_dark$(tier_suffix(tier))_semantic6" : "penumbra_light_semantic6"
+            target_path = joinpath(@__DIR__, "..", dir, stem * ext)
+            fn(mode, tier; target_path=target_path, ansi_n=8, dry_run=dry_run)
         end
     end
 
