@@ -131,8 +131,7 @@ If palettes smaller than 6 are desired, choose subsets as following:
 * **5** omit one colour from a six colour palette (**not recommended**)
 * **4** every other colour from an eight colour palette (two possible sets)
 * **3** every other colour from a six colour palette (two possible sets)
-* **2** every third colour from a six colour palette (three possible sets)
-* **1** any one colour from a six colour palette (or any palette)
+* **2** every fourth colour from an eight colour palette or every third from a six colour palette (seven possible sets)
 
 ## Construction
 
