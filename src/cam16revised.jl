@@ -202,40 +202,40 @@ const VE = ViewingEnvironment()
 # CAM Type Hierarchy & Struct Definitions
 # ---------------------------------------------------------
 
-abstract type AbstractCAM16{T<:Real, E} <: Color{T,3} end
-abstract type AbstractCAM16UCS{T<:Real, E} <: AbstractCAM16{T, E} end
+abstract type AbstractCAM16{T<:Real,E} <: Color{T,3} end
+abstract type AbstractCAM16UCS{T<:Real,E} <: AbstractCAM16{T,E} end
 
-struct CAM16JCh{T<:Real, E} <: AbstractCAM16{T, E}
+struct CAM16JCh{T<:Real,E} <: AbstractCAM16{T,E}
     j::T
     c::T
     h::T
 end
 
-struct CAM16QMh{T<:Real, E} <: AbstractCAM16{T, E}
+struct CAM16QMh{T<:Real,E} <: AbstractCAM16{T,E}
     q::T
     m::T
     h::T
 end
 
-struct CAM16UCSJab{T<:Real, E} <: AbstractCAM16UCS{T, E}
+struct CAM16UCSJab{T<:Real,E} <: AbstractCAM16UCS{T,E}
     j::T
     a::T
     b::T
 end
 
-struct CAM16UCSJCh{T<:Real, E} <: AbstractCAM16UCS{T, E}
+struct CAM16UCSJCh{T<:Real,E} <: AbstractCAM16UCS{T,E}
     j::T
     c::T
     h::T
 end
 
-struct CAM16UCSQpt{T<:Real, E} <: AbstractCAM16UCS{T, E}
+struct CAM16UCSQpt{T<:Real,E} <: AbstractCAM16UCS{T,E}
     q::T
     p::T
     t::T
 end
 
-struct CAM16UCSQMh{T<:Real, E} <: AbstractCAM16UCS{T, E}
+struct CAM16UCSQMh{T<:Real,E} <: AbstractCAM16UCS{T,E}
     q::T
     m::T
     h::T
@@ -245,17 +245,17 @@ end
 for C in (:CAM16JCh, :CAM16QMh, :CAM16UCSJab, :CAM16UCSJCh, :CAM16UCSQpt, :CAM16UCSQMh)
     @eval begin
         $C{T}(x::Real, y::Real, z::Real, env::ViewingEnvironment=VE) where {T<:Real} =
-            $C{T, env}(T(x), T(y), T(z))
+            $C{T,env}(T(x), T(y), T(z))
         $C(x::Real, y::Real, z::Real, env::ViewingEnvironment=VE) = begin
             T = promote_type(typeof(float(x)), typeof(float(y)), typeof(float(z)))
-            $C{T, env}(T(x), T(y), T(z))
+            $C{T,env}(T(x), T(y), T(z))
         end
         $C(c::Color, env::ViewingEnvironment=VE) =
-            convert($C{Colors.floattype(eltype(c)), env}, c)
+            convert($C{Colors.floattype(eltype(c)),env}, c)
         $C{T}(c::Color, env::ViewingEnvironment=VE) where {T<:Real} =
-            convert($C{T, env}, c)
-        $C{T, E}(c::Color) where {T<:Real, E} =
-            convert($C{T, E}, c)
+            convert($C{T,env}, c)
+        $C{T,E}(c::Color) where {T<:Real,E} =
+            convert($C{T,E}, c)
     end
 end
 
@@ -265,12 +265,12 @@ end
 
 for C in (:CAM16JCh, :CAM16QMh, :CAM16UCSJab, :CAM16UCSJCh, :CAM16UCSQpt, :CAM16UCSQMh)
     @eval begin
-        ColorTypes.base_colorant_type(::Type{$C{T, E}}) where {T, E} = ($C{S, E} where S<:Real)
-        ColorTypes.base_colorant_type(::Type{$C{S, E} where S<:Real}) where {E} = ($C{S, E} where S<:Real)
+        ColorTypes.base_colorant_type(::Type{$C{T,E}}) where {T,E} = ($C{S,E} where S<:Real)
+        ColorTypes.base_colorant_type(::Type{$C{S,E} where S<:Real}) where {E} = ($C{S,E} where S<:Real)
     end
 end
 ColorTypes.floattype(::Type{C}) where {C<:AbstractCAM16} = C
-ColorTypes.ccolor(::Type{C}, ::Type{CO}) where {C<:AbstractCAM16, CO<:Colorant{<:ColorTypes.FixedPoint}} =
+ColorTypes.ccolor(::Type{C}, ::Type{CO}) where {C<:AbstractCAM16,CO<:Colorant{<:ColorTypes.FixedPoint}} =
     ColorTypes.base_colorant_type(C){Float32}
 
 # ---------------------------------------------------------
@@ -287,10 +287,10 @@ function _eccentricity(h_rad)
     sin_4h = 2.0 * sin_2h * cos_2h
 
     return -0.0582 * cos_h - 0.0258 * cos_2h - 0.1347 * cos_3h + 0.0289 * cos_4h -
-           0.1475 * sin_h - 0.0308 * sin_2h +
-           0.0385 * sin_3h +
-           0.0096 * sin_4h +
-           1.0
+            0.1475 * sin_h - 0.0308 * sin_2h +
+        0.0385 * sin_3h +
+        0.0096 * sin_4h +
+        1.0
 end
 
 function _hue_quadrature(h)
@@ -305,8 +305,8 @@ function _hue_quadrature(h)
         4
     end
 
-    h_i, h_i1 = HUE_QUADRATURE.h[i], HUE_QUADRATURE.h[i + 1]
-    e_i, e_i1 = HUE_QUADRATURE.e[i], HUE_QUADRATURE.e[i + 1]
+    h_i, h_i1 = HUE_QUADRATURE.h[i], HUE_QUADRATURE.h[i+1]
+    e_i, e_i1 = HUE_QUADRATURE.e[i], HUE_QUADRATURE.e[i+1]
     H_i = HUE_QUADRATURE.H[i]
 
     return H_i + 100.0 * e_i * (_h - h_i) / (e_i1 * (_h - h_i) + e_i * (h_i1 - _h))
@@ -319,11 +319,11 @@ end
 @inline function _cam16_coords(xyz::XYZ)
     return xyz.x, xyz.y, xyz.z
 end
-@inline function _cam16_coords(xyz::Union{SVector{3, <:Real}, NTuple{3, <:Real}, AbstractVector{<:Real}})
+@inline function _cam16_coords(xyz::Union{SVector{3,<:Real},NTuple{3,<:Real},AbstractVector{<:Real}})
     return xyz[1], xyz[2], xyz[3]
 end
 
-function _xyz_to_cam16(xyz::Union{XYZ, SVector{3, <:Real}, NTuple{3, <:Real}, AbstractVector{<:Real}}, env::ViewingEnvironment)
+function _xyz_to_cam16(xyz::Union{XYZ,SVector{3,<:Real},NTuple{3,<:Real},AbstractVector{<:Real}}, env::ViewingEnvironment)
     x_in, y_in, z_in = _cam16_coords(xyz)
     T = promote_type(typeof(x_in), typeof(y_in), typeof(z_in), typeof(env.L_A))
     c_100 = oftype(x_in, 100)
@@ -413,7 +413,7 @@ function _cam16_to_xyz(qmh::CAM16QMh, env::ViewingEnvironment)
     return xyz[1], xyz[2], xyz[3]
 end
 
-_cam16_to_xyz(c::AbstractCAM16{T, E}) where {T, E} = _cam16_to_xyz(c, E)
+_cam16_to_xyz(c::AbstractCAM16{T,E}) where {T,E} = _cam16_to_xyz(c, E)
 
 function _jch_to_qmh(jch::CAM16JCh, env::ViewingEnvironment)
     Q = (2.0 / env.c) * (jch.j / 100.0) * env.A_w
@@ -464,7 +464,7 @@ function _cam16_to_cam16ucs(qmh::CAM16QMh, env::ViewingEnvironment)
     t_prime = M_prime * sind(qmh.h)
     return Q_prime, p_prime, t_prime, M_prime, qmh.h
 end
-_cam16_to_cam16ucs(qmh::CAM16QMh{T, E}) where {T, E} = _cam16_to_cam16ucs(qmh, E)
+_cam16_to_cam16ucs(qmh::CAM16QMh{T,E}) where {T,E} = _cam16_to_cam16ucs(qmh, E)
 
 function _cam16ucs_to_cam16(jab::CAM16UCSJab)
     J = sign(jab.j) * abs(jab.j) / (1.7 - 0.007 * abs(jab.j))
@@ -487,35 +487,35 @@ function _cam16ucs_to_cam16(qpt::CAM16UCSQpt, env::ViewingEnvironment)
     h = mod(atand(qpt.t, qpt.p), 360.0)
     return Q, M, h
 end
-_cam16ucs_to_cam16(qpt::CAM16UCSQpt{T, E}) where {T, E} = _cam16ucs_to_cam16(qpt, E)
+_cam16ucs_to_cam16(qpt::CAM16UCSQpt{T,E}) where {T,E} = _cam16ucs_to_cam16(qpt, E)
 
 function _cam16ucs_to_cam16(qmh::CAM16UCSQMh, env::ViewingEnvironment)
     Q = sign(qmh.q) * abs(qmh.q) / (1.462 - 0.35 * (env.c / env.A_w) * abs(qmh.q))
     M = sign(qmh.m) * expm1(0.094 * abs(qmh.m) / 2.0) / 0.094
     return Q, M, qmh.h
 end
-_cam16ucs_to_cam16(qmh::CAM16UCSQMh{T, E}) where {T, E} = _cam16ucs_to_cam16(qmh, E)
+_cam16ucs_to_cam16(qmh::CAM16UCSQMh{T,E}) where {T,E} = _cam16ucs_to_cam16(qmh, E)
 
 # ---------------------------------------------------------
 # Conversions: XYZ <-> Base CAM16
 # ---------------------------------------------------------
 
-function cnvt(::Type{CAM16JCh{T, E}}, c::XYZ) where {T, E}
+function cnvt(::Type{CAM16JCh{T,E}}, c::XYZ) where {T,E}
     J, _, C, _, _, h = _xyz_to_cam16(c, E)
-    return CAM16JCh{T, E}(T(J), T(C), T(h))
+    return CAM16JCh{T,E}(T(J), T(C), T(h))
 end
 
-function cnvt(::Type{XYZ{T}}, c::CAM16JCh{S, E}) where {T, S, E}
+function cnvt(::Type{XYZ{T}}, c::CAM16JCh{S,E}) where {T,S,E}
     x, y, z = _cam16_to_xyz(c, E)
     return XYZ{T}(T(x), T(y), T(z))
 end
 
-function cnvt(::Type{CAM16QMh{T, E}}, c::XYZ) where {T, E}
+function cnvt(::Type{CAM16QMh{T,E}}, c::XYZ) where {T,E}
     _, Q, _, M, _, h = _xyz_to_cam16(c, E)
-    return CAM16QMh{T, E}(T(Q), T(M), T(h))
+    return CAM16QMh{T,E}(T(Q), T(M), T(h))
 end
 
-function cnvt(::Type{XYZ{T}}, c::CAM16QMh{S, E}) where {T, S, E}
+function cnvt(::Type{XYZ{T}}, c::CAM16QMh{S,E}) where {T,S,E}
     x, y, z = _cam16_to_xyz(c, E)
     return XYZ{T}(T(x), T(y), T(z))
 end
@@ -524,119 +524,119 @@ end
 # Intra-CAM Conversions (Same Environment E)
 # ---------------------------------------------------------
 
-cnvt(::Type{C}, c::C) where {T, E, C<:AbstractCAM16{T, E}} = c
+cnvt(::Type{C}, c::C) where {T,E,C<:AbstractCAM16{T,E}} = c
 
 for C in (:CAM16JCh, :CAM16QMh, :CAM16UCSJab, :CAM16UCSJCh, :CAM16UCSQpt, :CAM16UCSQMh)
     @eval begin
-        cnvt(::Type{$C{T, E}}, c::$C{S, E}) where {T, S, E} =
-            $C{T, E}(T(getfield(c, 1)), T(getfield(c, 2)), T(getfield(c, 3)))
+        cnvt(::Type{$C{T,E}}, c::$C{S,E}) where {T,S,E} =
+            $C{T,E}(T(getfield(c, 1)), T(getfield(c, 2)), T(getfield(c, 3)))
     end
 end
 
 # JCh <-> QMh
-function cnvt(::Type{CAM16JCh{T, E}}, c::CAM16QMh{S, E}) where {T, S, E}
+function cnvt(::Type{CAM16JCh{T,E}}, c::CAM16QMh{S,E}) where {T,S,E}
     J, C, h = _qmh_to_jch(c, E)
-    return CAM16JCh{T, E}(T(J), T(C), T(h))
+    return CAM16JCh{T,E}(T(J), T(C), T(h))
 end
 
-function cnvt(::Type{CAM16QMh{T, E}}, c::CAM16JCh{S, E}) where {T, S, E}
+function cnvt(::Type{CAM16QMh{T,E}}, c::CAM16JCh{S,E}) where {T,S,E}
     Q, M, h = _jch_to_qmh(c, E)
-    return CAM16QMh{T, E}(T(Q), T(M), T(h))
+    return CAM16QMh{T,E}(T(Q), T(M), T(h))
 end
 
 # CAM16UCSJab <-> CAM16JCh
-function cnvt(::Type{CAM16UCSJab{T, E}}, c::CAM16JCh{S, E}) where {T, S, E}
+function cnvt(::Type{CAM16UCSJab{T,E}}, c::CAM16JCh{S,E}) where {T,S,E}
     J, a, b, _, _ = _cam16_to_cam16ucs(c)
-    return CAM16UCSJab{T, E}(T(J), T(a), T(b))
+    return CAM16UCSJab{T,E}(T(J), T(a), T(b))
 end
 
-function cnvt(::Type{CAM16JCh{T, E}}, c::CAM16UCSJab{S, E}) where {T, S, E}
+function cnvt(::Type{CAM16JCh{T,E}}, c::CAM16UCSJab{S,E}) where {T,S,E}
     J, C, h = _cam16ucs_to_cam16(c)
-    return CAM16JCh{T, E}(T(J), T(C), T(h))
+    return CAM16JCh{T,E}(T(J), T(C), T(h))
 end
 
 # CAM16UCSJCh <-> CAM16JCh
-function cnvt(::Type{CAM16UCSJCh{T, E}}, c::CAM16JCh{S, E}) where {T, S, E}
+function cnvt(::Type{CAM16UCSJCh{T,E}}, c::CAM16JCh{S,E}) where {T,S,E}
     J, _, _, C, h = _cam16_to_cam16ucs(c)
-    return CAM16UCSJCh{T, E}(T(J), T(C), T(h))
+    return CAM16UCSJCh{T,E}(T(J), T(C), T(h))
 end
 
-function cnvt(::Type{CAM16JCh{T, E}}, c::CAM16UCSJCh{S, E}) where {T, S, E}
+function cnvt(::Type{CAM16JCh{T,E}}, c::CAM16UCSJCh{S,E}) where {T,S,E}
     J, C, h = _cam16ucs_to_cam16(c)
-    return CAM16JCh{T, E}(T(J), T(C), T(h))
+    return CAM16JCh{T,E}(T(J), T(C), T(h))
 end
 
 # CAM16UCSJab <-> CAM16UCSJCh (Cartesian <-> Polar)
-function cnvt(::Type{CAM16UCSJCh{T, E}}, c::CAM16UCSJab{S, E}) where {T, S, E}
+function cnvt(::Type{CAM16UCSJCh{T,E}}, c::CAM16UCSJab{S,E}) where {T,S,E}
     C = hypot(c.a, c.b)
     h = mod(atand(c.b, c.a), 360.0)
-    return CAM16UCSJCh{T, E}(T(c.j), T(C), T(h))
+    return CAM16UCSJCh{T,E}(T(c.j), T(C), T(h))
 end
 
-function cnvt(::Type{CAM16UCSJab{T, E}}, c::CAM16UCSJCh{S, E}) where {T, S, E}
+function cnvt(::Type{CAM16UCSJab{T,E}}, c::CAM16UCSJCh{S,E}) where {T,S,E}
     a = c.c * cosd(c.h)
     b = c.c * sind(c.h)
-    return CAM16UCSJab{T, E}(T(c.j), T(a), T(b))
+    return CAM16UCSJab{T,E}(T(c.j), T(a), T(b))
 end
 
 # CAM16UCSQpt <-> CAM16QMh
-function cnvt(::Type{CAM16UCSQpt{T, E}}, c::CAM16QMh{S, E}) where {T, S, E}
+function cnvt(::Type{CAM16UCSQpt{T,E}}, c::CAM16QMh{S,E}) where {T,S,E}
     Q, p, t, _, _ = _cam16_to_cam16ucs(c, E)
-    return CAM16UCSQpt{T, E}(T(Q), T(p), T(t))
+    return CAM16UCSQpt{T,E}(T(Q), T(p), T(t))
 end
 
-function cnvt(::Type{CAM16QMh{T, E}}, c::CAM16UCSQpt{S, E}) where {T, S, E}
+function cnvt(::Type{CAM16QMh{T,E}}, c::CAM16UCSQpt{S,E}) where {T,S,E}
     Q, M, h = _cam16ucs_to_cam16(c, E)
-    return CAM16QMh{T, E}(T(Q), T(M), T(h))
+    return CAM16QMh{T,E}(T(Q), T(M), T(h))
 end
 
 # CAM16UCSQMh <-> CAM16QMh
-function cnvt(::Type{CAM16UCSQMh{T, E}}, c::CAM16QMh{S, E}) where {T, S, E}
+function cnvt(::Type{CAM16UCSQMh{T,E}}, c::CAM16QMh{S,E}) where {T,S,E}
     Q, _, _, M, h = _cam16_to_cam16ucs(c, E)
-    return CAM16UCSQMh{T, E}(T(Q), T(M), T(h))
+    return CAM16UCSQMh{T,E}(T(Q), T(M), T(h))
 end
 
-function cnvt(::Type{CAM16QMh{T, E}}, c::CAM16UCSQMh{S, E}) where {T, S, E}
+function cnvt(::Type{CAM16QMh{T,E}}, c::CAM16UCSQMh{S,E}) where {T,S,E}
     Q, M, h = _cam16ucs_to_cam16(c, E)
-    return CAM16QMh{T, E}(T(Q), T(M), T(h))
+    return CAM16QMh{T,E}(T(Q), T(M), T(h))
 end
 
 # CAM16UCSQpt <-> CAM16UCSQMh (Cartesian <-> Polar)
-function cnvt(::Type{CAM16UCSQMh{T, E}}, c::CAM16UCSQpt{S, E}) where {T, S, E}
+function cnvt(::Type{CAM16UCSQMh{T,E}}, c::CAM16UCSQpt{S,E}) where {T,S,E}
     M = hypot(c.p, c.t)
     h = mod(atand(c.t, c.p), 360.0)
-    return CAM16UCSQMh{T, E}(T(c.q), T(M), T(h))
+    return CAM16UCSQMh{T,E}(T(c.q), T(M), T(h))
 end
 
-function cnvt(::Type{CAM16UCSQpt{T, E}}, c::CAM16UCSQMh{S, E}) where {T, S, E}
+function cnvt(::Type{CAM16UCSQpt{T,E}}, c::CAM16UCSQMh{S,E}) where {T,S,E}
     p = c.m * cosd(c.h)
     t = c.m * sind(c.h)
-    return CAM16UCSQpt{T, E}(T(c.q), T(p), T(t))
+    return CAM16UCSQpt{T,E}(T(c.q), T(p), T(t))
 end
 
 # Inter-branch in same environment
-function cnvt(::Type{CAM16JCh{T, E}}, c::Union{CAM16UCSQpt{S, E}, CAM16UCSQMh{S, E}}) where {T, S, E}
-    cnvt(CAM16JCh{T, E}, cnvt(CAM16QMh{T, E}, c))
+function cnvt(::Type{CAM16JCh{T,E}}, c::Union{CAM16UCSQpt{S,E},CAM16UCSQMh{S,E}}) where {T,S,E}
+    cnvt(CAM16JCh{T,E}, cnvt(CAM16QMh{T,E}, c))
 end
 
-function cnvt(::Type{CAM16QMh{T, E}}, c::Union{CAM16UCSJab{S, E}, CAM16UCSJCh{S, E}}) where {T, S, E}
-    cnvt(CAM16QMh{T, E}, cnvt(CAM16JCh{T, E}, c))
+function cnvt(::Type{CAM16QMh{T,E}}, c::Union{CAM16UCSJab{S,E},CAM16UCSJCh{S,E}}) where {T,S,E}
+    cnvt(CAM16QMh{T,E}, cnvt(CAM16JCh{T,E}, c))
 end
 
-function cnvt(::Type{CAM16UCSJab{T, E}}, c::Union{CAM16QMh{S, E}, CAM16UCSQpt{S, E}, CAM16UCSQMh{S, E}}) where {T, S, E}
-    cnvt(CAM16UCSJab{T, E}, cnvt(CAM16JCh{T, E}, c))
+function cnvt(::Type{CAM16UCSJab{T,E}}, c::Union{CAM16QMh{S,E},CAM16UCSQpt{S,E},CAM16UCSQMh{S,E}}) where {T,S,E}
+    cnvt(CAM16UCSJab{T,E}, cnvt(CAM16JCh{T,E}, c))
 end
 
-function cnvt(::Type{CAM16UCSJCh{T, E}}, c::Union{CAM16QMh{S, E}, CAM16UCSQpt{S, E}, CAM16UCSQMh{S, E}}) where {T, S, E}
-    cnvt(CAM16UCSJCh{T, E}, cnvt(CAM16JCh{T, E}, c))
+function cnvt(::Type{CAM16UCSJCh{T,E}}, c::Union{CAM16QMh{S,E},CAM16UCSQpt{S,E},CAM16UCSQMh{S,E}}) where {T,S,E}
+    cnvt(CAM16UCSJCh{T,E}, cnvt(CAM16JCh{T,E}, c))
 end
 
-function cnvt(::Type{CAM16UCSQpt{T, E}}, c::Union{CAM16JCh{S, E}, CAM16UCSJab{S, E}, CAM16UCSJCh{S, E}}) where {T, S, E}
-    cnvt(CAM16UCSQpt{T, E}, cnvt(CAM16QMh{T, E}, c))
+function cnvt(::Type{CAM16UCSQpt{T,E}}, c::Union{CAM16JCh{S,E},CAM16UCSJab{S,E},CAM16UCSJCh{S,E}}) where {T,S,E}
+    cnvt(CAM16UCSQpt{T,E}, cnvt(CAM16QMh{T,E}, c))
 end
 
-function cnvt(::Type{CAM16UCSQMh{T, E}}, c::Union{CAM16JCh{S, E}, CAM16UCSJab{S, E}, CAM16UCSJCh{S, E}}) where {T, S, E}
-    cnvt(CAM16UCSQMh{T, E}, cnvt(CAM16QMh{T, E}, c))
+function cnvt(::Type{CAM16UCSQMh{T,E}}, c::Union{CAM16JCh{S,E},CAM16UCSJab{S,E},CAM16UCSJCh{S,E}}) where {T,S,E}
+    cnvt(CAM16UCSQMh{T,E}, cnvt(CAM16QMh{T,E}, c))
 end
 
 # ---------------------------------------------------------
@@ -644,37 +644,37 @@ end
 # ---------------------------------------------------------
 
 # Direct XYZ forwarding for UCS types
-cnvt(::Type{CAM16UCSJab{T, E}}, c::XYZ) where {T, E} =
-    cnvt(CAM16UCSJab{T, E}, cnvt(CAM16JCh{T, E}, c))
+cnvt(::Type{CAM16UCSJab{T,E}}, c::XYZ) where {T,E} =
+    cnvt(CAM16UCSJab{T,E}, cnvt(CAM16JCh{T,E}, c))
 
-cnvt(::Type{CAM16UCSJCh{T, E}}, c::XYZ) where {T, E} =
-    cnvt(CAM16UCSJCh{T, E}, cnvt(CAM16JCh{T, E}, c))
+cnvt(::Type{CAM16UCSJCh{T,E}}, c::XYZ) where {T,E} =
+    cnvt(CAM16UCSJCh{T,E}, cnvt(CAM16JCh{T,E}, c))
 
-cnvt(::Type{CAM16UCSQpt{T, E}}, c::XYZ) where {T, E} =
-    cnvt(CAM16UCSQpt{T, E}, cnvt(CAM16QMh{T, E}, c))
+cnvt(::Type{CAM16UCSQpt{T,E}}, c::XYZ) where {T,E} =
+    cnvt(CAM16UCSQpt{T,E}, cnvt(CAM16QMh{T,E}, c))
 
-cnvt(::Type{CAM16UCSQMh{T, E}}, c::XYZ) where {T, E} =
-    cnvt(CAM16UCSQMh{T, E}, cnvt(CAM16QMh{T, E}, c))
+cnvt(::Type{CAM16UCSQMh{T,E}}, c::XYZ) where {T,E} =
+    cnvt(CAM16UCSQMh{T,E}, cnvt(CAM16QMh{T,E}, c))
 
-cnvt(::Type{XYZ{T}}, c::CAM16UCSJab{S, E}) where {T, S, E} =
-    cnvt(XYZ{T}, cnvt(CAM16JCh{S, E}, c))
+cnvt(::Type{XYZ{T}}, c::CAM16UCSJab{S,E}) where {T,S,E} =
+    cnvt(XYZ{T}, cnvt(CAM16JCh{S,E}, c))
 
-cnvt(::Type{XYZ{T}}, c::CAM16UCSJCh{S, E}) where {T, S, E} =
-    cnvt(XYZ{T}, cnvt(CAM16JCh{S, E}, c))
+cnvt(::Type{XYZ{T}}, c::CAM16UCSJCh{S,E}) where {T,S,E} =
+    cnvt(XYZ{T}, cnvt(CAM16JCh{S,E}, c))
 
-cnvt(::Type{XYZ{T}}, c::CAM16UCSQpt{S, E}) where {T, S, E} =
-    cnvt(XYZ{T}, cnvt(CAM16QMh{S, E}, c))
+cnvt(::Type{XYZ{T}}, c::CAM16UCSQpt{S,E}) where {T,S,E} =
+    cnvt(XYZ{T}, cnvt(CAM16QMh{S,E}, c))
 
-cnvt(::Type{XYZ{T}}, c::CAM16UCSQMh{S, E}) where {T, S, E} =
-    cnvt(XYZ{T}, cnvt(CAM16QMh{S, E}, c))
+cnvt(::Type{XYZ{T}}, c::CAM16UCSQMh{S,E}) where {T,S,E} =
+    cnvt(XYZ{T}, cnvt(CAM16QMh{S,E}, c))
 
-cnvt(::Type{XYZ}, c::AbstractCAM16{T, E}) where {T, E} = cnvt(XYZ{T}, c)
+cnvt(::Type{XYZ}, c::AbstractCAM16{T,E}) where {T,E} = cnvt(XYZ{T}, c)
 
 # ---------------------------------------------------------
 # Cross-Environment Conversions (E1 !== E2)
 # ---------------------------------------------------------
 
-function cnvt(::Type{C1}, c::C2) where {T1, E1, C1<:AbstractCAM16{T1, E1}, T2, E2, C2<:AbstractCAM16{T2, E2}}
+function cnvt(::Type{C1}, c::C2) where {T1,E1,C1<:AbstractCAM16{T1,E1},T2,E2,C2<:AbstractCAM16{T2,E2}}
     if E1 === E2
         error("Unreachable: intra-CAM conversion should have been dispatched")
     else
@@ -687,16 +687,16 @@ end
 # ---------------------------------------------------------
 
 # Forward conversion from generic Color: route through XYZ
-cnvt(::Type{C}, c::Color) where {T, E, C<:AbstractCAM16{T, E}} =
+cnvt(::Type{C}, c::Color) where {T,E,C<:AbstractCAM16{T,E}} =
     cnvt(C, cnvt(XYZ{T}, c)::XYZ{T})
 
 # Unparameterized E fallbacks
 for C in (:CAM16JCh, :CAM16QMh, :CAM16UCSJab, :CAM16UCSJCh, :CAM16UCSQpt, :CAM16UCSQMh)
     @eval begin
-        cnvt(::Type{$C{T}}, c::AbstractCAM16{S, E}) where {T, S, E} = cnvt($C{T, E}, c)
-        cnvt(::Type{$C}, c::AbstractCAM16{S, E}) where {S, E} = cnvt($C{S, E}, c)
-        cnvt(::Type{$C{T}}, c::Color) where {T} = cnvt($C{T, VE}, c)
-        cnvt(::Type{$C}, c::Color) = cnvt($C{Colors.floattype(eltype(c)), VE}, c)
+        cnvt(::Type{$C{T}}, c::AbstractCAM16{S,E}) where {T,S,E} = cnvt($C{T,E}, c)
+        cnvt(::Type{$C}, c::AbstractCAM16{S,E}) where {S,E} = cnvt($C{S,E}, c)
+        cnvt(::Type{$C{T}}, c::Color) where {T} = cnvt($C{T,VE}, c)
+        cnvt(::Type{$C}, c::Color) = cnvt($C{Colors.floattype(eltype(c)),VE}, c)
     end
 end
 
@@ -704,19 +704,19 @@ end
 function convert(::Type{C}, c::Color, env::ViewingEnvironment) where {C<:AbstractCAM16}
     T = eltype(C) === Any ? Colors.floattype(eltype(c)) : eltype(C)
     base_c = ColorTypes.basetype(C)
-    return cnvt(base_c{T, env}, c)
+    return cnvt(base_c{T,env}, c)
 end
 
 # Inverse conversions to RGB
-function convert(::Type{RGB}, c::AbstractCAM16{T, E}) where {T, E}
+function convert(::Type{RGB}, c::AbstractCAM16{T,E}) where {T,E}
     cnvt(RGB{T}, cnvt(XYZ{T}, c))
 end
 
-function convert(::Type{RGB{TR}}, c::AbstractCAM16{T, E}) where {TR, T, E}
+function convert(::Type{RGB{TR}}, c::AbstractCAM16{T,E}) where {TR,T,E}
     cnvt(RGB{TR}, cnvt(XYZ{TR}, c))
 end
 
-function cnvt(::Type{CV}, c::AbstractCAM16{T, E}) where {CV<:AbstractRGB, T, E}
+function cnvt(::Type{CV}, c::AbstractCAM16{T,E}) where {CV<:AbstractRGB,T,E}
     cnvt(CV, cnvt(XYZ{T}, c))
 end
 
@@ -724,20 +724,20 @@ end
 # Distance Metrics
 # ---------------------------------------------------------
 
-function cam16dist(c1::AbstractCAM16{T1, E}, c2::AbstractCAM16{T2, E}; absolute::Bool=false) where {T1, T2, E}
+function cam16dist(c1::AbstractCAM16{T1,E}, c2::AbstractCAM16{T2,E}; absolute::Bool=false) where {T1,T2,E}
     T = promote_type(T1, T2)
     if absolute
-        c1_qpt = cnvt(CAM16UCSQpt{T, E}, c1)
-        c2_qpt = cnvt(CAM16UCSQpt{T, E}, c2)
+        c1_qpt = cnvt(CAM16UCSQpt{T,E}, c1)
+        c2_qpt = cnvt(CAM16UCSQpt{T,E}, c2)
         return hypot(c2_qpt.q - c1_qpt.q, c2_qpt.p - c1_qpt.p, c2_qpt.t - c1_qpt.t)
     else
-        c1_jab = cnvt(CAM16UCSJab{T, E}, c1)
-        c2_jab = cnvt(CAM16UCSJab{T, E}, c2)
+        c1_jab = cnvt(CAM16UCSJab{T,E}, c1)
+        c2_jab = cnvt(CAM16UCSJab{T,E}, c2)
         return hypot(c2_jab.j - c1_jab.j, c2_jab.a - c1_jab.a, c2_jab.b - c1_jab.b)
     end
 end
 
-function cam16dist(c1::AbstractCAM16{T1, E1}, c2::AbstractCAM16{T2, E2}; kwargs...) where {T1, E1, T2, E2}
+function cam16dist(c1::AbstractCAM16{T1,E1}, c2::AbstractCAM16{T2,E2}; kwargs...) where {T1,E1,T2,E2}
     throw(ArgumentError("Cannot compute CAM16 distance between colors adapted to different viewing environments ($E1 != $E2)"))
 end
 
@@ -768,10 +768,10 @@ function _hk_hue_dependency(h_rad::Real)
     cos_2h = oftype(cos_h, 2) * cos_h * cos_h - one(cos_h)
     sin_2h = oftype(sin_h, 2) * sin_h * cos_h
     return oftype(cos_h, -0.160) * cos_h +
-           oftype(cos_h, 0.132) * cos_2h -
-           oftype(cos_h, 0.405) * sin_h +
-           oftype(cos_h, 0.080) * sin_2h +
-           oftype(cos_h, 0.792)
+            oftype(cos_h, 0.132) * cos_2h -
+            oftype(cos_h, 0.405) * sin_h +
+        oftype(cos_h, 0.080) * sin_2h +
+        oftype(cos_h, 0.792)
 end
 
 """
@@ -810,13 +810,13 @@ end
 # Dispatches for CAM16 color types
 cam16_hk_lightness(c::CAM16JCh; alpha::Real=1.0) = cam16_hk_lightness(c.j, c.c, c.h; alpha=alpha)
 
-function cam16_hk_lightness(c::AbstractCAM16{T, E}; alpha::Real=1.0) where {T, E}
-    jch = cnvt(CAM16JCh{T, E}, c)
+function cam16_hk_lightness(c::AbstractCAM16{T,E}; alpha::Real=1.0) where {T,E}
+    jch = cnvt(CAM16JCh{T,E}, c)
     return cam16_hk_lightness(jch; alpha=alpha)
 end
 
-function cam16_hk_brightness(c::AbstractCAM16{T, E}; alpha::Real=1.0) where {T, E}
-    jch = cnvt(CAM16JCh{T, E}, c)
+function cam16_hk_brightness(c::AbstractCAM16{T,E}; alpha::Real=1.0) where {T,E}
+    jch = cnvt(CAM16JCh{T,E}, c)
     J_HK = cam16_hk_lightness(jch; alpha=alpha)
     return cam16_hk_brightness(J_HK, E)
 end
@@ -870,8 +870,8 @@ function cam16ucs_hk_lightness(c::CAM16UCSJab; alpha::Real=1.0)
     return cam16ucs_hk_lightness(c.j, C_prime, h; alpha=alpha)
 end
 
-function cam16ucs_hk_lightness(c::AbstractCAM16UCS{T, E}; alpha::Real=1.0) where {T, E}
-    ucs_jch = cnvt(CAM16UCSJCh{T, E}, c)
+function cam16ucs_hk_lightness(c::AbstractCAM16UCS{T,E}; alpha::Real=1.0) where {T,E}
+    ucs_jch = cnvt(CAM16UCSJCh{T,E}, c)
     return cam16ucs_hk_lightness(ucs_jch; alpha=alpha)
 end
 
@@ -891,4 +891,3 @@ function cam16ucs_hk_inverse_lightness(J_prime_HK::Real, C_prime::Real, h::Real;
     J = cam16_hk_inverse_lightness(J_HK, C, h; alpha=alpha)
     return sign(J) * 1.7 * abs(J) / (1.0 + 0.007 * abs(J))
 end
-

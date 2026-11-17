@@ -2,13 +2,15 @@
      <img align="center" width="200" height="200" src="./logo/penumbra_8.svg" alt="penumbra logo"/>
  </p>
 
-![dark theme code example](./examples/penumbra_example_header.png)
+<p align="center">
+  <img width="812" src="./examples/penumbra_example_header.png" alt="Penumbra dark and light code example"/>
+</p>
 
 # Penumbra
 
-Penumbra is an ergonomically designed, mathematically balanced colour scheme constructed in a perceptually uniform colour appearance space for customizable user interfaces and text editors. It cleanly separates the perceptual properties of colour (lightness, chroma and hue) while optimally utilizing the available colour space of typical displays.
+Penumbra is an ergonomic colour scheme for code editors, terminals, and interfaces, modelled after the natural transition between warm sunlit surfaces and cool open shade.
 
-The nine base colours follow the natural transition of daylight from sunlit surfaces through neutral daylight into cool sky-lit shade. They are used to build the main light and dark themes, drawing from differently sized accent colour palettes as necessary. Additionally, there are two variants of the dark theme with enhanced contrast, ideal for bright ambient environments or anyone with mild to moderate visual impairments. Due to the constraints of the design principles, none of the variants are suitable for people with colour vision deficiency.
+High-contrast screens and uneven token brightness can strain the eyes and interrupt reading flow. Penumbra addresses both by placing its base tones along the CIE daylight curve at a balanced ~3:1 contrast and calibrating every accent colour to equal perceived brightness in a perceptually uniform colour space, so syntax categories stand out purely by hue without jarring jumps. Enhanced-contrast dark variants (`contrast+` and `contrast++`) are included for challenging viewing conditions.
 
 ![penumbra base balanced swatch](./swatches/penumbra_swatch_base_balanced.png)
 ![penumbra dark balanced swatch](./swatches/penumbra_swatch_dark_balanced.png)
@@ -20,11 +22,11 @@ The nine base colours follow the natural transition of daylight from sunlit surf
 
 The goal of this colour scheme is to cleanly separate the use of each of the three perceptual properties of colour (lightness, chroma and hue) and optimally utilize the typically available colour space to encode information with each of them. Ergonomics and function are put before aesthetics, though the base colours modelled after natural daylight and low but sufficient contrast attempt to make the overall scheme pleasing to the eye.
 
-### 1. Biophilic Base Colours
+### 1. Surfaces Mimic Natural Sunlight and Shade
 
 Human vision evolved outdoors under natural daylight, where sunlit surfaces are warm and shadows are cooled by diffuse light from the sky. Because our colour constancy mechanisms are tuned to this natural daylight axis, Penumbra's base colours follow the CIE daylight locus continuously from warm direct sunlight through neutral daylight (CIE D65, the standard white point of consumer displays) into cool sky shade. Dark colours appearing like open shade and light colours like sunlit matte paper create a familiar, biophilic visual environment that fades into the background as that is what you are used to when going outside.
 
-### 2. Just Enough Contrast
+### 2. Just Enough Contrast (with High-Contrast Options)
 
 In psychophysical reading studies, reading speed reaches near-maximal levels around a luminance ratio of 3:1 – the minimum display legibility threshold specified in ISO-9241-3 – with strongly diminishing returns above it. While legibility is important to reduce eye strain, for many people, excessive contrast on dense, repetitive lines of text also contributes to visual stress and pattern glare. Penumbra places its main text-to-background contrast right at this threshold, with two enhanced contrast dark variants available when ambient lighting or eyesight call for greater separation.
 
@@ -36,7 +38,7 @@ Resolving fine character shapes and tracking smoothly along a line of text rely 
 
 By using the [Revised CAM16-UCS](https://doi.org/10.1002/col.22792) colour appearance model together with its [Helmholtz–Kohlrausch extension](https://doi.org/10.1002/col.22793), Penumbra achieves equal perceptual hue steps and equal modelled brightness across all accent colours, adapted separately for dark and light backgrounds. Saturated colours appear brighter to the human eye than a neutral grey of the same physical luminance (the Helmholtz–Kohlrausch effect). Compensating for this effect ensures that none of the accent colours stand out from or recede into the page more than others.
 
-### 5. Maximized Gamut Chroma
+### 5. Maximum Colourfulness Within Display Limits
 
 Within the constraints of equal hue spacing and uniform perceived lightness (including Helmholtz–Kohlrausch compensation), each discrete polygon of $N$ accent hues is rotated to maximize its constant chroma along the exact sRGB gamut boundary. Placing the discrete vertices around the gamut boundary preserves maximum chroma and categorical discriminability while keeping every accent colour balanced at the same perceived brightness.
 
@@ -44,21 +46,23 @@ Within the constraints of equal hue spacing and uniform perceived lightness (inc
 
 ### Dark
 
-![dark theme code example](./examples/penumbra_example_dark.png)
+<img width="812" src="./examples/penumbra_example_dark.png" alt="dark theme code example"/>
 
 ### Light
 
-![light theme code example](./examples/penumbra_example_light.png)
+<img width="812" src="./examples/penumbra_example_light.png" alt="light theme code example"/>
 
 ### Dark Contrast+
 
-![dark contrasty theme code example](./examples/penumbra_example_dark_contrast+.png)
+<img width="812" src="./examples/penumbra_example_dark_contrast+.png" alt="dark contrast+ theme code example"/>
 
 ### Dark Contrast++
 
-![dark high contrast theme code example](./examples/penumbra_example_dark_contrast++.png)
+<img width="812" src="./examples/penumbra_example_dark_contrast++.png" alt="dark contrast++ theme code example"/>
 
 ## Available For / Installation
+
+Use the default (`balanced`) themes for typical indoor lighting, and `contrast+` or `contrast++` for challenging viewing situations and mild visual impairment.
 
 ### Editors and IDEs
 
@@ -119,7 +123,7 @@ The recommended font is `Fira Code`.
 
 When additional in-between shades are desired, it’s recommended to use transparency to blend other appropriate base colours with the background colour.
 
-See the VS Code theme for an example of canonical usage.
+Beyond these base roles, syntax and UI assignments follow directly from the construction symmetries: keep common identifiers and punctuation in neutral `sky`, de-emphasize comments solely by lightness (`sky-` or `sky+`), and assign distinct syntax categories around the equal-lightness accent circle so tokens that frequently appear adjacent in code receive well-separated (at minimum non-adjacent) hues. See the VS Code theme for a canonical implementation.
 
 ### Accent Colour Palettes
 
@@ -127,16 +131,20 @@ Used for syntax highlighting and wherever colour is required in the UI. If avoid
 
 **Choose one palette (as large as necessary, as small as possible) and never mix and match!** Otherwise, the advantages of hue optimization are lost. Editor and UI themes use the 8-colour palette to provide distinct hue categories across syntax roles. For ANSI terminals, the equidistant 6-colour palette is the default for maximum 60° hue spacing and highest chroma, while `*_semantic6` builds select the matching six colours (`red`, `yellow`, `green`, `cyan`, `blue`, `magenta`) from the 8-colour syntax palette when visual consistency between editor and terminal is preferred. A 7-colour palette is also exported in [`penumbra_accents.tsv`](penumbra_accents.tsv).
 
+In 16-colour terminal palettes, ANSI slots 1–6 (`red`, `green`, `yellow`, `blue`, `magenta`, `cyan`) and 9–14 (`bright_*`) map identically to the six terminal accents, while the four neutral slots map to base tones: `black` (0) is `shade-`, `bright black` (8) is `sky-`, `white` (7) is `sun`, and `bright white` (15) is `sun+` in dark themes (mirroring to `sun-`, `sky+`, `shade`, and `shade-` in light themes).
+
 If palettes smaller than 6 are desired, choose subsets as following:
 
-* **5** omit one colour from a six colour palette (**not recommended**)
-* **4** every other colour from an eight colour palette (two possible sets)
-* **3** every other colour from a six colour palette (two possible sets)
-* **2** every fourth colour from an eight colour palette or every third from a six colour palette (seven possible sets)
+* **5**: omit one colour from a six colour palette (**not recommended**)
+* **4**: every other colour from an eight colour palette (two possible sets)
+* **3**: every other colour from a six colour palette (two possible sets)
+* **2**: every fourth colour from an eight colour palette or every third from a six colour palette (seven possible sets)
 
 ## Construction
 
-Penumbra is formulated in Revised CAM16-UCS with Helmholtz–Kohlrausch brightness compensation. This accounts for how a dark (`shade`) versus a bright (`sun`) background alters perceived lightness and derives all base and accent colours from closed-form perceptual and gamut constraints.
+Penumbra is formulated in Revised CAM16-UCS with Helmholtz–Kohlrausch brightness compensation under standard reference viewing conditions (D65 display whitepoint, sRGB gamut, average surround, and adapting luminance $L_A = 24\text{ cd/m}^2$). This accounts for how a dark (`shade`) versus a bright (`sun`) background alters perceived lightness and derives all base and accent colours from closed-form perceptual and gamut constraints.
+
+![Penumbra base daylight trajectory and CAM16-UCS accent octagon](./docs/penumbra_geometry.png)
 
 ### Base Colours
 
@@ -156,11 +164,11 @@ Each palette forms a regular $N$-gon rotated around the constant-lightness hue c
 
 While Penumbra accounts for how the overall luminance of the dark or light background scales perceived lightness, it neglects chromatic simultaneous contrast. Because the `sun` and `shade` backgrounds have a subtle warm or cool tint along the daylight locus, the perceptual distance between the background and the accent colours is not strictly identical for every hue. Since the base colours have very low chroma, this effect is small and an acceptable trade-off for natural daylight tones. Local simultaneous contrast between adjacent UI panels or neighbouring words is likewise not modelled, as layout varies arbitrarily in practice.
 
-More generally, any static colour appearance model assumes fixed average viewing conditions (screen brightness and ambient room illumination). In addition, the strength of the Helmholtz–Kohlrausch effect depends on the visual angle subtended by a stimulus: compensation derived from standard 2° colour patches slightly overestimates the perceived brightness glow of thin font strokes, and the exact perceived balance will vary slightly with font size, font weight, display resolution and viewing distance.
+More generally, any static colour appearance model assumes fixed average viewing conditions (screen brightness and ambient room illumination). In addition, the strength of the Helmholtz–Kohlrausch effect depends on the visual angle subtended by a stimulus: compensation derived from standard 2° colour patches slightly overestimates the perceived brightness glow of thin font strokes, and the exact perceived balance will vary slightly with font size, font weight, display resolution and viewing distance. Penumbra also inherits the known limitations of Revised CAM16-UCS and its H–K extension: residual hue non-linearity in the blue–purple region, eccentricity scaling pooled across Munsell lightness, and an H–K fit calibrated under average surround conditions. Despite these trade-offs, to my knowledge, no other existing model currently unifies a uniform colour space, viewing-environment adaptation and empirically calibrated Helmholtz–Kohlrausch compensation.
 
 Because differences between the accent colours are solely in hue at constant lightness and chroma, people with colour vision deficiency (CVD) will have great difficulty discriminating between them. In complete dichromacy (red–green or blue–yellow colour blindness), a constant-lightness hue circle collapses onto a single opponent axis, leaving only two distinguishable hues – far too few for useful syntax highlighting. Designing an effective scheme for CVD requires encoding differences across lightness and chroma as well, which requires a different approach from the ground up.
 
-Finally, some legacy terminal applications rely on the large luminance differences between traditional ANSI terminal colours, both against each other and against the background. Because Penumbra intentionally equalizes the lightness of all accent colours, legibility in such applications can suffer drastically. If you regularly use such applications, this scheme is sadly just not for you. Terminal themes also purposefully omit separate "bright" ANSI colours, as modern terminal emulators use bold text or base foreground hierarchy where emphasis is needed.
+Finally, legacy terminal applications that depend on large luminance differences between ANSI colours, rather than hue alone, will lose contrast under Penumbra's equal-lightness accents. Terminal themes also mirror the normal accent colours in the bright ANSI slots (9–14), relying on bold text or base foreground hierarchy where emphasis is needed.
 
 ## The Colours
 
