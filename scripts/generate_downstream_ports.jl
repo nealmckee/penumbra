@@ -1,5 +1,5 @@
-# SPDX-License-Identifier: PolyForm-Noncommercial-1.0.0
-# Copyright (c) 2021-2026 Neal McKee. All rights reserved.
+# SPDX-License-Identifier: MIT
+# Copyright (c) 2021-2026 Neal McKee
 
 """
 generate_downstream_ports.jl
@@ -109,8 +109,8 @@ function generate_ohmyrepl_theme(mode::Symbol, tier::Symbol; target_path::String
 
     fg_comment = is_dark ? base["sky-"] : base["sky+"]
 
-    content = """# SPDX-License-Identifier: PolyForm-Noncommercial-1.0.0
-# Copyright (c) 2021-2026 Neal McKee. All rights reserved.
+    content = """# SPDX-License-Identifier: MIT
+# Copyright (c) 2021-2026 Neal McKee
 #
 # To install in Julia REPL:
 # ] add OhMyREPL Crayons

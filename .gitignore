@@ -8,5 +8,6 @@
 # Reference literature PDFs
 docs/*.pdf
 
-# Scratch & inspection data
+# Scratch & inspection scripts/data
 data/
+scripts/generate_accent_inspection.jl

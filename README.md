@@ -228,7 +228,7 @@ The original Oklab-based formulation of Penumbra is preserved under release tag 
 
 ## Contributions
 
-Any implementations or ports, as well as improvements and additional features for existing ones, are very welcome. Just submit a pull request here or in the respective repository, or open an issue.
+Any implementations or ports, as well as improvements and additional features for existing ones (including additions to the MIT-licensed theme generators [`scripts/generate_downstream_ports.jl`](./scripts/generate_downstream_ports.jl) and [`scripts/generate_vscode_themes.jl`](./scripts/generate_vscode_themes.jl)), are very welcome under the MIT License. Just submit a pull request here or in the respective repository, or open an issue.
 
 ## Acknowledgments
 
@@ -244,6 +244,6 @@ Large language models were used for coding assistance, generating the downstream
 
 Penumbra is distributed under a dual-licensing model (see [`LICENSE.txt`](LICENSE.txt)):
 
-* **Palettes, Themes, Swatches and Documentation ([MIT License](LICENSE.txt)):** All exported colour tables (`penumbra_base.tsv`, `penumbra_accents.tsv`), editor and terminal themes, swatches and documentation are freely available under the MIT License.
-* **Solver Source Code and Generator Scripts ([PolyForm Noncommercial 1.0.0](src/LICENSE-POLYFORM.txt)):** The colour appearance modelling code, optimization solvers and generator scripts in [`src/`](./src) and [`scripts/`](./scripts) are licensed under the PolyForm Noncommercial License 1.0.0.
+* **Palettes, Themes, Theme Generators, Swatches and Documentation ([MIT License](LICENSE.txt)):** All exported colour tables (`penumbra_base.tsv`, `penumbra_accents.tsv`), editor and terminal themes, swatches, documentation, the palette loader ([`src/palette_io.jl`](./src/palette_io.jl)) and the downstream theme, swatch and example generator scripts ([`scripts/generate_vscode_themes.jl`](./scripts/generate_vscode_themes.jl), [`scripts/generate_downstream_ports.jl`](./scripts/generate_downstream_ports.jl), [`scripts/generate_swatches.jl`](./scripts/generate_swatches.jl), [`scripts/generate_example_snippets.jl`](./scripts/generate_example_snippets.jl)) are freely available under the MIT License.
+* **Solver Source Code ([PolyForm Noncommercial 1.0.0](src/LICENSE-POLYFORM.txt)):** The colour appearance modelling code and optimization solvers in [`src/`](./src) (excluding [`src/palette_io.jl`](./src/palette_io.jl)), together with [`scripts/generate_public_palettes.jl`](./scripts/generate_public_palettes.jl) and [`scripts/generate_geometry_figure.jl`](./scripts/generate_geometry_figure.jl), are licensed under the PolyForm Noncommercial License 1.0.0.
 * **Bundled Fonts ([SIL Open Font License 1.1](fonts/OFL.txt)):** The `Fira Sans` and `Fira Code` fonts in [`fonts/`](./fonts) used to render the swatch and example graphics are licensed under the SIL Open Font License 1.1.

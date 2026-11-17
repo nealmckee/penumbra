@@ -1,9 +1,13 @@
 Penumbra is distributed under a dual-licensing model:
 
-1. Color Palettes, Themes, Swatches, and Documentation (MIT License)
+1. Color Palettes, Themes, Theme/Asset Generators, Swatches, and Documentation (MIT License)
    All generated color palettes (including penumbra_base.tsv and penumbra_accents.tsv),
    color specifications, swatch graphics, exported editor and terminal themes,
-   documentation, and assets are licensed under the MIT License:
+   documentation, assets, the palette loader (src/palette_io.jl), and the
+   downstream theme, swatch, and example generator scripts in scripts/
+   (scripts/generate_vscode_themes.jl, scripts/generate_downstream_ports.jl,
+   scripts/generate_swatches.jl, and scripts/generate_example_snippets.jl)
+   are licensed under the MIT License:
 
    Copyright (c) 2021-2026 Neal McKee
 
@@ -26,10 +30,11 @@ Penumbra is distributed under a dual-licensing model:
    OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-2. Source Code and Generator Scripts (PolyForm Noncommercial License 1.0.0)
+2. Color Appearance Solver Source Code (PolyForm Noncommercial License 1.0.0)
    All algorithmic color appearance modeling (CAM) code, optimization solvers,
-   and generation scripts located in src/ and scripts/ are licensed under the
-   PolyForm Noncommercial License 1.0.0.
+   and solver/figure scripts located in src/ (excluding src/palette_io.jl) and
+   scripts/generate_public_palettes.jl and scripts/generate_geometry_figure.jl
+   are licensed under the PolyForm Noncommercial License 1.0.0.
 
    See src/LICENSE-POLYFORM.txt for the full license terms.
 

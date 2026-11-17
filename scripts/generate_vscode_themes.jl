@@ -1,5 +1,5 @@
-# SPDX-License-Identifier: PolyForm-Noncommercial-1.0.0
-# Copyright (c) 2021-2026 Neal McKee. All rights reserved.
+# SPDX-License-Identifier: MIT
+# Copyright (c) 2021-2026 Neal McKee
 
 """
 generate_vscode_themes.jl
