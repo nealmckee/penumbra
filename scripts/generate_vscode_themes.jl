@@ -11,7 +11,7 @@ Deterministic compiler for Penumbra v2 VSCode themes:
 - Penumbra Light (balanced)
 
 Architecture:
-- LSP Semantic Tokens (`semanticTokenColors`): Complete, canonical 26-token mapping (`N = 8`).
+- LSP Semantic Tokens (`semanticTokenColors`): Complete, canonical 28-rule mapping (`N = 8`).
 - TextMate Scopes (`tokenColors`): Canonical root and 2nd-level scopes across all languages (`N = 8`).
 - Workbench Chrome (`colors`): Curated keys mapped to Penumbra's 3-tier contrast lattice.
 - Terminal ANSI (`terminal.ansi*`): Equidistant `N = 6` palette (`sun`/`sun+` whites in dark, `shade`/`shade-` in light).
@@ -349,6 +349,15 @@ function build_theme_dict(
         "diffEditor.insertedTextBorder" => "#00000000",
         "diffEditor.removedTextBorder" => "#00000000",
         "merge.border" => border_subtle,
+        "merge.currentHeaderBackground" => "#$c_cyan" * "33",
+        "merge.currentContentBackground" => "#$c_cyan" * "18",
+        "merge.incomingHeaderBackground" => "#$c_blue" * "33",
+        "merge.incomingContentBackground" => "#$c_blue" * "18",
+        "merge.commonHeaderBackground" => "#$fg_comment" * "33",
+        "merge.commonContentBackground" => "#$fg_comment" * "18",
+        "editorOverviewRuler.currentContentForeground" => "#$c_cyan",
+        "editorOverviewRuler.incomingContentForeground" => "#$c_blue",
+        "editorOverviewRuler.commonContentForeground" => "#$fg_comment",
 
         # Peek Views
         "peekView.border" => "#$c_blue",
@@ -514,6 +523,31 @@ function build_theme_dict(
         "scrollbarSlider.hoverBackground" => "#$fg_text" * "66",
         "scrollbarSlider.activeBackground" => "#$fg_heading",
 
+        # Debugger & Testing
+        "editor.stackFrameHighlightBackground" => "#$c_yellow" * "25",
+        "editor.focusedStackFrameHighlightBackground" => "#$c_orange" * "33",
+        "debugIcon.breakpointForeground" => "#$c_red",
+        "debugIcon.breakpointDisabledForeground" => "#$fg_comment",
+        "debugIcon.breakpointUnverifiedForeground" => "#$fg_comment",
+        "debugIcon.breakpointCurrentStackframeForeground" => "#$c_orange",
+        "debugIcon.breakpointStackframeForeground" => "#$c_yellow",
+        "debugIcon.startForeground" => "#$c_green",
+        "debugIcon.pauseForeground" => "#$c_yellow",
+        "debugIcon.stopForeground" => "#$c_red",
+        "debugIcon.disconnectForeground" => "#$c_red",
+        "debugIcon.restartForeground" => "#$c_green",
+        "debugIcon.stepOverForeground" => "#$c_blue",
+        "debugIcon.stepIntoForeground" => "#$c_blue",
+        "debugIcon.stepOutForeground" => "#$c_blue",
+        "debugIcon.continueForeground" => "#$c_blue",
+        "debugIcon.stepBackForeground" => "#$c_purple",
+        "testing.iconPassed" => "#$c_green",
+        "testing.iconFailed" => "#$c_red",
+        "testing.iconErrored" => "#$c_red",
+        "testing.iconQueued" => "#$c_yellow",
+        "testing.iconSkipped" => "#$fg_comment",
+        "testing.iconUnset" => "#$fg_comment",
+
         # Badges & Progress
         "badge.background" => "#$bg_high",
         "badge.foreground" => "#$fg_heading",
@@ -530,7 +564,7 @@ function build_theme_dict(
         "notificationsInfoIcon.foreground" => "#$c_blue"
     )
 
-    # --- LSP SEMANTIC TOKEN COLORS (Full 26 Canonical Token Types) ---
+    # --- LSP SEMANTIC TOKEN COLORS (Full 28 Canonical Semantic Token Rules) ---
     semanticTokenColors = Dict{String,Any}(
         "comment" => Dict("foreground" => "#$fg_comment", "fontStyle" => ""),
         "keyword" => Dict("foreground" => "#$c_purple", "fontStyle" => ""),
@@ -553,11 +587,13 @@ function build_theme_dict(
         "regexp" => Dict("foreground" => "#$c_magenta", "fontStyle" => ""),
         "operator" => Dict("foreground" => "#$c_cyan", "fontStyle" => ""),
         "macro" => Dict("foreground" => "#$c_red", "fontStyle" => ""),
+        "decorator" => Dict("foreground" => "#$c_red", "fontStyle" => ""),
         "enumMember" => Dict("foreground" => "#$c_orange", "fontStyle" => ""),
         "variable" => Dict("foreground" => "#$fg_text", "fontStyle" => ""),
         "parameter" => Dict("foreground" => "#$fg_text", "fontStyle" => ""),
         "property" => Dict("foreground" => "#$fg_text", "fontStyle" => ""),
-        "variable.defaultLibrary" => Dict("foreground" => "#$c_magenta", "fontStyle" => "")
+        "variable.defaultLibrary" => Dict("foreground" => "#$c_magenta", "fontStyle" => ""),
+        "*.deprecated" => Dict("strikethrough" => true)
     )
 
     # --- TEXTMATE SCOPES (Canonical Root Hierarchy, Upright Roman) ---
@@ -681,9 +717,11 @@ function build_theme_dict(
             "name" => "Numbers, Units & Booleans",
             "scope" => [
                 "constant.numeric",
+                "constant.character",
                 "constant.language.boolean",
                 "constant.language.null",
-                "constant.language"
+                "constant.language",
+                "support.constant"
             ],
             "settings" => Dict("foreground" => "#$c_orange", "fontStyle" => "")
         ),
@@ -694,7 +732,12 @@ function build_theme_dict(
             "scope" => [
                 "entity.name.function.macro",
                 "support.function.macro",
-                "entity.name.function.decorator"
+                "entity.name.function.decorator",
+                "punctuation.definition.decorator",
+                "storage.type.annotation",
+                "keyword.control.directive",
+                "keyword.other.directive",
+                "punctuation.definition.directive"
             ],
             "settings" => Dict("foreground" => "#$c_red", "fontStyle" => "")
         ),
@@ -750,6 +793,13 @@ function build_theme_dict(
                 "markup.italic"
             ],
             "settings" => Dict("foreground" => "#$c_purple", "fontStyle" => "italic")
+        ),
+        Dict(
+            "name" => "Markdown Strikethrough",
+            "scope" => [
+                "markup.strikethrough"
+            ],
+            "settings" => Dict("fontStyle" => "strikethrough")
         ),
         Dict(
             "name" => "Markdown Code",

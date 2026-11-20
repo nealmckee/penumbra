@@ -14,6 +14,14 @@ cursor = "#2c2e31"
 text = "#8b8b8b"
 background = "#dfd9d0"
 
+[colors.search.matches]
+foreground = "#5e6063"
+background = "#e2d3c4"
+
+[colors.search.focused_match]
+foreground = "#5e6063"
+background = "#d9c3b0"
+
 [colors.normal]
 black   = "#dfd9d0"
 red     = "#bb5c78"

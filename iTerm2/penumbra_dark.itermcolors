@@ -42,9 +42,9 @@
 		<key>Red Component</key>
 		<real>0.0</real>
 		<key>Green Component</key>
-		<real>0.506</real>
+		<real>0.498</real>
 		<key>Blue Component</key>
-		<real>0.706</real>
+		<real>0.729</real>
 	</dict>
 	<key>Match Background Color</key>
 	<dict>
@@ -55,7 +55,7 @@
 		<key>Green Component</key>
 		<real>0.314</real>
 		<key>Blue Component</key>
-		<real>0.212</real>
+		<real>0.192</real>
 	</dict>
 	<key>Active Pane Border Color</key>
 	<dict>
@@ -64,20 +64,20 @@
 		<key>Red Component</key>
 		<real>0.0</real>
 		<key>Green Component</key>
-		<real>0.506</real>
+		<real>0.498</real>
 		<key>Blue Component</key>
-		<real>0.706</real>
+		<real>0.729</real>
 	</dict>
 	<key>IME Cursor Color</key>
 	<dict>
 		<key>Color Space</key>
 		<string>sRGB</string>
 		<key>Red Component</key>
-		<real>0.58</real>
+		<real>0.706</real>
 		<key>Green Component</key>
-		<real>0.541</real>
+		<real>0.463</real>
 		<key>Blue Component</key>
-		<real>0.114</real>
+		<real>0.196</real>
 	</dict>
 	<key>Cursor Color</key>
 	<dict>

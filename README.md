@@ -88,7 +88,7 @@ All terminal themes default to the equally spaced 6-colour ANSI palette (`penumb
 
 * **Julia REPL with OhMyREPL** add the packages `OhMyREPL.jl` and `Crayons.jl` to your base environment and include one of the scripts from [`OhMyREPL.jl/`](./OhMyREPL.jl) in your `startup.jl`
 * **Claude Code & Codex CLI** theme files in [`claude-code/`](./claude-code) and [`codex/`](./codex)
-* **Base16** YAML schemes in [`base16/`](./base16)
+* **Base16 & Base24** YAML schemes in [`base16/`](./base16) and [`base24/`](./base24)
 * **CSS & Design Tools** CSS custom properties in [`css/penumbra.css`](./css/penumbra.css) and GIMP/Inkscape/Krita palettes in [`gpl/`](./gpl)
 
 ## Intended Usage

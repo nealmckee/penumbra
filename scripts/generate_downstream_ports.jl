@@ -21,7 +21,8 @@ Deterministic generator for auxiliary editor, terminal, and AI CLI theme ports:
 14. Codex Desktop App: `codex/penumbra_*.txt`
 15. Claude Code CLI: `claude-code/penumbra_*.json`
 16. Base16 (tinted-theming): `base16/penumbra_*.yaml`
-17. Zellij: `zellij/themes/penumbra_*.kdl`
+17. Base24 (tinted-theming): `base24/penumbra_*.yaml`
+18. Zellij: `zellij/themes/penumbra_*.kdl`
 
 Generates clean, verified configurations based on the solved v2 base and accent palettes.
 """
@@ -333,11 +334,11 @@ function generate_vim_theme(mode::Symbol, tier::Symbol; target_path::String, dry
         _vim_hi("DiagnosticUnderlineOk", "NONE"; gui="undercurl", cterm="underline", guisp=acc["green"]),
     ]
 
-    fg16_heading = is_dark ? "15" : "8"
+    fg16_heading = "15"
     fg16_comment = "8"
-    bg16_chrome = is_dark ? "0" : "7"
-    fg16_sel = is_dark ? "0" : "0"
-    bg16_sel = is_dark ? "7" : "3"
+    bg16_chrome = "0"
+    fg16_sel = "0"
+    bg16_sel = "7"
 
     content = """\" Penumbra v2 -- Vim / Neovim color scheme
 \" Theme: $slug (Mode: $mode, Tier: $tier)
@@ -462,8 +463,8 @@ $(join(["  " * l for l in nvim_diag_lines], "\n"))
   hi! link @number              Number
   hi! link @boolean             Boolean
   hi! link @string              String
-  hi! link @string.regexp       String
-  hi! link @character           Character
+  hi! link @string.regexp       Special
+  hi! link @character           String
   hi! link @variable            Identifier
   hi! link @variable.parameter  Identifier
   hi! link @variable.member     Identifier
@@ -486,6 +487,10 @@ $(join(["  " * l for l in nvim_diag_lines], "\n"))
   hi! link @markup.heading      Title
   hi! link @markup.raw          String
   hi! link @markup.link         Underlined
+  hi! link @markup.strikethrough Comment
+  hi! link @diff.plus           DiffAdd
+  hi! link @diff.minus          DiffDelete
+  hi! link @diff.delta          DiffChange
 elseif (has('termguicolors') && &termguicolors) || has('gui_running')
   let g:terminal_ansi_colors = [$term_vim_list]
 endif
@@ -503,103 +508,200 @@ function generate_helix_theme(mode::Symbol, tier::Symbol; target_path::String, d
     base = BASE_TONES[tier]
     acc = ACCENTS[mode][tier][8]
 
+    bg_low = is_dark ? base["shade+"] : base["sun-"]
     bg_canvas = is_dark ? base["shade"] : base["sun"]
-    bg_recessed = is_dark ? base["shade-"] : base["sun-"]
-    bg_elevated = is_dark ? base["shade+"] : base["sun+"]
+    bg_high = is_dark ? base["shade-"] : base["sun+"]
+    fg_comment = is_dark ? base["sky-"] : base["sky+"]
+    fg_text = base["sky"]
+    fg_heading = is_dark ? base["sky+"] : base["sky-"]
     cursor_col = is_dark ? base["sun"] : base["shade"]
-    theme_name = is_dark ? "penumbra_dark$(tier_suffix(tier))" : "penumbra_light"
-    comment_ref = is_dark ? "sky_minus" : "sky_plus"
-    linenr_ref = is_dark ? "sky_minus" : "sky_plus"
+    sel_bg = _blend_hex(bg_low, fg_comment, 0.35)
+    cursorline_bg = _blend_hex(bg_canvas, bg_low, 0.50)
+    display_name = _display_name(mode, tier)
 
-    content = """# Penumbra v2 -- Helix Editor Theme
-# Theme: $theme_name
-# Mode: $mode, Tier: $tier
-# Opponent Scheme: N = 8 (Strict Upright Typography)
+    content = """# Author : Neal McKee <https://github.com/nealmckee/penumbra>
+# License: MIT
+# Penumbra v2 -- Helix Editor Theme ($display_name)
 
+# Syntax (N = 8, strict upright typography)
 "attribute" = "yellow"
 "type" = "yellow"
 "type.builtin" = "yellow"
+"type.enum.variant" = "orange"
 "type.parameter" = "yellow"
 "constructor" = "yellow"
 
 "constant" = "orange"
-"constant.numeric" = "orange"
+"constant.builtin" = "orange"
 "constant.builtin.boolean" = "orange"
+"constant.numeric" = "orange"
 "constant.character" = "orange"
 "constant.character.escape" = "magenta"
 
 "string" = "green"
 "string.regexp" = "magenta"
 "string.special" = "green"
+"string.special.path" = "green"
+"string.special.symbol" = "magenta"
+"string.special.url" = { fg = "blue", underline = { style = "line" } }
 
-"comment" = { fg = "$comment_ref" }
+"comment" = "fg_comment"
+"comment.line" = "fg_comment"
+"comment.line.documentation" = "fg_comment"
+"comment.block" = "fg_comment"
+"comment.block.documentation" = "fg_comment"
+"comment.unused" = "fg_comment"
 
-"variable" = "sky"
+"variable" = "fg_text"
 "variable.builtin" = "magenta"
-"variable.parameter" = "sky"
-"variable.other.member" = "sky"
+"variable.parameter" = "fg_text"
+"variable.other.member" = "fg_text"
 
 "label" = "red"
 "special" = "magenta"
 
-"function" = "blue"
-"function.builtin" = "blue"
-"function.method" = "blue"
-"function.macro" = "red"
-
-"operator" = "cyan"
+"punctuation" = "fg_text"
+"punctuation.bracket" = "fg_text"
+"punctuation.delimiter" = "fg_text"
+"punctuation.special" = "cyan"
 
 "keyword" = "purple"
 "keyword.control" = "purple"
 "keyword.operator" = "cyan"
 "keyword.directive" = "red"
+"keyword.function" = "purple"
+"keyword.storage" = "purple"
+
+"operator" = "cyan"
+
+"function" = "blue"
+"function.builtin" = "blue"
+"function.method" = "blue"
+"function.macro" = "red"
+"function.special" = "red"
+
+"tag" = "blue"
+"tag.builtin" = "blue"
+"namespace" = "yellow"
+"module" = "yellow"
+
+# Diff
+"diff.plus" = "green"
+"diff.plus.gutter" = "green"
+"diff.minus" = "red"
+"diff.minus.gutter" = "red"
+"diff.delta" = "blue"
+"diff.delta.gutter" = "blue"
+"diff.delta.moved" = "cyan"
+"diff.delta.conflict" = { fg = "orange", modifiers = ["bold"] }
 
 # Markup / Markdown (Semantic styles for doc markup only)
-"markup.heading" = { fg = "blue", modifiers = ["bold"] }
-"markup.list" = "yellow"
+"markup.heading" = { fg = "fg_heading", modifiers = ["bold"] }
+"markup.heading.marker" = "fg_comment"
+"markup.heading.1" = { fg = "fg_heading", modifiers = ["bold"] }
+"markup.heading.2" = { fg = "blue", modifiers = ["bold"] }
+"markup.heading.3" = { fg = "cyan", modifiers = ["bold"] }
+"markup.heading.4" = { fg = "purple", modifiers = ["bold"] }
+"markup.heading.5" = { fg = "yellow", modifiers = ["bold"] }
+"markup.heading.6" = { fg = "fg_text", modifiers = ["bold"] }
+"markup.list" = "cyan"
+"markup.list.checked" = "green"
+"markup.list.unchecked" = "fg_comment"
 "markup.bold" = { modifiers = ["bold"] }
 "markup.italic" = { modifiers = ["italic"] }
-"markup.link.url" = { fg = "cyan", underline = { style = "line" } }
-"markup.link.text" = "purple"
+"markup.strikethrough" = { modifiers = ["crossed_out"] }
+"markup.link.url" = { fg = "blue", underline = { style = "line" } }
+"markup.link.text" = "cyan"
+"markup.link.label" = "purple"
+"markup.quote" = "fg_comment"
 "markup.raw" = "green"
+"markup.raw.inline" = "green"
+"markup.raw.block" = "green"
+"markup.normal.completion" = "fg_text"
+"markup.normal.hover" = "fg_text"
+"markup.heading.completion" = { fg = "fg_heading", modifiers = ["bold"] }
+"markup.heading.hover" = { fg = "fg_heading", modifiers = ["bold"] }
+"markup.raw.inline.completion" = "green"
+"markup.raw.inline.hover" = "green"
 
 # UI Canvas & Hierarchy
-"ui.background" = { bg = "bg_canvas" }
-"ui.background.separator" = { fg = "bg_recessed" }
+"ui.background" = { fg = "fg_text", bg = "bg_canvas" }
+"ui.background.separator" = { fg = "fg_comment" }
 "ui.cursor" = { fg = "bg_canvas", bg = "cursor_color" }
-"ui.cursor.match" = { bg = "bg_elevated" }
 "ui.cursor.primary" = { fg = "bg_canvas", bg = "cursor_color" }
-"ui.selection" = { bg = "bg_elevated" }
-"ui.selection.primary" = { bg = "bg_elevated" }
-"ui.linenr" = { fg = "$linenr_ref" }
-"ui.linenr.selected" = { fg = "sky_plus", bg = "bg_elevated" }
-"ui.statusline" = { fg = "sky", bg = "bg_recessed" }
-"ui.statusline.inactive" = { fg = "$comment_ref", bg = "bg_recessed" }
-"ui.popup" = { bg = "bg_recessed", fg = "sky" }
-"ui.window" = { fg = "bg_recessed" }
-"ui.help" = { bg = "bg_recessed", fg = "sky" }
-"ui.text" = "sky"
-"ui.text.focus" = "sky_plus"
+"ui.cursor.match" = { fg = "fg_heading", bg = "bg_high" }
+"ui.cursorline.primary" = { bg = "cursorline_bg" }
+"ui.cursorline.secondary" = { bg = "cursorline_bg" }
+"ui.cursorcolumn.primary" = { bg = "cursorline_bg" }
+"ui.cursorcolumn.secondary" = { bg = "cursorline_bg" }
+"ui.selection" = { bg = "sel_bg" }
+"ui.selection.primary" = { bg = "sel_bg" }
+"ui.gutter" = { bg = "bg_canvas" }
+"ui.gutter.selected" = { bg = "cursorline_bg" }
+"ui.linenr" = { fg = "fg_comment" }
+"ui.linenr.selected" = { fg = "fg_heading", bg = "cursorline_bg" }
+"ui.statusline" = { fg = "fg_text", bg = "bg_low" }
+"ui.statusline.inactive" = { fg = "fg_comment", bg = "bg_low" }
+"ui.statusline.normal" = { fg = "bg_high", bg = "blue", modifiers = ["bold"] }
+"ui.statusline.insert" = { fg = "bg_high", bg = "green", modifiers = ["bold"] }
+"ui.statusline.select" = { fg = "bg_high", bg = "purple", modifiers = ["bold"] }
+"ui.statusline.separator" = { fg = "fg_comment", bg = "bg_low" }
+"ui.bufferline" = { fg = "fg_comment", bg = "bg_low" }
+"ui.bufferline.active" = { fg = "fg_heading", bg = "bg_canvas" }
+"ui.bufferline.background" = { bg = "bg_low" }
+"ui.popup" = { fg = "fg_text", bg = "bg_low" }
+"ui.popup.info" = { fg = "fg_text", bg = "bg_low" }
+"ui.window" = { fg = "fg_comment" }
+"ui.help" = { fg = "fg_text", bg = "bg_low" }
+"ui.menu" = { fg = "fg_text", bg = "bg_low" }
+"ui.menu.selected" = { fg = "fg_heading", bg = "bg_high", modifiers = ["bold"] }
+"ui.menu.scroll" = { fg = "fg_comment", bg = "bg_low" }
+"ui.picker.header" = { fg = "fg_text", modifiers = ["bold"] }
+"ui.picker.header.column" = { fg = "fg_text" }
+"ui.picker.header.column.active" = { fg = "blue", modifiers = ["bold"] }
+"ui.highlight" = { bg = "bg_high" }
+"ui.highlight.frameline" = { bg = "sel_bg" }
+"ui.debug.breakpoint" = { fg = "red" }
+"ui.debug.active" = { fg = "orange", modifiers = ["bold"] }
+"ui.text" = "fg_text"
+"ui.text.focus" = { fg = "fg_heading", bg = "bg_high", modifiers = ["bold"] }
+"ui.text.inactive" = { fg = "fg_comment" }
+"ui.text.info" = { fg = "fg_text" }
+"ui.text.directory" = { fg = "blue" }
+"ui.virtual.ruler" = { bg = "bg_low" }
+"ui.virtual.whitespace" = { fg = "fg_comment" }
+"ui.virtual.indent-guide" = { fg = "bg_low" }
+"ui.virtual.inlay-hint" = { fg = "fg_comment", bg = "bg_low" }
+"ui.virtual.inlay-hint.parameter" = { fg = "fg_comment", bg = "bg_low" }
+"ui.virtual.inlay-hint.type" = { fg = "fg_comment", bg = "bg_low" }
+"ui.virtual.wrap" = { fg = "fg_comment" }
+"ui.virtual.jump-label" = { fg = "red", modifiers = ["bold"] }
+"tabstop" = { underline = { color = "orange", style = "dashed" } }
+rainbow = ["cyan", "purple", "yellow", "blue", "green", "orange"]
 
 # Diagnostics & Alerts
-"warning" = "orange"
 "error" = "red"
+"warning" = "orange"
 "info" = "blue"
 "hint" = "cyan"
 "diagnostic" = { underline = { style = "line" } }
-"diagnostic.warning" = { underline = { color = "orange", style = "curl" } }
 "diagnostic.error" = { underline = { color = "red", style = "curl" } }
+"diagnostic.warning" = { underline = { color = "orange", style = "curl" } }
 "diagnostic.info" = { underline = { color = "blue", style = "curl" } }
 "diagnostic.hint" = { underline = { color = "cyan", style = "curl" } }
+"diagnostic.unnecessary" = { modifiers = ["dim"] }
+"diagnostic.deprecated" = { modifiers = ["crossed_out"] }
 
 [palette]
+bg_low = "#$bg_low"
 bg_canvas = "#$bg_canvas"
-bg_recessed = "#$bg_recessed"
-bg_elevated = "#$bg_elevated"
+bg_high = "#$bg_high"
+sel_bg = "#$sel_bg"
+cursorline_bg = "#$cursorline_bg"
 cursor_color = "#$cursor_col"
-sky_minus = "#$(base["sky-"])"
-sky = "#$(base["sky"])"
-sky_plus = "#$(base["sky+"])"
+fg_comment = "#$fg_comment"
+fg_text = "#$fg_text"
+fg_heading = "#$fg_heading"
 red = "#$(acc["red"])"
 orange = "#$(acc["orange"])"
 yellow = "#$(acc["yellow"])"
@@ -610,13 +712,7 @@ purple = "#$(acc["purple"])"
 magenta = "#$(acc["magenta"])"
 """
 
-    if dry_run
-        println("  [DRY RUN] Helix theme ($theme_name) target: $target_path ($(sizeof(content)) bytes)")
-    else
-        mkpath(dirname(target_path))
-        write(target_path, content)
-        println("  [WRITTEN] $target_path")
-    end
+    _write_port(target_path, content, "Helix theme ($display_name)"; dry_run=dry_run)
 end
 
 # =============================================================================
@@ -626,14 +722,13 @@ end
 function generate_iterm2_profile(mode::Symbol, tier::Symbol; target_path::String, ansi_n::Int=6, dry_run::Bool=true)
     is_dark = mode == :dark
     base = BASE_TONES[tier]
-    acc = ACCENTS[mode][tier][8]
     p = get_terminal_ansi_palette(mode, tier; ansi_n=ansi_n)
 
     bg_canvas = is_dark ? base["shade"] : base["sun"]
     fg_comment = is_dark ? base["sky-"] : base["sky+"]
     fg_heading = is_dark ? base["sky+"] : base["sky-"]
     canvas_opposite = is_dark ? base["sun"] : base["shade"]
-    match_bg = _blend_hex(bg_canvas, acc["orange"], 0.35)
+    match_bg = _blend_hex(bg_canvas, ansi_n == 8 ? ACCENTS[mode][tier][8]["orange"] : p.yellow, 0.35)
 
     function color_xml(name::String, hex_str::String; alpha::Union{Nothing,Real}=nothing)
         c = RGB(parse(Colorant, "#" * hex_str))
@@ -655,10 +750,10 @@ function generate_iterm2_profile(mode::Symbol, tier::Symbol; target_path::String
         color_xml("Background Color", p.bg),
         color_xml("Foreground Color", p.fg),
         color_xml("Bold Color", fg_heading),
-        color_xml("Link Color", acc["blue"]),
+        color_xml("Link Color", p.blue),
         color_xml("Match Background Color", match_bg),
-        color_xml("Active Pane Border Color", acc["blue"]),
-        color_xml("IME Cursor Color", acc["yellow"]),
+        color_xml("Active Pane Border Color", p.blue),
+        color_xml("IME Cursor Color", p.yellow),
         color_xml("Cursor Color", p.cursor),
         color_xml("Cursor Text Color", p.cursor_text),
         color_xml("Cursor Guide Color", canvas_opposite; alpha=0.05),
@@ -706,7 +801,7 @@ end
 
 function generate_ghostty_theme(mode::Symbol, tier::Symbol; target_path::String, ansi_n::Int=6, dry_run::Bool=true)
     p = get_terminal_ansi_palette(mode, tier; ansi_n=ansi_n)
-    theme_label = mode == :dark ? "penumbra_dark$(tier_suffix(tier))" : "penumbra_light"
+    theme_label = _theme_slug(mode, tier) * (ansi_n == 8 ? "_semantic6" : "")
 
     content = """# Penumbra v2 -- Ghostty Color Scheme
 # Theme: $theme_label
@@ -750,8 +845,14 @@ end
 # =============================================================================
 
 function generate_alacritty_theme(mode::Symbol, tier::Symbol; target_path::String, ansi_n::Int=6, dry_run::Bool=true)
+    is_dark = mode == :dark
+    base = BASE_TONES[tier]
     p = get_terminal_ansi_palette(mode, tier; ansi_n=ansi_n)
-    theme_label = mode == :dark ? "penumbra_dark$(tier_suffix(tier))" : "penumbra_light"
+    theme_label = _theme_slug(mode, tier) * (ansi_n == 8 ? "_semantic6" : "")
+    fg_heading = is_dark ? base["sky+"] : base["sky-"]
+    search_acc = ansi_n == 8 ? ACCENTS[mode][tier][8]["orange"] : p.yellow
+    match_bg = _blend_hex(p.bg, search_acc, 0.25)
+    focused_bg = _blend_hex(p.bg, search_acc, 0.42)
 
     content = """# Penumbra v2 -- Alacritty Color Scheme
 # Theme: $theme_label
@@ -768,6 +869,14 @@ cursor = "#$(lowercase(p.cursor))"
 [colors.selection]
 text = "#$(lowercase(p.selection_fg))"
 background = "#$(lowercase(p.selection_bg))"
+
+[colors.search.matches]
+foreground = "#$(lowercase(fg_heading))"
+background = "#$(lowercase(match_bg))"
+
+[colors.search.focused_match]
+foreground = "#$(lowercase(fg_heading))"
+background = "#$(lowercase(focused_bg))"
 
 [colors.normal]
 black   = "#$(lowercase(p.black))"
@@ -803,19 +912,58 @@ end
 # =============================================================================
 
 function generate_kitty_theme(mode::Symbol, tier::Symbol; target_path::String, ansi_n::Int=6, dry_run::Bool=true)
+    is_dark = mode == :dark
+    base = BASE_TONES[tier]
     p = get_terminal_ansi_palette(mode, tier; ansi_n=ansi_n)
-    theme_label = mode == :dark ? "penumbra_dark$(tier_suffix(tier))" : "penumbra_light"
+    bg_low = is_dark ? base["shade+"] : base["sun-"]
+    bg_high = is_dark ? base["shade-"] : base["sun+"]
+    fg_comment = is_dark ? base["sky-"] : base["sky+"]
+    fg_heading = is_dark ? base["sky+"] : base["sky-"]
 
-    content = """# Penumbra v2 -- Kitty Color Scheme
-# Theme: $theme_label
-# Mode: $mode, Tier: $tier
+    suffix = ansi_n == 8 ? " (Semantic 6)" : ""
+    name = _display_name(mode, tier) * suffix
+    theme_label = _theme_slug(mode, tier) * (ansi_n == 8 ? "_semantic6" : "")
+    upstream_file = replace(basename(target_path), "+" => "%2B")
 
-foreground            #$(lowercase(p.fg))
-background            #$(lowercase(p.bg))
+    content = """# vim:ft=kitty
+
+## name: $name
+## author: Neal McKee
+## license: MIT
+## upstream: https://raw.githubusercontent.com/nealmckee/penumbra/main/kitty/$upstream_file
+## blurb: Perceptually uniform colour scheme modelled after natural sunlight and shade (Revised CAM16-UCS + H-K).
+
+foreground             #$(lowercase(p.fg))
+background             #$(lowercase(p.bg))
 selection_foreground   #$(lowercase(p.selection_fg))
 selection_background   #$(lowercase(p.selection_bg))
-cursor                #$(lowercase(p.cursor))
-cursor_text_color     #$(lowercase(p.cursor_text))
+
+cursor                 #$(lowercase(p.cursor))
+cursor_text_color      #$(lowercase(p.cursor_text))
+
+url_color              #$(lowercase(p.blue))
+
+active_border_color    #$(lowercase(p.blue))
+inactive_border_color  #$(lowercase(bg_low))
+bell_border_color      #$(lowercase(p.yellow))
+visual_bell_color      none
+
+wayland_titlebar_color background
+macos_titlebar_color   background
+
+active_tab_foreground   #$(lowercase(fg_heading))
+active_tab_background   #$(lowercase(p.bg))
+inactive_tab_foreground #$(lowercase(fg_comment))
+inactive_tab_background #$(lowercase(bg_low))
+tab_bar_background      #$(lowercase(bg_low))
+tab_bar_margin_color    #$(lowercase(bg_low))
+
+mark1_foreground #$(lowercase(bg_high))
+mark1_background #$(lowercase(p.cyan))
+mark2_foreground #$(lowercase(bg_high))
+mark2_background #$(lowercase(p.yellow))
+mark3_foreground #$(lowercase(bg_high))
+mark3_background #$(lowercase(p.magenta))
 
 # Normal ANSI colors
 color0  #$(lowercase(p.black))
@@ -837,13 +985,7 @@ color13 #$(lowercase(p.bright_magenta))
 color14 #$(lowercase(p.bright_cyan))
 color15 #$(lowercase(p.bright_white))
 """
-    if dry_run
-        println("  [DRY RUN] Kitty theme ($theme_label) target: $target_path ($(sizeof(content)) bytes)")
-    else
-        mkpath(dirname(target_path))
-        write(target_path, content)
-        println("  [WRITTEN] $target_path")
-    end
+    _write_port(target_path, content, "Kitty theme ($theme_label)"; dry_run=dry_run)
 end
 
 # =============================================================================
@@ -1136,7 +1278,12 @@ end
 # =============================================================================
 
 function generate_wezterm_theme(mode::Symbol, tier::Symbol; target_path::String, ansi_n::Int=6, dry_run::Bool=true)
+    is_dark = mode == :dark
+    base = BASE_TONES[tier]
     p = get_terminal_ansi_palette(mode, tier; ansi_n=ansi_n)
+    bg_low = is_dark ? base["shade+"] : base["sun-"]
+    fg_comment = is_dark ? base["sky-"] : base["sky+"]
+    fg_heading = is_dark ? base["sky+"] : base["sky-"]
     name = _display_name(mode, tier) * (ansi_n == 8 ? " (Semantic 6)" : "")
     slug = _theme_slug(mode, tier) * (ansi_n == 8 ? "_semantic6" : "")
 
@@ -1178,6 +1325,29 @@ brights = [
   "#$(lowercase(p.bright_cyan))",
   "#$(lowercase(p.bright_white))",
 ]
+
+[colors.tab_bar]
+background = "#$(lowercase(bg_low))"
+
+[colors.tab_bar.active_tab]
+bg_color = "#$(lowercase(p.bg))"
+fg_color = "#$(lowercase(fg_heading))"
+
+[colors.tab_bar.inactive_tab]
+bg_color = "#$(lowercase(bg_low))"
+fg_color = "#$(lowercase(fg_comment))"
+
+[colors.tab_bar.inactive_tab_hover]
+bg_color = "#$(lowercase(p.bg))"
+fg_color = "#$(lowercase(p.fg))"
+
+[colors.tab_bar.new_tab]
+bg_color = "#$(lowercase(bg_low))"
+fg_color = "#$(lowercase(fg_comment))"
+
+[colors.tab_bar.new_tab_hover]
+bg_color = "#$(lowercase(p.bg))"
+fg_color = "#$(lowercase(fg_heading))"
 """
     _write_port(target_path, content, "WezTerm theme ($slug)"; dry_run=dry_run)
 end
@@ -1188,10 +1358,9 @@ end
 
 function generate_warp_theme(mode::Symbol, tier::Symbol; target_path::String, ansi_n::Int=6, dry_run::Bool=true)
     p = get_terminal_ansi_palette(mode, tier; ansi_n=ansi_n)
-    acc = ACCENTS[mode][tier][8]
     suffix = ansi_n == 8 ? " (Semantic 6)" : ""
     name = _display_name(mode, tier) * suffix
-    slug = _theme_slug(mode, tier)
+    slug = _theme_slug(mode, tier) * (ansi_n == 8 ? "_semantic6" : "")
     details = mode == :dark ? "darker" : "lighter"
 
     content = """# Penumbra v2 -- Warp Terminal Theme
@@ -1199,7 +1368,7 @@ function generate_warp_theme(mode::Symbol, tier::Symbol; target_path::String, an
 # Mode: $mode, Tier: $tier
 
 name: "$name"
-accent: "#$(lowercase(acc["blue"]))"
+accent: "#$(lowercase(p.blue))"
 cursor: "#$(lowercase(p.cursor))"
 background: "#$(lowercase(p.bg))"
 foreground: "#$(lowercase(p.fg))"
@@ -1261,12 +1430,14 @@ function generate_tmtheme(mode::Symbol, tier::Symbol; target_path::String, dry_r
     slug = _theme_slug(mode, tier)
     uuid = TMTHEME_UUIDS[(mode, tier)]
 
+    bg_low = is_dark ? base["shade+"] : base["sun-"]
     bg_canvas = is_dark ? base["shade"] : base["sun"]
-    bg_elevated = is_dark ? base["shade+"] : base["sun+"]
     fg_comment = is_dark ? base["sky-"] : base["sky+"]
     fg_text = base["sky"]
     fg_heading = is_dark ? base["sky+"] : base["sky-"]
     canvas_opposite = is_dark ? base["sun"] : base["shade"]
+    sel_bg = _blend_hex(bg_low, fg_comment, 0.35)
+    line_hl = _blend_hex(bg_canvas, bg_low, 0.50)
     find_hl = _blend_hex(bg_canvas, acc["orange"], 0.35)
 
     rules = [
@@ -1278,14 +1449,15 @@ function generate_tmtheme(mode::Symbol, tier::Symbol; target_path::String, dry_r
         _tmtheme_rule("Syntactic Punctuation &amp; Brackets", "punctuation, punctuation.separator, punctuation.terminator, meta.brace, meta.template.expression, meta.embedded", fg_text),
         _tmtheme_rule("Strings &amp; Code", "string, string.quoted, string.template", acc["green"]),
         _tmtheme_rule("String Escapes &amp; RegExp", "constant.character.escape, string.regexp", acc["magenta"]),
-        _tmtheme_rule("Numbers, Units &amp; Booleans", "constant.numeric, constant.language.boolean, constant.language.null, constant.language", acc["orange"]),
-        _tmtheme_rule("Macros &amp; Decorators", "entity.name.function.macro, support.function.macro, entity.name.function.decorator", acc["red"]),
+        _tmtheme_rule("Numbers, Units &amp; Booleans", "constant.numeric, constant.character, constant.language.boolean, constant.language.null, constant.language, support.constant", acc["orange"]),
+        _tmtheme_rule("Macros, Decorators &amp; Directives", "entity.name.function.macro, support.function.macro, entity.name.function.decorator, punctuation.definition.decorator, storage.type.annotation, keyword.control.directive, keyword.other.directive, punctuation.definition.directive", acc["red"]),
         _tmtheme_rule("Symbols &amp; Special Bindings", "constant.other.symbol, variable.language.special, variable.language.this, variable.language.self", acc["magenta"]),
         _tmtheme_rule("Errors &amp; Invalid Syntax", "invalid, invalid.illegal", acc["red"]),
         _tmtheme_rule("Variables &amp; Parameters", "variable, variable.parameter, variable.other", fg_text),
         _tmtheme_rule("Markdown Headings", "markup.heading, entity.name.section", fg_heading; font_style="bold"),
         _tmtheme_rule("Markdown Bold", "markup.bold", acc["yellow"]; font_style="bold"),
         _tmtheme_rule("Markdown Italic", "markup.italic", acc["purple"]; font_style="italic"),
+        _tmtheme_rule("Markdown Strikethrough", "markup.strikethrough", fg_comment),
         _tmtheme_rule("Markdown Code", "markup.inline.raw, markup.raw.block", acc["green"]),
         _tmtheme_rule("Markdown Links", "markup.underline.link, string.other.link", acc["blue"]),
         _tmtheme_rule("Markdown Quotes", "markup.quote", fg_comment),
@@ -1323,11 +1495,11 @@ function generate_tmtheme(mode::Symbol, tier::Symbol; target_path::String, dry_r
 \t\t\t\t<key>caret</key>
 \t\t\t\t<string>#$canvas_opposite</string>
 \t\t\t\t<key>selection</key>
-\t\t\t\t<string>#$bg_elevated</string>
+\t\t\t\t<string>#$sel_bg</string>
 \t\t\t\t<key>selectionBorder</key>
-\t\t\t\t<string>#$bg_elevated</string>
+\t\t\t\t<string>#$sel_bg</string>
 \t\t\t\t<key>lineHighlight</key>
-\t\t\t\t<string>#$bg_elevated</string>
+\t\t\t\t<string>#$line_hl</string>
 \t\t\t\t<key>invisibles</key>
 \t\t\t\t<string>#$fg_comment</string>
 \t\t\t\t<key>gutter</key>
@@ -1394,11 +1566,12 @@ function generate_claude_code_theme(mode::Symbol, tier::Symbol; target_path::Str
     name = _display_name(mode, tier)
     slug = _theme_slug(mode, tier)
 
-    bg_recessed = is_dark ? base["shade-"] : base["sun-"]
+    bg_low = is_dark ? base["shade+"] : base["sun-"]
     bg_canvas = is_dark ? base["shade"] : base["sun"]
-    bg_elevated = is_dark ? base["shade+"] : base["sun+"]
+    bg_high = is_dark ? base["shade-"] : base["sun+"]
     fg_comment = is_dark ? base["sky-"] : base["sky+"]
     fg_text = base["sky"]
+    sel_bg = _blend_hex(bg_low, fg_comment, 0.35)
 
     overrides = Dict{String,String}(
         "text" => "#" * fg_text,
@@ -1406,11 +1579,11 @@ function generate_claude_code_theme(mode::Symbol, tier::Symbol; target_path::Str
         "background" => "#" * bg_canvas,
         "subtle" => "#" * fg_comment,
         "inactive" => "#" * fg_comment,
-        "selectionBg" => "#" * bg_elevated,
-        "userMessageBackground" => "#" * bg_elevated,
-        "userMessageBackgroundHover" => "#" * _blend_hex(bg_elevated, fg_comment, 0.15),
-        "messageActionsBackground" => "#" * bg_recessed,
-        "composerSidebarBackground" => "#" * bg_recessed,
+        "selectionBg" => "#" * sel_bg,
+        "userMessageBackground" => "#" * bg_high,
+        "userMessageBackgroundHover" => "#" * _blend_hex(bg_high, fg_comment, 0.15),
+        "messageActionsBackground" => "#" * bg_low,
+        "composerSidebarBackground" => "#" * bg_low,
         "bashBorder" => "#" * acc["cyan"],
         "promptBorder" => "#" * fg_comment,
         "claude" => "#" * acc["orange"],
@@ -1444,38 +1617,45 @@ function generate_claude_code_theme(mode::Symbol, tier::Symbol; target_path::Str
 end
 
 # =============================================================================
-# 16. Base16 (tinted-theming/schemes YAML)
+# 16. Base16 & Base24 (tinted-theming/schemes YAML)
 # =============================================================================
 
-function generate_base16_theme(mode::Symbol, tier::Symbol; target_path::String, dry_run::Bool=true)
+function _base16_core_ramp(mode::Symbol, tier::Symbol)
     is_dark = mode == :dark
     base = BASE_TONES[tier]
-    acc = ACCENTS[mode][tier][8]
-    name = _display_name(mode, tier)
-    slug = _theme_slug(mode, tier)
-    variant = is_dark ? "dark" : "light"
-
-    bg_recessed = is_dark ? base["shade-"] : base["sun-"]
+    bg_low = is_dark ? base["shade+"] : base["sun-"]
     bg_canvas = is_dark ? base["shade"] : base["sun"]
-    bg_elevated = is_dark ? base["shade+"] : base["sun+"]
+    bg_high = is_dark ? base["shade-"] : base["sun+"]
     fg_comment = is_dark ? base["sky-"] : base["sky+"]
     fg_text = base["sky"]
     fg_heading = is_dark ? base["sky+"] : base["sky-"]
     canvas_opposite = is_dark ? base["sun"] : base["shade"]
+    sel_bg = _blend_hex(bg_low, fg_comment, 0.35)
+    fg_sub = _blend_hex(fg_comment, fg_text, 0.50)
+    return (; bg_low, bg_canvas, bg_high, sel_bg, fg_comment, fg_sub, fg_text, fg_heading, canvas_opposite)
+end
+
+function generate_base16_theme(mode::Symbol, tier::Symbol; target_path::String, dry_run::Bool=true)
+    acc = ACCENTS[mode][tier][8]
+    r = _base16_core_ramp(mode, tier)
+    name = _display_name(mode, tier)
+    slug = _theme_slug(mode, tier)
+    variant = mode == :dark ? "dark" : "light"
 
     content = """system: "base16"
 name: "$name"
-author: "Neal McKee"
+author: "Neal McKee (https://github.com/nealmckee/penumbra)"
+description: "Perceptually uniform colour scheme modelled after natural sunlight and shade (Revised CAM16-UCS + H-K). https://github.com/nealmckee/penumbra"
 variant: "$variant"
 palette:
-  base00: "#$bg_canvas"
-  base01: "#$bg_recessed"
-  base02: "#$bg_elevated"
-  base03: "#$fg_comment"
-  base04: "#$fg_text"
-  base05: "#$fg_text"
-  base06: "#$fg_heading"
-  base07: "#$canvas_opposite"
+  base00: "#$(r.bg_canvas)"
+  base01: "#$(r.bg_low)"
+  base02: "#$(r.sel_bg)"
+  base03: "#$(r.fg_comment)"
+  base04: "#$(r.fg_sub)"
+  base05: "#$(r.fg_text)"
+  base06: "#$(r.fg_heading)"
+  base07: "#$(r.canvas_opposite)"
   base08: "#$(acc["red"])"
   base09: "#$(acc["orange"])"
   base0A: "#$(acc["yellow"])"
@@ -1486,6 +1666,47 @@ palette:
   base0F: "#$(acc["magenta"])"
 """
     _write_port(target_path, content, "Base16 scheme ($slug)"; dry_run=dry_run)
+end
+
+function generate_base24_theme(mode::Symbol, tier::Symbol; target_path::String, dry_run::Bool=true)
+    acc = ACCENTS[mode][tier][8]
+    r = _base16_core_ramp(mode, tier)
+    name = _display_name(mode, tier)
+    slug = _theme_slug(mode, tier)
+    variant = mode == :dark ? "dark" : "light"
+
+    content = """system: "base24"
+name: "$name"
+author: "Neal McKee (https://github.com/nealmckee/penumbra)"
+description: "Perceptually uniform colour scheme modelled after natural sunlight and shade (Revised CAM16-UCS + H-K). https://github.com/nealmckee/penumbra"
+variant: "$variant"
+palette:
+  base00: "#$(r.bg_canvas)"
+  base01: "#$(r.bg_low)"
+  base02: "#$(r.sel_bg)"
+  base03: "#$(r.fg_comment)"
+  base04: "#$(r.fg_sub)"
+  base05: "#$(r.fg_text)"
+  base06: "#$(r.fg_heading)"
+  base07: "#$(r.canvas_opposite)"
+  base08: "#$(acc["red"])"
+  base09: "#$(acc["orange"])"
+  base0A: "#$(acc["yellow"])"
+  base0B: "#$(acc["green"])"
+  base0C: "#$(acc["cyan"])"
+  base0D: "#$(acc["blue"])"
+  base0E: "#$(acc["purple"])"
+  base0F: "#$(acc["magenta"])"
+  base10: "#$(r.bg_high)"
+  base11: "#$(r.bg_high)"
+  base12: "#$(acc["red"])"
+  base13: "#$(acc["yellow"])"
+  base14: "#$(acc["green"])"
+  base15: "#$(acc["cyan"])"
+  base16: "#$(acc["blue"])"
+  base17: "#$(acc["magenta"])"
+"""
+    _write_port(target_path, content, "Base24 scheme ($slug)"; dry_run=dry_run)
 end
 
 # =============================================================================
@@ -1640,6 +1861,7 @@ function main(; dry_run::Bool=true)
         ("Codex Desktop", generate_codex_theme, "codex", ".txt"),
         ("Claude Code CLI", generate_claude_code_theme, "claude-code", ".json"),
         ("Base16", generate_base16_theme, "base16", ".yaml"),
+        ("Base24", generate_base24_theme, "base24", ".yaml"),
         ("Zellij", generate_zellij_theme, joinpath("zellij", "themes"), ".kdl"),
     ]
 

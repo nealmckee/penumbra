@@ -128,26 +128,26 @@ hi Todo              guifg=#958A1C guibg=#EFE8DD gui=bold ctermfg=100  ctermbg=2
 if !has('gui_running') && !(has('termguicolors') && &termguicolors) && &t_Co < 256
   hi Normal       ctermfg=NONE          ctermbg=NONE         cterm=NONE
   hi Terminal     ctermfg=NONE          ctermbg=NONE         cterm=NONE
-  hi ColorColumn  ctermfg=NONE          ctermbg=7 cterm=NONE
-  hi CursorLine   ctermfg=NONE          ctermbg=7 cterm=NONE
-  hi CursorLineNr ctermfg=8 ctermbg=7 cterm=NONE
+  hi ColorColumn  ctermfg=NONE          ctermbg=0 cterm=NONE
+  hi CursorLine   ctermfg=NONE          ctermbg=0 cterm=NONE
+  hi CursorLineNr ctermfg=15 ctermbg=0 cterm=NONE
   hi LineNr       ctermfg=8 ctermbg=NONE         cterm=NONE
   hi NonText      ctermfg=8 ctermbg=NONE         cterm=NONE
-  hi StatusLine   ctermfg=8 ctermbg=7 cterm=NONE
-  hi StatusLineNC ctermfg=8 ctermbg=7 cterm=NONE
-  hi TabLine      ctermfg=NONE          ctermbg=7 cterm=NONE
-  hi TabLineFill  ctermfg=8 ctermbg=7 cterm=NONE
-  hi TabLineSel   ctermfg=8 ctermbg=NONE         cterm=bold
-  hi Pmenu        ctermfg=NONE          ctermbg=7 cterm=NONE
-  hi PmenuSbar    ctermfg=NONE          ctermbg=7 cterm=NONE
-  hi PmenuSel     ctermfg=0     ctermbg=3    cterm=bold
+  hi StatusLine   ctermfg=15 ctermbg=0 cterm=NONE
+  hi StatusLineNC ctermfg=8 ctermbg=0 cterm=NONE
+  hi TabLine      ctermfg=NONE          ctermbg=0 cterm=NONE
+  hi TabLineFill  ctermfg=8 ctermbg=0 cterm=NONE
+  hi TabLineSel   ctermfg=15 ctermbg=NONE         cterm=bold
+  hi Pmenu        ctermfg=NONE          ctermbg=0 cterm=NONE
+  hi PmenuSbar    ctermfg=NONE          ctermbg=0 cterm=NONE
+  hi PmenuSel     ctermfg=0     ctermbg=7    cterm=bold
   hi PmenuThumb   ctermfg=NONE          ctermbg=8 cterm=NONE
-  hi VertSplit    ctermfg=7  ctermbg=7 cterm=NONE
+  hi VertSplit    ctermfg=0  ctermbg=0 cterm=NONE
   hi Visual       ctermfg=NONE          ctermbg=NONE         cterm=reverse
   hi VisualNOS    ctermfg=NONE          ctermbg=NONE         cterm=reverse
   hi Search       ctermfg=0             ctermbg=3            cterm=NONE
   hi IncSearch    ctermfg=0             ctermbg=3            cterm=bold
-  hi MatchParen   ctermfg=8 ctermbg=7 cterm=bold
+  hi MatchParen   ctermfg=15 ctermbg=0 cterm=bold
   hi DiffAdd      ctermfg=2             ctermbg=NONE         cterm=NONE
   hi DiffChange   ctermfg=4             ctermbg=NONE         cterm=NONE
   hi DiffDelete   ctermfg=1             ctermbg=NONE         cterm=NONE
@@ -158,8 +158,8 @@ if !has('gui_running') && !(has('termguicolors') && &termguicolors) && &t_Co < 2
   hi ModeMsg      ctermfg=4             ctermbg=NONE         cterm=NONE
   hi MoreMsg      ctermfg=4             ctermbg=NONE         cterm=NONE
   hi Question     ctermfg=6             ctermbg=NONE         cterm=NONE
-  hi Title        ctermfg=8 ctermbg=NONE         cterm=bold
-  hi WildMenu     ctermfg=0     ctermbg=3    cterm=bold
+  hi Title        ctermfg=15 ctermbg=NONE         cterm=bold
+  hi WildMenu     ctermfg=0     ctermbg=7    cterm=bold
   hi Comment      ctermfg=8 ctermbg=NONE         cterm=NONE
   hi Constant     ctermfg=3             ctermbg=NONE         cterm=NONE
   hi String       ctermfg=2             ctermbg=NONE         cterm=NONE
@@ -213,8 +213,8 @@ if has('nvim')
   hi! link @number              Number
   hi! link @boolean             Boolean
   hi! link @string              String
-  hi! link @string.regexp       String
-  hi! link @character           Character
+  hi! link @string.regexp       Special
+  hi! link @character           String
   hi! link @variable            Identifier
   hi! link @variable.parameter  Identifier
   hi! link @variable.member     Identifier
@@ -237,6 +237,10 @@ if has('nvim')
   hi! link @markup.heading      Title
   hi! link @markup.raw          String
   hi! link @markup.link         Underlined
+  hi! link @markup.strikethrough Comment
+  hi! link @diff.plus           DiffAdd
+  hi! link @diff.minus          DiffDelete
+  hi! link @diff.delta          DiffChange
 elseif (has('termguicolors') && &termguicolors) || has('gui_running')
   let g:terminal_ansi_colors = ['#DFD9D0', '#BB5C78', '#759221', '#B57632', '#0080BB', '#8470AF', '#008C7D', '#2C2E31', '#B4B1AD', '#BB5C78', '#759221', '#B57632', '#0080BB', '#8470AF', '#008C7D', '#202225']
 endif

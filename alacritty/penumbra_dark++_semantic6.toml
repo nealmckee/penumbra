@@ -1,5 +1,5 @@
 # Penumbra v2 -- Alacritty Color Scheme
-# Theme: penumbra_dark++
+# Theme: penumbra_dark++_semantic6
 # Mode: dark, Tier: contrast_plus_plus
 
 [colors.primary]
@@ -13,6 +13,14 @@ cursor = "#eee8dd"
 [colors.selection]
 text = "#a9a9a9"
 background = "#1b1e23"
+
+[colors.search.matches]
+foreground = "#c2c0bd"
+background = "#744d2b"
+
+[colors.search.focused_match]
+foreground = "#c2c0bd"
+background = "#936135"
 
 [colors.normal]
 black   = "#07080b"

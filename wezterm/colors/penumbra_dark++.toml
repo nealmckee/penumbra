@@ -36,3 +36,26 @@ brights = [
   "#00aa98",
   "#fff6e9",
 ]
+
+[colors.tab_bar]
+background = "#1b1e23"
+
+[colors.tab_bar.active_tab]
+bg_color = "#101317"
+fg_color = "#c2c0bd"
+
+[colors.tab_bar.inactive_tab]
+bg_color = "#1b1e23"
+fg_color = "#575b62"
+
+[colors.tab_bar.inactive_tab_hover]
+bg_color = "#101317"
+fg_color = "#a9a9a9"
+
+[colors.tab_bar.new_tab]
+bg_color = "#1b1e23"
+fg_color = "#575b62"
+
+[colors.tab_bar.new_tab_hover]
+bg_color = "#101317"
+fg_color = "#c2c0bd"

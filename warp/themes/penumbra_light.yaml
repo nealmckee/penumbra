@@ -3,7 +3,7 @@
 # Mode: light, Tier: balanced
 
 name: "Penumbra Light"
-accent: "#0082b5"
+accent: "#0080bb"
 cursor: "#2c2e31"
 background: "#efe8dd"
 foreground: "#8b8b8b"

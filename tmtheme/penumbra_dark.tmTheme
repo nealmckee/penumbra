@@ -22,11 +22,11 @@
 				<key>caret</key>
 				<string>#EFE8DD</string>
 				<key>selection</key>
-				<string>#383A3D</string>
+				<string>#484A4D</string>
 				<key>selectionBorder</key>
-				<string>#383A3D</string>
+				<string>#484A4D</string>
 				<key>lineHighlight</key>
-				<string>#383A3D</string>
+				<string>#323437</string>
 				<key>invisibles</key>
 				<string>#5E6063</string>
 				<key>gutter</key>
@@ -131,7 +131,7 @@
 			<key>name</key>
 			<string>Numbers, Units &amp; Booleans</string>
 			<key>scope</key>
-			<string>constant.numeric, constant.language.boolean, constant.language.null, constant.language</string>
+			<string>constant.numeric, constant.character, constant.language.boolean, constant.language.null, constant.language, support.constant</string>
 			<key>settings</key>
 			<dict>
 				<key>foreground</key>
@@ -140,9 +140,9 @@
 		</dict>
 		<dict>
 			<key>name</key>
-			<string>Macros &amp; Decorators</string>
+			<string>Macros, Decorators &amp; Directives</string>
 			<key>scope</key>
-			<string>entity.name.function.macro, support.function.macro, entity.name.function.decorator</string>
+			<string>entity.name.function.macro, support.function.macro, entity.name.function.decorator, punctuation.definition.decorator, storage.type.annotation, keyword.control.directive, keyword.other.directive, punctuation.definition.directive</string>
 			<key>settings</key>
 			<dict>
 				<key>foreground</key>
@@ -219,6 +219,17 @@
 				<string>#7176AE</string>
 				<key>fontStyle</key>
 				<string>italic</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Markdown Strikethrough</string>
+			<key>scope</key>
+			<string>markup.strikethrough</string>
+			<key>settings</key>
+			<dict>
+				<key>foreground</key>
+				<string>#5E6063</string>
 			</dict>
 		</dict>
 		<dict>

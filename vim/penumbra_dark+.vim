@@ -213,8 +213,8 @@ if has('nvim')
   hi! link @number              Number
   hi! link @boolean             Boolean
   hi! link @string              String
-  hi! link @string.regexp       String
-  hi! link @character           Character
+  hi! link @string.regexp       Special
+  hi! link @character           String
   hi! link @variable            Identifier
   hi! link @variable.parameter  Identifier
   hi! link @variable.member     Identifier
@@ -237,6 +237,10 @@ if has('nvim')
   hi! link @markup.heading      Title
   hi! link @markup.raw          String
   hi! link @markup.link         Underlined
+  hi! link @markup.strikethrough Comment
+  hi! link @diff.plus           DiffAdd
+  hi! link @diff.minus          DiffDelete
+  hi! link @diff.delta          DiffChange
 elseif (has('termguicolors') && &termguicolors) || has('gui_running')
   let g:terminal_ansi_colors = ['#131418', '#CD6584', '#81A026', '#C68237', '#008CCD', '#917BBF', '#009989', '#EFE8DD', '#5B5D62', '#CD6584', '#81A026', '#C68237', '#008CCD', '#917BBF', '#009989', '#FFF6E9']
 endif
